@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ja-jp">
+<head>
+<meta charset="utf-8" />
+<title>Python3 Py365Lib</title>
+<link rel="stylesheet" href="/css/default.css" />
+<style>
+table {
+  width:100%;
+  border:solid thin gray;
+}
+
+th {
+  border:solid thin gray;
+  background-color:gainsboro;
+}
+
+td {
+  border:solid thin gray;
+  vertical-align:top;
+}
+
+header, article, fooder {
+  margin-left:5%;
+  margin-right:5%;
+}
+</style>
+</head>
+
+
+
+<body>
+<header>
+<h1 style="text-align:center;">Python3.6 Py365Lib 仕様書　<span style="font-size:14pt">(ver 2.0)</span></h1>
+<div style="text-align:center;"><a href="/">HOME</a></div>
+</header>
+
+
+<article>
+<h3>もくじ</h3>
+<ul>
+ <li><a href="#abstract">概要</a></li>
+ <li><a href="#class">クラス</a>
+  <ul>
+   <li><a href="#Common">Common モジュール</a></li>
+   <li><a href="#FileSystem">FileSystem モジュール</a></li>
+   <li><a href="#Text">Text クラス, モジュール</a></li>
+   <li><a href="#DateTime">DateTime クラス, モジュール</a></li>
+   <li><a href="#MySQL">MySQL クラス</a></li>
+   <li><a href="#AWSS3">AWSS3 クラス</a></li>
+   <li><a href="#WebPage">WebPage クラス (CGI 向け)</a></li>
+   <li><a href="#CursesApp">CursesApp クラス (Curses CUI アプリ向け)</a></li>
+   <li><a href="#TkApp">TkApp クラス (Tkinter GUI アプリ向け)</a></li>
+   <li><a href="#HTApp">HTApp クラス (HTTP サーバ向け)</a></li>
+  </ul>
+ </li>
+ <li><a href="#samples">サンプル</a></li>
+</ul>
+<br />
+
+<!-- 概要 -->
+<h2><a id="abstract">概要</a></h2>
+<!-- 目標 -->
+<h3>目標</h3>
+<p>Py365Lib パッケージの目標は、あまり大きくない小型のプログラムを手間をかけず、迅速に作成することである。機能を絞って、たまにしかプログラミングをしない人も、すぐ覚えられて忘れにくいように考慮する。</p>
+<br />
+
+
+<!-- 要件 -->
+<h3>要件</h3>
+<ul>
+ <li>Python 3.6.5 以上が必要</li>
+ <li>Linux 環境が必要</li>
+ <li>MySQL モジュールを使う場合は、Oracle の MySQL コネクタが必要 (pip3 install mysql-connector-python)</li>
+ <li>AWSS3 モジュールを使う場合は、AWS S3 のアクセス権と boto3 のインストールが必要 (pip3 install boto3)</li>
+ <li></li>
+</ul>
+<br />
+
+
+<!-- インストール -->
+<h3>インストール</h3>
+<ol>
+ <li>適切なフォルダの下に Py365Lib というフォルダを作成する。（例）~/lib/python/Py365Lib</li>
+ <li>Py365Lib の下に次のファイルをコピーする。
+  <ul>
+   <li>Common.py</li>
+   <li>FileSystem.py</li>
+   <li>Text.py</li>
+   <li>DateTime.py</li>
+   <li>MySQL.py</li>
+   <li>AWSS3.py</li>
+   <li>WebPage.py</li>
+   <li>CursesApp.py</li>
+   <li>HTApp.py</li>
+   <li>TkApp.py</li>
+  </ul>
+  <li>Py365Lib の下に __init__.py を作成する。内容は次の通りとする。
+    <pre>
+  __all__ = ['Common', 'FileSystem', 'Text', 'DateTime' ]
+    </pre></li>
+   <li>環境変数 PYTHONPATH に Py365Lib の親フォルダを追加する。(例) "~/lib/python3" を追加<br />
+   PYTHONPATH が自動的に設定されるように .bashrc に次のような１行を追加するとよい。
+   <pre>
+   export PYTHONPATH=$PYTHONPATH:~/lib/python3
+   </pre>
+  </li>
+</ol>
+<br />
+
+
+
+<!--  機能 -->
+<h3>機能</h3>
+<ul>
+<li>FileSystem
+<ul>
+ <li>ファイル属性取得・判別機能</li>
+ <li>ファイル操作機能</li>
+ <li>ディレクトリ内オブジェクト一覧取得機能</li>
+ <li>テキストファイル入出力機能</li>
+ <li>バイナリーファイル入出力機能</li>
+</ul>
+<li>Text
+ <ul>
+  <li>検索機能</li>
+  <li>置換機能</li>
+  <li>CSV ファイル処理</li>
+  <li>INI ファイル処理</li>
+ </ul>
+<li>DateTime 日付時刻</li>
+<li>Common コマンド引数処理</li>
+<li>MySQL アクセス</li>
+<li>AWS S3 アクセス</li>
+<li>ログ</li>
+<li>WebPage CGI 作成機能</li>
+<li>(HTTP Server) 独自 HTTP サーバ (アプリケーションサーバを構築)</li>
+<li>(Curses) Curses を利用した CUI アプリケーション構築機能</li>
+<li>(Tkinter) Tkinter を利用した GUI アプリケーション構築機能</li>
+<li>その他</li>
+</ul>
+<br />
+
+<!--  構成 -->
+<h3>構成</h3>
+<p>Py365Lib に含まれるモジュールは以下の通りである。このうち、<b>"from Py365Lib import *" でインポートされるのは、Common, FileSystem, Text, DateTime モジュールである。</b>他のモジュールは明示的にインポートする必要がある。</p>
+<p>Py365Lib フォルダを PYTHONPATH 環境変数に含むようにすると、カレントディレクトリに置かずに共通ライブラリフォルダなどに設置できる。</p>
+<p>(例) .bashrc の中に export PYTHONPATH=/home/user/lib/python3 などとしておく。</p>
+<ul>
+   <li>パッケージ Py365Lib</li>
+   <li><a href="#Common">Common モジュール (Common.py)</a></li>
+   <li><a href="#FileSystem">FileSystem モジュール (FileSystem.py)</a></li>
+   <li><a href="#Text">Text クラス, モジュール (Text.py)</a></li>
+   <li><a href="#DateTime">DateTime クラス, モジュール (DateTime.py)</a></li>
+   <li><a href="#MySQL">MySQL クラス (MySQL.py)</a></li>
+   <li><a href="#AWSS3">AWSS3 クラス (AWSS3.py)</a></li>
+   <li><a href="#WebPage">WebPage クラス (CGI) (WebPage.py)</a></li>
+   <li><a href="#CursesApp">CursesApp クラス (CursesApp.py)</a></li>
+   <li><a href="#HTApp">HTApp クラス (HTApp.py)</a></li>
+   <li><a href="#TkApp">TkApp クラス (TkApp.py)</a></li>
+</ul>
+<br />
+
+<!-- サンプル -->
+<h2><a id="samples">サンプル</a></h2>
+<ul>
+  <li><a href="samples/Common.html">Common モジュール</a></li>
+  <li><a href="samples/FileSystem.html">FileSystem クラス</a></li>
+  <li><a href="samples/Text.html">Text クラス</a></li>
+  <li><a href="samples/DateTime.html">DateTime クラス</a></li>
+  <li><a href="samples/MySQL.html">MySQL クラス</a></li>
+  <li><a href="samples/AWSS3.html">AWSS3 クラス</a></li>
+  <li><a href="samples/WebPage.html">WebPage クラス</a></li>
+  <li><a href="samples/CursesApp.html">CursesApp クラス</a></li>
+  <li><a href="samples/HTApp.html">HTApp クラス</a></li>
+  <li><a href="samples/TkApp.html">TkApp クラス</a></li>
+</ul>
+<br />
+
+
+<br />
+
+<!--  Common -->
+<h2><a id="Common">Common モジュール</a></h2>
+<p>Common モジュールは主にコンソールアプリを構築するのに便利な雑多な関数を含む。Common モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
+<p><a href="samples/Common.html">Common モジュールのサンプル</a></p>
+<table>
+ <tr><th>関数</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>init_log(filename)</td><td>filename: ログファイルのパス名。省略時は Py365Lib.log となる。</td><td>なし</td><td>ログ機能を有効にする。</td><td>logger モジュールのメソッドでログを出力する。</td></tr>
+ <tr><td>args()</td><td>なし</td><td>コマンド引数の配列</td><td>コマンド引数を得る。</td><td>コマンド名は含まれない</td></tr>
+ <tr><td>count_args()</td><td>なし</td><td>コマンド引数の数</td><td>コマンド引数の数を返す。</td><td></td></tr>
+ <tr><td>stop(code = 0, message = "", color=ESC_FG_RED)</td><td>
+code: 終了コード<br />message: 終了時に表示するメッセージ。<br />表示色または属性
+</td><td>なし</td><td>プログラムを終了させる。</td><td></td></tr>
+ <tr><td>exec(cmd)</td><td>cmd: コマンド(配列)</td><td>終了コード。成功なら 0。</td><td>コマンドを起動する。</td><td></td></tr>
+ <tr><td>shell(cmd)</td><td>cmd: コマンド(配列)</td><td>実行結果</td><td>コマンドを起動し、その結果を取得する。</td><td></td></tr>
+ <tr><td>log(msg)</td><td>msg: メッセージ</td><td>なし</td><td>ログファイルにログ文字列を追加する。</td><td></td></tr>
+ <tr><td>error(msg)</td><td>msg: メッセージ</td><td>なし</td><td>ログファイルにエラー文字列を追加する。</td><td></td></tr>
+ <tr><td>isset(v)</td><td>v: 変数</td><td>v が有効なら True</td><td>変数が有効か判別する。</td><td></td></tr>
+ <tr><td>is_str(x)</td><td>x: 変数</td><td>x が文字列なら True</td><td>変数が文字列型か判別する。</td><td></td></tr>
+ <tr><td>is_int(x)</td><td>x: 変数</td><td>x が整数なら True</td><td>変数が整数型か判別する。</td><td></td></tr>
+ <tr><td>is_float(x)</td><td>x: 変数</td><td>x が浮動小数点数なら True</td><td>変数が浮動小数点数型か判別する。</td><td></td></tr>
+ <tr><td>is_bool(x)</td><td>x: 変数</td><td>x がブール型なら True</td><td>変数がブール型か判別する。</td><td></td></tr>
+ <tr><td>syslog_out(msg)</td><td>msg: メッセージ</td><td>なし</td><td>syslog へ出力する。</td><td></td></tr>
+ <tr><td>set_timeout(sec, callback)</td><td>sec: タイムアウトまでの時間（秒）<br />
+callback : タイムアウト時にコールされる関数 callback()
+</td><td>なし</td><td>タイムアウト時に実行されるコールバック関数を設定する。</td><td></td></tr>
+ <tr><td>sleep(sec)</td><td>sec: スリープ秒数</td><td>なし</td><td>スリープする。</td><td></td></tr>
+ <tr><td>get_env(key)</td><td>key: 環境変数の名前</td><td>環境変数の値</td><td>環境変数を得る。</td><td></td></tr>
+ <tr><td>is_windows()</td><td>なし</td><td>動作環境が Windows なら True</td><td>動作環境を判別する。</td><td></td></tr>
+ <tr><td>to_bytes(s)</td><td>s: 文字列</td><td>バイト列</td><td>文字列をバイト列に変換する。</td><td></td></tr>
+ <tr><td>from_bytes(b)</td><td>b: バイト列</td><td>文字列</td><td>バイト列を文字列に変換する。</td><td></td></tr>
+ <tr><td>esc_print(code, text, reset=True)</td><td>code: 端末エスケープシーケンスコード<br />
+text: 表示文字列<br />
+reset: True なら前の状態にもどす。False ならそのまま。
+ </td><td>なし</td><td>端末にエスケープシーケンスを出力後、文字列を出力する。</td><td></td></tr>
+ <tr><td>is_main()</td><td>なし</td><td>メインなら True</td><td>メインプログラムとして実行されているか判別</td><td></td></tr>
+ <tr><td>from_json(json)</td><td>json: JSON 形式文字列</td><td>Python オブジェクト</td><td>JSON 文字列を Python オブジェクトに変換する。</td><td></td></tr>
+ <tr><td>to_json(obj)</td><td>obj: Python オブジェクト</td><td>JSON 形式文字列</td><td>Python オブジェクトを JSON 形式文字列に変換する。</td><td></td></tr>
+<table>
+<br />
+
+<h4>端末エスケープシーケンスコード</h4>
+<p>これらのコードは Common.esc_print 関数などで利用する。</p>
+<table>
+<tr><th>コード</th><th>意味</th></tr>
+<tr><td>ESC_NORMAL</td><td>指定をリセットして標準に戻す。</td></tr>
+<tr><td>ESC_BOLD</td><td>明るい色を使用する。</td></tr>
+<tr><td>ESC_DIM</td><td>暗い色を使用する。</td></tr>
+<tr><td>ESC_ITALIC</td><td>イタリック(傾斜文字)</td></tr>
+<tr><td>ESC_UNDERLINE</td><td>下線ありの文字</td></tr>
+<tr><td>ESC_BLINK</td><td>点滅</td></tr>
+<tr><td>ESC_HBLINK</td><td>高速点滅</td></tr>
+<tr><td>ESC_REVERSE</td><td>前景色と背景色を反転する。</td></tr>
+<tr><td>ESC_FG_BLACK</td><td>前景色が黒</td></tr>
+<tr><td>ESC_BG_BLACK</td><td>背景色が黒</td></tr>
+<tr><td>ESC_FG_RED</td><td>前景色が赤</td></tr>
+<tr><td>ESC_BG_RED</td><td>背景色が赤</td></tr>
+<tr><td>ESC_FG_GREEN</td><td>前景色が緑</td></tr>
+<tr><td>ESC_BG_GREEN</td><td>背景色が緑</td></tr>
+<tr><td>ESC_FG_BLUE</td><td>前景色が青</td></tr>
+<tr><td>ESC_BG_BLUE</td><td>背景色が青</td></tr>
+<tr><td>ESC_FG_YELLOW</td><td>前景色が黄色</td></tr>
+<tr><td>ESC_BG_YELLOW</td><td>背景色が黄色</td></tr>
+<tr><td>ESC_FG_MAGENTA</td><td>前景色が赤紫</td></tr>
+<tr><td>ESC_BG_MAGENTA</td><td>背景色が赤紫</td></tr>
+<tr><td>ESC_FG_CYAN</td><td>前景色が青緑</td></tr>
+<tr><td>ESC_BG_CYAN</td><td>背景色が青緑</td></tr>
+<tr><td>ESC_FG_WHITE</td><td>前景色が白</td></tr>
+<tr><td>ESC_BG_WHITE</td><td>背景色が白</td></tr>
+</table>
+
+<br />
+
+
+
+<!--  FileSystem -->
+<h2><a id="FileSystem">FileSystem モジュール</a></h2>
+<p>FileSystem モジュールは Python 関数の薄いラッパー (wrapper) である。Python に慣れた人は、このモジュールを利用する利点はあまりないかもしれない。ただ、たまにしか Python を使わない人や他の言語に経験があって、Python を始めた人などには便利に使えるかもしれない。</p>
+<p>FileSystem モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
+<p><a href="samples/FileSystem.html">FileSystem のサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>readAllText(file)</td><td>file: ファイルのパス名</td><td>読み込んだ文字列</td><td>ファイル内容を読み込んで文字列として返す。</td><td>関数</td></tr>
+ <tr><td>writeAllText(file, str, append=False)</td><td>file: ファイルのパス名<br />
+str: 書き込む文字列<br />
+append: True の場合は追加
+</td><td>なし</td><td>ファイルにパラメータの文字列を書く。</td><td>関数</td></tr>
+ <tr><td>readAllLines(file, method)</td><td>
+file: ファイルのパス名<br />
+method(line): １行づつ処理する関数</td><td>なし</td><td>ファイルを１行づつ読んで、その行を method に渡す。</td><td>関数</td></tr>
+
+ <tr><td>readBinary(file)</td><td>file: ファイルのパス名</td><td>読み込んだバイナリー配列</td><td>ファイル内容を読み込んでバイナリー配列として返す。</td><td>関数</td></tr>
+ <tr><td>writeBinary(file, data)</td><td>file: ファイルのパス名<br />
+	data: バイナリーデータ配列
+ </td><td>なし</td><td>バイナリー配列 data をファイル file に書き込む。</td><td>関数</td></tr>
+ <tr><td>readIni(file)</td><td>file: INIファイルのパス名</td><td>連想配列</td><td>INI ファイルを読んで連想配列を返す。</td><td>関数</td></tr>
+ <tr><td>copy(src, dest)</td><td>src: コピー元のファイル<br />
+コピー先のファイルまたはディレクトリ</td><td>なし</td><td>ファイルをコピーする。</td><td>関数</td></tr>
+ <tr><td>move(src, dest)</td><td>src: 移動元のファイル<br />
+移動先のファイルまたはディレクトリ</td><td>なし</td><td>ファイル、ディレクトリを移動する。</td><td>関数</td></tr>
+ <tr><td>unlink(file)</td><td>file: 削除するファイルまたはリンク</td><td>なし</td><td>ファイルやリンクを削除する。</td><td>関数</td></tr>
+ <tr><td>exists(file)</td><td>file: 存在を確認するファイルまたはディレクトリ</td><td>存在すれば True、存在しなければ False</td><td>ファイルが存在すれば True を返す。</td><td>関数</td></tr>
+ <tr><td>isDirectory(dir)</td><td>dir: 存在を確認するディレクトリ</td><td>存在すれば True、存在しなければ False</td><td>ディレクトリ dir が存在すれば True を返す。</td><td>関数</td></tr>
+ <tr><td>isFile(file)</td><td>file: 存在を確認するファイル</td><td>存在すれば True、存在しなければ False</td><td>ファイル file が存在すれば True を返す。</td><td>関数</td></tr>
+ <tr><td>isLink(file)</td><td>file: 存在を確認するリンク</td><td>存在すれば True、存在しなければ False</td><td>リンク file が存在すれば True を返す。</td><td>関数</td></tr>
+ <tr><td>getAttr(file)</td><td>file: ファイル、ディレクトリ、リンク</td><td>属性</td><td>ファイルの属性を得る。</td><td>関数</td></tr>
+ <tr><td>getOwner(file)</td><td>file: ファイル、ディレクトリ、リンク</td><td>オーナー名</td><td>ファイルのオーナー名を得る。</td><td>関数</td></tr>
+ <tr><td>getGroup(file)</td><td>file: ファイル、ディレクトリ、リンク</td><td>グループ名</td><td>ファイルのグループ名を得る。</td><td>関数</td></tr>
+ <tr><td>chdir(dir)</td><td>dir: ディレクトリ名</td><td>なし</td><td>カレントディレクトリを変更する。</td><td>関数</td></tr>
+ <tr><td>mkdir(dir)</td><td>dir: ディレクトリ名</td><td>なし</td><td>ディレクトリを作成する。</td><td>関数</td></tr>
+ <tr><td>rmdir(dir, recursive=False)</td><td>dir: ディレクトリ名<br />
+recursive: True ならファイルやサブディレクトリも削除</td><td>なし</td><td>ディレクトリを削除する。</td><td>関数</td></tr>
+ <tr><td>grep(str, file)</td><td>str: 検索文字列<br />file: 対象ファイル</td><td>見つかった行番号の配列</td><td>ファイル内を検索する。</td><td>関数</td></tr>
+ <tr><td>listFiles(dir, wildcard="*")</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイルとサブディレクトリ一覧を得る。</td><td>関数</td></tr>
+ <tr><td>listDirectories(dir)</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>サブディレクトリ一覧リスト</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>関数</td></tr>
+ <tr><td>getFileName(path)</td><td>path: パス名</td><td>パスのファイル名部分</td><td>path のファイル名部分を得る。</td><td>関数</td></tr>
+ <tr><td>getDirectoryName(path)</td><td>path: パス名</td><td>パスのディレクトリ名</td><td>path のディレクトリ名部分を得る。</td><td>関数</td></tr>
+ <tr><td>getExtension(path)</td><td>path: パス名</td><td>パスの拡張子部分</td><td>path のドットを含む拡張子部分を得る。</td><td>関数</td></tr>
+ <tr><td>getAbolutePath(path)</td><td>path: パス名</td><td>絶対パス</td><td>相対パス path の絶対パスを得る。</td><td>関数</td></tr>
+ <tr><td>getParentDirectory(path)</td><td>path: パス名</td><td>親のディレクトリ</td><td>path の親ディレクトリを得る。</td><td>関数</td></tr>
+ <tr><td>getCurrentDirectory()</td><td>なし</td><td>カレントディレクトリ</td><td>pwd() の別名</td><td>関数</td></tr>
+ <tr><td>getTempFile()</td><td>なし</td><td>一時ファイルのパス名</td><td>一時ファイルを得る。</td><td>関数</td></tr>
+ <tr><td>changeExt(path, ext)</td><td>path: ファイルのパス名<br />ext: 新しい拡張子（先頭はドットであること）</td><td>新しいパス名</td><td>ファイルの拡張子を変更する。</td><td>関数</td></tr>
+</table>
+
+
+
+
+<br />
+<!--  Text -->
+<h2><a id="Text">Text モジュールとクラス</a></h2>
+<p>Text モジュールは Python 関数の薄いラッパー (wrapper) である。Python に慣れた人は、このモジュールを利用する利点はあまりないかもしれない。ただ、たまにしか Python を使わない人や他の言語に経験があって、Python を始めた人などには便利に使えるかもしれない。</p>
+<p>Text モジュールにはモジュール関数と Text クラスが含まれる。Text クラスは Text.Text として参照する必要があるので注意する。</p>
+<p>Text モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
+<p><a href="samples/Text.html">Text のサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>__init__(s)</td><td>s: 文字列</td><td>N/A</td><td>コンストラクタ</td><td>コンストラクタ</td></tr>
+ <tr><td>length</td><td>なし</td><td>現在の文字列の長さ</td><td>現在の文字列の長さを得る。</td><td>Text クラスの R/O property</td></tr>
+ <tr><td>isdigit(a)</td><td>a: 文字</td><td>数字なら True、そうでないなら False</td><td>数字かどうかを判別する</td><td>関数</td></tr>
+ <tr><td>isalpha(a)</td><td>a: 文字</td><td>アルファベットなら True、そうでないなら False</td><td>アルファベットかどうかを判別する</td><td>関数</td></tr>
+ <tr><td>isdelim(a)</td><td>a: 文字</td><td>区切り文字なら True、そうでないなら False</td><td>区切り文字かどうかを判別する</td><td>関数</td></tr>
+ <tr><td>isprint(a)</td><td>a: 文字</td><td>表示可能文字なら True、そうでないなら False</td><td>表示可能文字なら True、そうでないなら False</td><td>関数</td></tr>
+ <tr><td>tolower(s)</td><td>s: 文字列</td><td>大文字に変換された文字列</td><td>文字列に含まれる小文字をすべて大文字にする。</td><td>関数</td></tr>
+ <tr><td>toupper(s)</td><td>s: 文字列</td><td>小文字に変換された文字列</td><td>文字列に含まれる大文字をすべて小文字にする。</td><td>関数</td></tr>
+ <tr><td>append(s)</td><td>s: 文字列</td><td>なし</td><td>現在の文字列に s を追加する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substring(start, length)</td><td>start: 開始位置<br />length: 長さ</td><td>部分文字列</td><td>start の位置から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substr(start, end)</td><td>start: 開始位置<br />end: 終了位置</td><td>部分文字列</td><td>start の位置から end 手前までの文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>left(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の先頭から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>right(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の最後から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>trim(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の両端の空白を削除する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>chomp(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の復帰改行文字を削除する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>split(c, s)</td><td>c: 区切り文字<br />s: 文字列</td><td>分割された文字列のリスト</td><td>c で現在の文字列を分割してリストとして返す。</td><td>関数</td></tr>
+ <tr><td>join(c, array)</td><td>c: 結合文字<br />array: 文字列リスト</td><td>結合された文字列</td><td>c で array の要素をすべて結合する。</td><td>関数</td></tr>
+ <tr><td>contain(str, s)</td><td>str: 検索文字列<br />
+s: 対象の文字列</td><td>str が含まれていれば True、そうでないなら False</td><td>文字列 s に str が含まれるか判別する。</td><td>関数</td></tr>
+ <tr><td>indexOf(str, s)</td><td>str: 検索文字列<br />
+s: 対象の文字列</td><td>最初にパターンが見つかった位置</td><td>文字列 s に pattern が含まれるていれば、その位置を返す。<br />(見つからない場合は -1)</td><td>関数</td></tr>
+  <tr><td>replace(old, new, s)</td><td>old: 置換前の文字列<br />
+new: 置換後の文字列<br />
+s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対して部分文字列 old を new に置換する。</td><td>関数</td></tr>
+ <tr><td>format(f, *args)</td><td>f: フォーマット<br />*args: 変換する変数(可変数変数)</td><td>書式化された文字列</td><td>フォーマットに基づいて変数を書式化する。フォーマットは {} 形式とする。</td><td>関数</td></tr>
+ <tr><td>parseInt(s)</td><td>s: 文字列</td><td>整数</td><td>可能なら文字列を整数に変換する。</td><td>関数</td></tr>
+ <tr><td>parseDouble(s)</td><td>s: 文字列</td><td>浮動小数点数</td><td>可能なら文字列を浮動小数点数に変換する。</td><td>関数</td></tr>
+ <tr><td>char(n)</td><td>n: 整数</td><td>文字</td><td>整数を文字に変換する。</td><td>関数</td></tr>
+ <tr><td>asc(a)</td><td>a: 文字</td><td>整数</td><td>文字を整数に変換する。</td><td>関数</td></tr>
+ <tr><td>toString()</td><td>なし</td><td>このインスタンスの文字列</td><td>このインスタンスの文字列を返す。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>times(c, n)</td><td>c: 文字<br />n: 回数</td><td>なし</td><td>このインスタンスの文字列を文字 c を n 回繰り返す文字列で置き換える。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>clear()</td><td>なし</td><td>なし</td><td>このインスタンスの文字列を "" で置き換える。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>re_contain(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>検索文字列が含まれていれば True</td><td>
+   対象の文字列を正規表現で検索して、検索文字列が含まれているか判別する。 </td><td>関数</td></tr>
+ <tr><td>re_search(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td>
+  <td>見つかった部分文字列のリスト</td><td>対象の文字列を正規表現で検索して、部分文字列を抽出する。</td><td>関数</td></tr>
+ <tr><td>re_split(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>なし</td><td>対象の文字列を正規表現で分割してリストにする。</td><td>関数</td></tr>
+ <tr><td>re_replace(re, c, s)</td><td>re: 正規表現文字列<br />c:置き換える文字列<br />s: 対象文字列</td>
+  <td>新しい文字列</td><td>対象文字列 s を正規表現 re で検索して見つかった部分文字列を c で置き換える。</td><td>関数</td></tr>
+</table>
+
+
+<br />
+<!--  DateTime -->
+<h2><a id="DateTime">DateTime クラスとモジュール</a></h2>
+<p>DateTime モジュールは Python 関数の薄いラッパー (wrapper) である。Python に慣れた人は、このモジュールを利用する利点はあまりないかもしれない。ただ、たまにしか Python を使わない人や他の言語に経験があって、Python を始めた人などには便利に使えるかもしれない。</p>
+<p>DateTime モジュールにはモジュール関数と Text クラスが含まれる。DateTime クラスは DateTime.DateTime として参照する必要があるので注意する。</p>
+<p>DateTime モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
+<p><a href="samples/DateTime.html">DateTime のサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>__init__([s])</td><td>s: 日付時刻文字列</td><td>N/A</td><td>コンストラクタ</td><td>コンストラクタ</td></tr>
+ <tr><td>now()</td><td>なし</td><td>DateTime クラス</td><td>現在の時刻を持つ DateTime クラスのインスタンスを返す。</td><td>関数</td></tr>
+ <tr><td>utc()</td><td>なし</td><td>DateTime クラス</td><td>現在の UTC 時刻を持つ DateTime クラスのインスタンスを返す。</td><td>関数</td></tr>
+ <tr><td>toString([form])</td><td>form: 書式文字列</td><td>日付時刻文字列</td><td>このインスタンスを日付時刻文字列に変換する。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>toDateString([form])</td><td>form: 書式文字列</td><td>日付文字列</td><td>このインスタンスの日付部分を日付文字列に変換する。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>toTimeString([form])</td><td>form: 書式文字列</td><td>時刻文字列</td><td>このインスタンスの時刻部分を時刻文字列に変換する。</td><td>関数</td></tr>
+ <tr><td>day</td><td>なし</td><td>このインスタンスの日部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
+ <tr><td>month</td><td>なし</td><td>このインスタンスの月部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
+ <tr><td>year</td><td>なし</td><td>このインスタンスの年部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
+ <tr><td>dayOfweek</td><td>なし</td><td>このインスタンスの週部分 (0-6)</td><td></td><td>DateTime クラスの R/O property</td></tr>
+ <tr><td>second</td><td>なし</td><td>このインスタンスの秒部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
+ <tr><td>minute</td><td>なし</td><td>このインスタンスの分部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
+ <tr><td>hour</td><td>なし</td><td>このインスタンスの時部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
+ <tr><td>addDays(days)</td><td>days: 日数</td><td>なし</td><td>このインスタンスに days を加える。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>addMonths(months)</td><td>months: 月数</td><td>なし</td><td>このインスタンスに months を加える。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>addYears(years)</td><td>years: 年数</td><td>なし</td><td>このインスタンスに years を加える。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>addSeconds(seconds)</td><td>seconds: 秒数</td><td>なし</td><td>このインスタンスに seconds を加える。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>addMinutes(minutes)</td><td>minutes: 分数</td><td>なし</td><td>このインスタンスに minutes を加える。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>addHours(hours)</td><td>hours: 時間数</td><td>なし</td><td>このインスタンスに hours を加える。</td><td>DateTime クラスのメソッド</td></tr>
+ <tr><td>timestamp</td><td>なし</td><td>Unix タイム</td><td>このインスタンスのタイムスタンプ (実数)</td><td>DateTime クラスの R/O property</td></tr>
+</table>
+
+<br />
+<!--  MySQL -->
+<h2><a id="MySQL">MySQL クラスとモジュール</a></h2>
+<p>このモジュールには MySQL クラスが含まれる。このクラスは MySQL を簡単に利用するためのメソッドが含まれるが、フルに MySQL を活用するにはこのクラスは非力である。</p>
+<p>このクラスは、Oracle の MySQL コネクタを利用しているので、pip3 を使ってインストールしておく必要がある。</p>
+<p><a href="samples/MySQL.html">MySQL クラスのサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>__init__()</td><td>なし</td><td>N/A</td><td>コンストラクタ</td><td>AppConf.ini のキーを使って接続する。</td></tr>
+ <tr><td>__init__(uid, pwd, db, host='localhost')__</td><td>
+uid: ユーザID<br />
+pwd: パスワード<br />
+db: データベース<br />
+host: ホストのアドレス<br />
+</td><td>N/A</td><td>コンストラクタ</td><td>パラメータを使って接続する。</td></tr>
+ <tr><td>cursor(sql)</td><td>sql: SELECT を含む SQL</td><td>カーソル</td><td>結果 (ResultSet) を返すクエリーを実行してカーソルを得る。</td><td></td></tr>
+ <tr><td>query(sql)</td><td>sql: SELECT を含む SQL</td><td>tuple配列</td><td>結果 (ResultSet) を返すクエリーを実行する。</td><td></td></tr>
+ <tr><td>execute(sql)</td><td>sql: SELECT を含まない SQL</td><td>None</td><td>結果 (ResultSet) を返さないクエリーを実行する。</td><td></td></tr>
+ <tr><td>rows</td><td>なし</td><td>N/A</td><td>クエリー結果の行数</td><td>R/O property</td></tr>
+ <tr><td>cursorClose()</td><td>なし</td><td>N/A</td><td>カーソルを閉じる。</td><td></td></tr>
+</table>
+
+
+<br />
+<!--  AWS S3 -->
+<h2><a id="AWSS3">AWS S3 クラス</a></h2>
+<p>このクラスは Amazon Web Service のストレージ (S3) を利用するためのクラスである。データをリモートに保存し共有したり、バックアップとするような場合に利用する。</p>
+<p>このクラスを利用するためには、アクセスキーを取得し、boto3 モジュールをインストールする必要がある。</p>
+<p><a href="samples/AWSS3.html">AWSS3 クラスのサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>__init__(region)</td><td>region: リージョン</td><td>N/A</td><td>コンストラクタ</td><td></td></tr>
+ <tr><td>query_buckets()</td><td>なし</td><td>バケットのリスト</td><td>バケットのリストを得る。</td><td></td></tr>
+ <tr><td>query_objects(bucket, key)</td><td>bucket: バケット<br />key: キー</td><td>キー key を持つオブジェクト一覧を得る。</td><td></td><td></td></tr>
+ <tr><td>get_file(bucket, key, file)</td><td>
+	bucket: バケット<br />
+	key: 取得するファイルのキー<br />
+	file: 取得したファイルの保存先
+ </td><td>ファイルのサイズ</td><td>bucket, key で指定されたファイルをダウンロードして file に保存する。</td><td></td></tr>
+ <tr><td>put_file(bucket, key, file)</td><td>
+ 	bucket: バケット<br />
+	key: 取得するファイルのキー<br />
+	file: 取得したファイルの保存先
+</td><td>アップロードしたファイルのサイズ</td><td>bucket, key で指定されたオブジェクトにローカルファイル file をアップロードする。</td><td></td></tr>
+ <tr><td>set_public(bucket, key)</td><td>
+ 	bucket: バケット<br />
+	key: 取得するファイルのキー 
+ </td><td>成功したら True、失敗したら False</td><td>bucket, key で指定したオブジェクトを公開する。</td><td></td></tr>
+ <tr><td>set_private(bucket, key)</td><td>
+ 	bucket: バケット<br />
+	key: 取得するファイルのキー 
+ </td><td>成功したら True、失敗したら False</td><td>bucket, key で指定したオブジェクトを非公開にする。</td><td></td></tr>
+ <tr><td>create_bucket(bucket)</td><td>bucket: バケット</td><td>成功したら True、失敗したら False</td><td>バケット bucket を作成する。</td><td></td></tr>
+ <tr><td>create_key(bucket, key)</td><td>
+  	bucket: バケット<br />
+	key: 取得するファイルのキー 
+</td><td>成功したら True、失敗したら False<</td><td>bucket にキー key をさくせする。</td><td></td></tr>
+ <tr><td>move_key(old_bucket, old_key, new_bucket, new_key)</td><td>
+	old_bucket: もとのバケット<br />
+	old_key: もとのキー<br />
+	new_bucket: 新しいバケット<br />
+	new_key: 新しいキー
+ </td><td>成功したら True、失敗したら False</td><td>指定したオブジェクトを移動する。</td><td></td></tr>
+</table>
+<br />
+
+
+<!--  WebPage -->
+<h2><a id="WebPage">WebPage クラス</a></h2>
+<p>このクラスは、Python で CGI を容易に作成するためのクラスである。</p>
+<p><a href="samples/WebPage.html">WebPage クラスのサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>__init__(template="")</td><td>template: HTML ファイル</td><td>N/A</td><td>コンストラクタ</td><td>template を省略した場合は、手動でHTMLを html に設定する。</td></tr>
+ <tr><td>vars[key]</td><td>key: キー</td><td>key に対する値</td><td>埋め込み変数の連想配列。HTML の (*var*) 部分を置換する。</td><td>R/W property</td></tr>
+ <tr><td>params[key]</td><td>key: キー</td><td>key に対する値</td><td>HTTP パラメータの連想配列</td><td>R/O property</td></tr>
+ <tr><td>conf[key]</td><td>key: キー</td><td>key に対する値</td><td>INI ファイル・パラメータの連想配列</td><td>R/O property</td></tr>
+ <tr><td>cookies[key]</td><td>key: キー</td><td>key に対する値</td><td>受信したクッキーの連想配列</td><td>R/W property</td></tr>
+ <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定</td><td>R/W property</td></tr>
+ <tr><td>echo()</td><td>なし</td><td>なし</td><td>HTML を送信する(ヘッダーとクッキーも同時送信)</td><td></td></tr>
+ <tr><td>header(str)</td><td>str:ヘッダー文字列</td><td>なし</td><td>HTTP ヘッダーを送信する。</td><td></td></tr>
+ <tr><td>cookie(key, val)</td><td>key:クッキーのキー<br />
+val:クッキーの値</td><td>なし</td><td>クッキーを送信する。</td><td>実際の動作は self.cookies に追加する。</td></tr>
+ <tr><td>readConf(file)</td><td>file: コンフィグファイル</td><td>なし</td><td>コンフィグファイルを読み込んで conf を初期化する。</td><td></td></tr>
+ <tr><td>tag(name, str)</td><td>name: タグ名<br />
+str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作る。</td><td>static</td></tr>
+ <tr><td>table_row(coll)</td><td>coll: コレクション (行の内容)</td><td>タグ (tr, td)</td><td>iter から HTML テーブル行を作る。</td><td>static</td></tr>
+ <tr><td>escape(str)</td><td>str: 文字列</td><td>HTML エスケープされた文字列</td><td>HTML エスケープされた文字列にする。</td><td>static</td></tr>
+ <tr><td>saveFile(key, dir)</td><td>
+   key: アップロードされたファイルのキー<br />
+   dir: 保存先のフォルダ
+ </td><td>なし</td><td>key で指定されたアップロードされたファイルを file へ保存する。</td><td></td></tr>
+ <tr><td>sendImage(file)</td><td>
+   file: 画像ファイルのパス名
+ </td><td>なし</td><td>HTTPヘッダーと画像ファイルを送信する。</td><td>jpeg, png, gif のみ</td></tr>
+ <tr><td>sendJson(json)</td><td>
+   json: JSON 文字列
+</td><td>なし</td><td>HTTPヘッダー(application/json)とJSON 形式文字列を送信する。</td><td></td></tr>
+ <tr><td>sendText(str)</td><td>
+   str: プレーンテキスト
+</td><td>なし</td><td>HTTPヘッダー(text/plain)と文字列を送信する。</td><td></td></tr>
+ <tr><td>redirect(url, wait=1)</td><td>
+   url: URL<br />wait: 待ち時間（秒）
+</td><td>なし</td><td>指定した URL へジャンプする。</td><td></td></tr>
+ </table>
+<br />
+
+<!--  CursesApp -->
+<h2><a id="CursesApp">CursesApp クラス</a></h2>
+<p>CursesApp クラスは、curses アプリを構築するための基本クラスである。</p>
+<p><a href="samples/CursesApp.html">CursesApp クラスのサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>__init__()</td>
+<td>なし</td><td>なし</td><td>コンストラクタ</td><td></td></tr>
+ <tr><td>end_app()</td>
+<td>なし</td><td>なし</td><td>画面の状態を元にもどす。</td><td>コンストラクタ内で使用される。明示的に呼び出す必要はない。</td></tr>
+ <tr><td>main()</td>
+<td>なし</td><td>なし</td><td>キー入力待ちループ</td><td>コンストラクタ内で使用される。明示的に呼び出す必要はない。</td></tr>
+ <tr><td>handler(key)</td>
+<td>key: キーコード(getkey()関数の戻り値)</td><td>なし</td><td>キー入力ハンドラだが、デフォルトでは何もしない</td><td>オーバーライドが必要。</td></tr>
+ <tr><td>init_app()</td>
+<td>なし</td><td>なし</td><td>キー入力待ちに入る前に呼び出され、初期表示などを行う。</td><td>オーバーライドが必要</td></tr>
+ <tr><td>redraw()</td>
+<td>なし</td><td>なし</td><td>画面の再描画が必要なとき呼び出される。デフォルトでは画面をクリアして init_app() を呼び出す。</td><td>オーバーライドが必要</td></tr>
+ <tr><td>init_colors()</td><td>なし</td><td>なし</td><td>CursesApp 標準色を定義する。</td><td>標準以外の色を使う場合は、オーバーライドする。</td></tr>
+ <tr><td>readConf()</td><td>なし</td><td>なし</td><td>構成ファイル(AppConf.ini)を読み込んで self.conf を初期化する。</td><td>AppConf.ini がない場合は何もしない。</td></tr>
+ <tr><td>titlebar(text, align=0, color=-1)</td><td>
+text: タイトル<br />
+align: タイトル文字列の表示位置 (0=中央,1=左)<br />
+color: カラーペア番号
+</td><td>なし</td><td>タイトルバーを表示する。</td><td></td></tr>
+ <tr><td>statusbar(text, color=-1)</td><td>
+text: 表示文字列。<br />
+color: カラーペア番号
+</td><td>なし</td><td>ステータスバーを表示する。</td><td>文字列を変更する場合もこのメソッドを使用する。</td></tr>
+ <tr><td>print(str, x = -1, y = -1, color = -1, attr = 0)</td>
+<td>
+str: 表示文字列<br />
+x: 横方向の表示座標<br />
+y: たて方向の表示座標<br />
+color: カラーペア番号。デフォルトは標準色。<br />
+attr: 表示属性。
+</td><td>なし</td><td>文字列を表示する。</td><td></td></tr>
+ <tr><td>printLines(text, x, y, color=1, attr=0)</td>
+<td>
+text: 表示文字列。<br />
+x: 横方向の表示座標<br />
+y: たて方向の表示座標<br />
+color: カラーペア番号。デフォルトは標準色。<br />
+attr: 表示属性。
+</td><td>なし</td><td>改行を含む文字列を表示する。</td><td></td></tr>
+ <tr><td>putchar(ch, x = -1, y = -1)</td><td>
+ch: 文字<br />
+x: 横方向の表示座標<br />
+y: たて方向の表示座標
+</td><td>なし</td><td>文字を表示する。</td><td></td></tr>
+ <tr><td>putch(ch)</td><td>ch: 文字</td><td>なし</td><td>現在の位置に文字を表示する。</td><td></td></tr>
+ <tr><td>setCursorPosition(x, y)</td><td>
+x: 横方向の表示座標<br />
+y: たて方向の表示座標</td><td>なし</td><td>カーソルの位置を設定する。</td><td></td></tr>
+ <tr><td>getCursorPosition()</td><td>なし</td><td>カーソルの座標をタプルとして返す。</td><td>カーソルの位置を取得する。</td><td></td></tr>
+ <tr><td>hideCursor()</td><td>なし</td><td>なし</td><td>カーソルを非表示にする。</td><td></td></tr>
+ <tr><td>showCursor()</td><td>なし</td><td>なし</td><td>カーソルを表示する。</td><td></td></tr>
+ <tr><td>setColor(n, foreground, background)</td><td>
+n: カラーペア番号<br />
+foreground: 前景色<br />
+background: 背景色
+</td><td>なし</td><td>カラーペア番号を設定する。</td><td></td></tr>
+ <tr><td>makeColor(n, r, g, b)</td><td>
+n: カラーペア番号<br />
+r, g, b: RGB
+</td><td>なし</td><td>新しい色を作成する。</td><td></td></tr>
+ <tr><td>Columns</td><td></td><td></td><td>ウィンドウの幅(カラム数)</td><td>プロパティ</td></tr>
+ <tr><td>Rows</td><td></td><td></td><td>ウィンドウの高さ(行数)</td><td>プロパティ</td></tr>
+ <tr><td>MaxColorNumber</td><td></td><td></td><td>最大のカラーペア番号。通常 256 となる。</td><td>プロパティ</td></tr>
+ <tr><td>clear(client=False)</td><td>client: True の場合、タイトルバーとステータスバーを除く領域</td><td>なし</td><td>ウィンドウをクリアする。</td><td></td></tr>
+ <tr><td>setAttr(attr)</td><td>attr: 表示属性</td><td>なし</td><td>表示属性を設定する。</td><td></td></tr>
+ <tr><td>setAttrOff(attr)</td><td>attr: 表示属性</td><td>なし</td><td>指定した表示属性をオフにする。</td><td></td></tr>
+ <tr><td>setAttrOn(attr)</td><td>attr: 表示属性</td><td>なし</td><td>指定した表示属性をオンにする。</td><td></td></tr>
+ <tr><td>helpWindow(text, title="")</td><td>
+text: ヘルプの内容。改行を含んでもよい。<br />
+title: ヘルプのタイトル
+</td><td></td><td>ヘルプウィンドウを開く。</td><td></td></tr>
+ <tr><td>createForm(name, data)</td><td>
+name: フォームの名前。ユニークであること。<br />
+data: フォームのウィジェットの定義(JSON)
+</td><td>なし</td><td>フォームを作成する。</td><td></td></tr>
+ <tr><td>selectForm(name)</td><td>name: フォーム名</td><td>なし</td><td>表示するフォームを選ぶ。</td><td></td></tr>
+ <tr><td>drawWidgets(name)</td><td>name: ウィジェットの指定</td><td>なし</td><td>name で指定したウィジェットを描画する。</td><td></td></tr>
+ <tr><td>messageBox(message, type=0)</td><td>
+message: メッセージ<br />
+type: 0 なら OK ボタンのみ<br />
+　1 なら YES/NO ボタン<br />
+　2 なら OK/CANCEL ボタン
+</td><td></td><td>メッセージボックスを開く。</td><td></td></tr>
+ <tr><td>inputBox(message)</td><td>message: メッセージ</td><td>なし</td><td>入力ボックスを開く。</td><td></td></tr>
+ <tr><td>toast(message, seconds=2, color=2)</td><td>
+message: メッセージ<br />
+seconds: 表示秒数<br />
+color: カラーペア番号
+</td><td></td><td>指定した秒数だけメッセージを表示する。</td><td></td></tr>
+ <tr><td>selectWidget()</td><td>なし</td><td>タブインデックス</td><td>次のウィジェットのタブインデックスを得る。</td><td></td></tr>
+ <tr><td>setCursorToWidget(widget)</td><td>ウィジェット</td><td>なし</td><td>指定したウィジェットへカーソルを移動する。</td><td></td></tr>
+ <tr><td>enterText(widget)</td><td>widget: ウィジェット</td><td>入力文字列</td><td>ウィジェットから文字列を入力する。</td><td>テキストボックスのみ有効</td></tr>
+ <tr><td>changeChecked(widget, form)</td><td>
+widget: ウィジェット<br />
+form: フォーム
+</td><td></td><td>指定したフォームのウィジェットのチェック状態を変更する。</td><td>チェックボックス、ラジオボタンのみ有効</td></tr>
+ <tr><td>selectUp(widget)</td><td>widget: ウィジェット</td><td>なし</td><td>指定したウィジェットで上向き矢印キーを押したときの動作</td><td>セレクタのみ有効</td></tr>
+ <tr><td>selectDown(widget)</td><td>widget: ウィジェット</td><td>なし</td>指定したウィジェットで下向き矢印キーを押したときの動作<td></td><td>セレクタのみ有効</td></tr>
+ <tr><td>buttonPressed(widget)</td><td>widget: ウィジェット</td><td>なし</td><td>Enterキーを押したときの動作</td><td>ボタンのみ有効</td></tr>
+ <tr><td>alert(message)</td><td>message: メッセージ</td><td>なし</td><td>ステータスバーにメッセージを表示して画面をフラッシュする。</td><td></td></tr>
+ <tr><td>left_justify(text, width)</td><td>
+text: 文字列(全角を含む)<br />
+width: 幅
+</td><td>左寄せ文字列</td><td>文字列を左寄せする。</td><td>スタティックメソッド</td></tr>
+ <tr><td>center_justify(text, width)</td><td>
+text: 文字列(全角を含む)<br />
+width: 幅
+</td><td>中寄せ文字列</td><td>文字列を中寄せする。</td><td>スタティックメソッド</td></tr>
+</table>
+<br />
+<h4>定数定義</h4>
+<table>
+ <tr><th>定数</th><th>curses の定義</th><th>意味</th></tr>
+ <tr><td>UNDERLINE</td><td>curses.A_UNDERLINE</td><td>表示属性・下線</td></tr>
+ <tr><td>BLINK</td><td>curses.A_BLINK</td><td>表示属性・点滅</td></tr>
+ <tr><td>BOLD</td><td>curses.A_BOLD</td><td>表示属性・高輝度</td></tr>
+ <tr><td>REVERSE</td><td>curses.A_REVERSE</td><td>表示属性・反転</td></tr>
+ <tr><td>DIM</td><td>curses.A_DIM</td><td>表示属性・低輝度</td></tr>
+ <tr><td>NORMAL</td><td>curses.A_NORMAL</td><td>表示属性・普通</td></tr>
+ <tr><td>TB_ALIGN_LEFT = 0</td><td></td><td>タイトルバーのテキスト表示位置・左</td></tr>
+ <tr><td>TB_ALIGN_CENTER = 1</td><td></td><td>タイトルバーのテキスト表示位置・中央</td></tr>
+ <tr><td>MB_OKONLY = 0</td><td></td><td>メッセージボックス・OKボタンのみ</td></tr>
+ <tr><td>MB_YESNO = 1</td><td></td><td>メッセージボックス・Yes / No ボタン</td></tr>
+ <tr><td>MB_OKCANCEL = 2</td><td></td><td>メッセージボックス・OK / Cancel ボタン</td></tr>
+ <tr><td>BTN_OK = 0</td><td></td><td>OK ボタンの値</td></tr>
+ <tr><td>BTN_CANCEL = 1</td><td></td><td>Cancel ボタンの値</td></tr>
+ <tr><td>LF  = '\x0a'</td><td></td><td>文字コード LF</td></tr>
+ <tr><td>TAB = '\x09'</td><td></td><td>文字コード TAB</td></tr>
+ <tr><td>ESC = '\x1b'</td><td></td><td>文字コード ESC</td></tr>
+</table>
+<br />
+
+<!--  HTApp -->
+<h2><a id="HTApp">HTApp クラス</a></h2>
+<p>このクラスは http.server から派生したクラスであり、HTTP サーバ (独自アプリケーションサーバ) を容易に構築するための機能を有する。</p>
+<p><a href="samples/HTApp.html">HTApp クラスのサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>readConf(filename="AppConf.ini")</td><td>filename: 構成ファイルのパス名</td><td>連想配列</td><td>構成ファイルを読んで連想配列として返す。</td><td>モジュール関数</td></tr>
+ <tr><td>getContent(path, post=False)</td><td>
+path: リクエストのパス<br />
+post: POST メソッドかどうか
+</td><td>レスポンス(HTML, JSON, TEXT)</td><td>リクエストに対するレスポンス(文字列)を返す。</td><td>モジュール関数</td></tr>
+ <tr><td>tag(tagname, text, attr="")</td><td>
+tagname: タグ<br />
+text: タグ内部テキスト<br />
+attr: 完全な属性文字列
+</td><td>完全なタグ</td><td>HTML要素を作成する。</td><td>モジュール関数</td></tr>
+ <tr><td>embed(html)</td><td>html: 変数の埋め込み先のHTML</td><td>完全なHTML</td><td>連想配列 vars をHTMLに埋め込む。</td><td>モジュール関数</td></tr>
+ <tr><td>do_GET()</td><td>なし</td><td>なし</td><td>GET メソッドに対して標準動作を行う。</td><td>必要ならオーバーライドする。</td></tr>
+ <tr><td>do_POST()</td><td>なし</td><td>なし</td><td>GET メソッドに対して限定的な動作を行う。</td><td>POST メソッドではパラメータを受け取れないので、POST メソッドは使用しない。</td></tr>
+ <tr><td>responseHtml(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>テキスト(HTML, CSS, JAVASCRIPT, SVG)ファイルを応答として返す。</td><td>オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
+ <tr><td>responseImage(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>画像ファイルを応答として返す。</td><td>オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
+</table>
+<br />
+
+
+<!--  TkApp -->
+<h2><a id="TkApp">TkApp クラス</a></h2>
+<p>このクラスは Tkinter を利用して GUI アプリを容易に構築するためのクラスである。</p>
+<p><a href="samples/TkApp.html">TkApp クラスのサンプル</a></p>
+<table>
+ <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
+ <tr><td>__init__(master, winprop, filename="")</td><td>
+master: 通常は root を指定する。<br />
+winprop: ウィンドウの属性<br />
+filename: ウィジェット定義ファイル(JSONファイル)
+</td><td>なし</td><td>コンストラクタ</td><td></td></tr>
+ <tr><td>setMasterProperties(title, x, y, width, height, fixedborder=False)</td><td>
+title: ウィンドウタイトル<br />
+x: ウィンドウの X 座標<br />
+y: ウィンドウの Y 座標<br />
+width: ウィンドウの幅<br />
+height: ウィンドウの高さ<br />
+fixedborder: False ならウィンドウサイズを変更可能、True なら変更不可。
+</td><td>なし</td><td>マスターウィンドウの属性を設定する。</td><td>内部で使用</td></tr>
+ <tr><td>createWidgets(filename)</td><td>filename: ウィジェット定義 JSON ファイル</td><td>なし</td><td></td><td>JSON ファイルがない場合は、オーバーライドする。</td></tr>
+ <tr><td>loadWidgets(filename)</td><td>filename: ウィジェット定義 JSON ファイル</td><td>なし</td><td>JSONファイルからウィジェットをロードする</td><td>内部で使用</td></tr>
+ <tr><td>createWidgetItems(items, parent)</td><td>
+items: ウィジェットのリスト<br />
+parent: 親のフレーム
+</td><td></td><td>個別のウィジェットオブジェクトを作成する。</td><td>内部で使用</td></tr>
+ <tr><td>setCommands()</td><td>なし</td><td>なし</td><td>コマンドにイベントハンドラをバインドする。</td><td></td></tr>
+ <tr><td>isWidgetKey(key)</td><td>key: ウィジェットの属性キー</td><td>なし</td><td>キーがウィジェットのものか判別する。</td><td>クラスメソッド</td></tr>
+ <tr><td>isTkAppKey(key)</td><td>key: ウィジェットの属性キー</td><td>なし</td><td>キーが TkApp 独自のものか判別する。</td><td>クラスメソッド</td></tr>
+ <tr><td>isLayoutKey(key, layout="pack")</td><td>
+key: ウィジェットの属性キー<br />
+layout: レイアウトの種別 ('pack', 'grid', 'place')
+</td><td></td><td>キーがレイアウトのものか確認する。</td><td>クラスメソッド</td></tr>
+ <tr><td>getWindowSize(win)</td><td>なし</td><td>サイズのタプル</td><td>ウィンドウサイズを得る。</td><td></td></tr>
+ <tr><td>getScreenSize()</td><td>なし</td><td>サイズのタプル</td><td>スクリーンサイズを得る。</td><td></td></tr>
+ <tr><td>getWidget(name)</td><td>name: ウィジェットの名前</td><td>ウィジェットオブジェクト</td><td>name からウィジェットオブジェクトを得る。</td><td></td></tr>
+ <tr><td>getWidgetName(idx)</td><td>idx: ウィジェットの番号</td><td>ウィジェットの名前</td><td>指定した番号のウィジェットの名前を得る。</td><td></td></tr>
+ <tr><td>messageBox(message, mbtype="info")</td><td>
+message: メッセージ<br />
+mbtype: メッセージボックスの種類
+</td><td></td><td>メッセージボックスを開く。</td><td></td></tr>
+ <tr><td>fileDailog(initdir)</td><td>initdir: 初期ディレクトリ</td><td>選択されたファイルのパス名</td><td>ファイル選択ダイアログを開く。</td><td></td></tr>
+ <tr><td>createWindow(parent, title, size, location=(0, 0)</td><td>
+parent: 親のウィンドウ(=自ウィンドウ)<br />
+title: ウィンドウタイトル<br />
+size: ウィンドウサイズ(タプル)<br />
+location: 表示位置(タプル)
+</td><td>なし</td><td>子ウィンドウを作成する。</td><td></td></tr>
+</table>
+<br />
+
+</article>
+
+<footer>
+<p style="text-align:center;"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<footer>
+</body>
+</html>

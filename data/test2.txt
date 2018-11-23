@@ -1,0 +1,2 @@
+-- writeAllText --
+ABC 000

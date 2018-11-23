@@ -1,0 +1,19 @@
+name	label1
+type	label
+text	Label1
+width	40
+height	10
+fg	#004040
+bg	#ff8080
+anchor	w
+font	("",16,"bold")
+justify	left
+layout	pack
+anchor	w
+expand	
+fill	
+side	left
+padx	5
+pady	5
+ipadx	4
+ipady	4

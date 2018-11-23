@@ -1,0 +1,9 @@
+-- writeAllText(append) --
+ABC 012
+LOL
+ABC 012
+LOL
+ABC 012
+LOL
+ABC 012
+LOL

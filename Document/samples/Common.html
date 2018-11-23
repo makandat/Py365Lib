@@ -1,0 +1,205 @@
+<!doctype>
+<html lang="ja-jp">
+<head>
+<meta charset="utf-8" />
+<title>Py365Lib モジュール サンプル</title>
+<link rel="stylesheet" href="/css/default.css" />
+<style>
+div.i2 {
+  margin-left:7%;
+}
+
+pre.code {
+  margin-left:5%;
+  margin-right:5%;
+  border: solid thin silver;
+  box-shadow: 4px 4px 6px silver;
+  padding:4px;
+}
+</style>
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+ <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+<h1>Common モジュール</h1>
+<p style="text-align:center;"><a href="../index.html">もどる</a></p>
+<div class="i2">
+
+<h3>サンプル (test/testPy365Lib.py)</h3>
+<p>コマンドライン引数をテスト番号として Common.py のモジュール関数の動作を確認する。</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+def callback() :
+  print("callback")
+
+# args() 関数、stop() 関数のテスト
+if Common.count_args() == 0 :
+  Common.stop(9, "コマンド引数がありません。")
+else :
+  for s in Common.args() :
+    Common.esc_print(Common.ESC_FG_GREEN, s)
+
+testNo = int(Common.args()[0])
+
+if testNo == 1 :
+  # ログのテスト
+  Common.init_logger()
+  print(Common.LOGFILE)
+  Common.log("ログのテスト")
+  Common.error("ログのエラー")
+
+  # exec(cmd), shell(cmd)
+  rc = Common.exec(['tail', '-n', '4', Common.LOGFILE])
+  print(rc)
+  print(Common.shell(['ls', '/']))
+
+  # isset(v)
+  ooo = None
+  print(Common.isset(ooo))
+  print(Common.isset(rc))
+elif testNo == 2 :
+  # is_str(x) etc.
+  print(Common.is_str(0))
+  print(Common.is_str('0'))
+  print(Common.is_int('0'))
+  print(Common.is_int(0))
+  print(Common.is_float('1.5'))
+  print(Common.is_float(1.5))
+  print(Common.is_bool(0))
+  print(Common.is_bool(False))
+elif testNo == 3 :
+  # syslog, setTimeout, get_env
+  Common.syslog_out("setTimeout test")
+  Common.set_timeout(0.5, callback)
+  Common.syslog_out("OK")
+  lang = Common.get_env("LANG")
+  Common.syslog_out(lang)
+  print("LANG=" + lang)
+  Common.sleep(2)
+  print("sudo cat /var/log/syslog")
+else :
+  print("不正な番号です。")
+
+print('Done.')
+</code></pre>
+<br />
+
+
+<h3>サンプル (test/Py365Lib/A01.py)</h3>
+<p>コマンドライン引数１をファイルのパス名として、そのファイルの内容を表示する。</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "パラメータを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+fileName = Common.args()[0]
+print(fileName)
+
+try :
+  # ファイルの内容を表示する。
+  content = FileSystem.readAllText(fileName)
+  print(content) 
+except Exception as e :
+  # 例外発生時の処理
+  Common.esc_print(Common.ESC_FG_RED, e.args)
+  err = 1
+
+
+if err == 0 :
+  print("正常終了。")
+else :
+  print("エラーを検出しました。エラーコード: {0:d}".format(err))
+
+# 終了コードを err とする。 (0 はエラーなし)
+exit(err)
+</code></pre>
+<br />
+
+<h3>サンプル (test/Py365Lib/A02.py)</h3>
+<p>ログを取得し、最後にログファイルの内容を表示する。※ syslog にログを出力する syslog_out 関数もある。</p>
+<pre class="code"><code>#!/usr/bin/env python3
+import sys
+from Py365Lib import *
+
+# ログファイルの名前を決める。
+logFile = FileSystem.changeExt(sys.argv[0], ".log")
+print("ログファイル名：" + logFile)
+
+# ロガーを初期化する。
+Common.init_logger(logFile)
+
+# ログにメッセージを出力する。
+Common.log("テスト用")
+Common.log("テスト テスト テスト")
+Common.log("test Test TEST")
+
+# ログにエラーメッセージを出力する。
+Common.error("テスト：エラーメッセージ")
+
+print("ログ出力終わり。内容は下記の通り。")
+
+# ログファイルの内容を表示する。
+log_content = FileSystem.readAllText(logFile)
+print(log_content)
+</code></pre>
+<br />
+
+
+<h3>サンプル (test/Py365Lib/A03.py)</h3>
+<p>exec, shell を使ってコマンドを実行する。shell の結果はバイト列で返されるので UTF-8 に変換して表示している。</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドを実行して終了コードを確認する。(パラメータは配列であることに注意)
+cmd = ["mkdir", "./testA03"]
+rc = Common.exec(cmd)
+print("戻り値 {0:d}".format(rc))
+cmd[0] = "rmdir"
+rc = Common.exec(cmd)
+print("戻り値 {0:d}".format(rc))
+
+# コマンドを実行してコマンド出力文字列を表示する。(パラメータは配列であることに注意)
+cmd = ["ls", "-l", "/home/user/bin"]
+b = Common.shell(cmd)
+# 結果はバイト列で返されるので UTF-8 に変換する。
+s = Common.from_bytes(b)
+print(s)
+</code></pre>
+<br />
+
+<h3>サンプル (test/Py365Lib/A04.py)</h3>
+<p>Common モジュールで定義されているエスケープシーケンスを使うと、表示色を変えたり表示属性を変えたりすることができる。もとに戻すときは ESC_NORMAL を使用する。</p>
+<pre class="code"><code>#!/usr/bin/env python3
+import sys
+from Py365Lib import *
+
+# esc_print 関数を使うと簡単に表示属性を変更できる。
+Common.esc_print(Common.ESC_FG_GREEN, sys.argv[0])
+Common.esc_print(Common.ESC_UNDERLINE, sys.argv[0])
+
+# 直接、エスケープシーケンスを使うと、属性を組み合わせて使える。
+print(Common.ESC_FG_CYAN + Common.ESC_BG_BLUE + Common.ESC_BLINK + "Complex Escape Sequence" + Common.ESC_NORMAL)
+
+# ESC_NOMRAL でもとに戻ったか確認
+print("Reset")
+</code></pre>
+<br />
+
+
+</div>
+<p>&nbsp;</p>
+<p style="text-align:center;"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

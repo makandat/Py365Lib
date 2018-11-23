@@ -1,0 +1,286 @@
+<!doctype>
+<html lang="ja-jp">
+<head>
+<meta charset="utf-8" />
+<title>FileSystem モジュール サンプル</title>
+<link rel="stylesheet" href="/css/default.css" />
+<style>
+div.i2 {
+  margin-left:7%;
+}
+
+pre.code {
+  margin-left:5%;
+  margin-right:5%;
+  border: solid thin silver;
+  box-shadow: 4px 4px 6px silver;
+  padding:4px;
+}
+</style>
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+ <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+<h1>FileSystem モジュール サンプル</h1>
+<p style="text-align:center;"><a href="../index.html">もどる</a></p>
+<div class="i2">
+
+<h3>サンプル (test/testFileSystem.py)</h3>
+<p>FileSystem モジュールの関数のテストプログラム</p>
+<pre class="code"><code>#!/usr/bin/python3
+# -*- coding=utf-8 -*-
+#  テストプログラム FileSystem
+import sys
+from Py365Lib import Common, FileSystem as fsys
+
+def method(s) :
+    print(s)
+
+# テスト番号取得
+if Common.count_args() == 0 :
+    Common.stop(9, "テスト番号を指定してください。") 
+else :
+    testNo = int(Common.args()[0])
+
+# readAllText(file), writeAllText(file, str, append)
+if testNo == 1 :
+    # readAllText(file)
+    FILE1 = "./test1.txt"
+    Common.exec(["./fsysTest.sh", "1"])
+    s = fsys.readAllText(FILE1)
+    print(s)
+    # writeAllText()
+    FILE2 = "./test2.txt"
+    FILE3 = "./test3.txt"
+    fsys.writeAllText(FILE2, "-- writeAllText --\nABC 000\n")
+    fsys.writeAllText(FILE3, "-- writeAllText(append) --\n", append=False)
+    fsys.writeAllText(FILE3, "ABC 012\nLOL\n", append=True)
+    Common.exec(["./fsysTest.sh", "2"])
+# readAllLines(file, method)
+elif testNo == 2 :
+    FILE4 = "./test4.txt"
+    Common.exec(["./fsysTest.sh", "3"])
+    fsys.readAllLines(FILE4, method)
+# readBinary(file), writeBinary(file, data), readIni(file)
+elif testNo == 3 :
+    # readBinary
+    Common.exec(["./fsysTest.sh", "4"])
+    data = fsys.readBinary("./binary1.bin")
+    print(data)
+    # writeBinary
+    fsys.writeBinary("./binary2.bin", b'\x08\x09\x0a')
+    Common.exec(["./fsysTest.sh", "5"])
+    # readIni
+    m = fsys.readIni("./AppConf.ini")
+    print(m)
+#  copy, move, unlink, exists
+elif testNo == 4 :
+    DEST = "./AppConf.ini.bak"
+    try :
+        fsys.unlink("config.ini")
+        print("unlink config.ini")
+    except FileNotFoundError :
+        pass
+    fsys.copy("./AppConf.ini", DEST)
+    if fsys.exists(DEST) :
+        print(DEST + " exists.")
+    fsys.move(DEST, "./config.ini")
+# isDirectory, isFile, isLink
+elif testNo == 5 :
+    assert fsys.isDirectory("/"), "testNo=5, subNo=1"
+    assert fsys.isDirectory("./FileSystem.py") == False, "testNo=5, subNo=2"
+    assert fsys.isFile("../FileSystem.py"), "testNo=5, subNo=3"
+    assert fsys.isFile(".") == False, "testNo=5, subNo=4"
+    assert fsys.isLink("./FileSystem.py") == False, "testNo=5, subNo=5"
+    assert fsys.isLink("/usr/bin/lz"), "testNo=5, subNo=6"
+    print("Test #5 OK")
+# getAttr, getOwner, getGroup
+elif testNo == 6 :
+    a = fsys.getAttr("../FileSystem.py")
+    print("%o" % a)
+    print(fsys.getOwner("../FileSystem.py"))
+    print(fsys.getGroup("../FileSystem.py"))
+# chdir, mkdir, rmdir, pwd, getCurrentDirectory
+elif testNo == 7 :
+    cd = fsys.getCurrentDirectory()
+    fsys.chdir("..")
+    print(fsys.getCurrentDirectory())
+    fsys.chdir(cd)
+    print(fsys.getCurrentDirectory())
+    fsys.mkdir("./xxx")
+    if not fsys.isDirectory("./xxx") :
+        print("mkdir error.")
+        exit(9)
+    fsys.rmdir("./xxx")
+    if fsys.isDirectory("./xxx") :
+        print("rmdir error.")
+        exit(9)
+    print("Test #7 OK")
+else :
+    print("不正なテスト番号です。")
+</code></pre>
+<br />
+
+<h3>サンプル (test/Py365Lib/F01.py)</h3>
+<p>ファイルの属性を取得するサンプル。</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "ファイルを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+fileName = Common.args()[0]
+Common.esc_print(Common.ESC_FG_CYAN, fileName)
+
+# ファイルが存在するか確認
+if not FileSystem.exists(fileName) :
+  Common.stop(8, "ファイルが存在しません。")
+    
+# ファイルの属性を得る。
+b = FileSystem.isFile(fileName)
+print("ファイルかどうか： {0}".format(b))
+b = FileSystem.isDirectory(fileName)
+print("ディレクトリかどうか： {0}".format(b))
+b = FileSystem.isLink(fileName)
+print("リンクかどうか： {0}".format(b))
+mode = FileSystem.getAttr(fileName)
+print("ファイルモード： {0:09o}".format(mode))
+owner = FileSystem.getOwner(fileName)
+print("所有者： {0}".format(owner))
+group = FileSystem.getGroup(fileName)
+print("グループ： {0}".format(group))
+
+# 終了コードを設定
+exit(err)
+</code></pre>
+<br />
+
+
+<h3>サンプル3 (test/Py365Lib/F02.py)</h3>
+<p>指定したディレクトリの内容を取得するサンプル</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "ディレクトリを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+dirName = Common.args()[0]
+Common.esc_print(Common.ESC_FG_CYAN, dirName)
+
+# ファイルが存在するか確認
+if not FileSystem.exists(dirName) :
+  Common.stop(8, "ディレクトリが存在しません。")
+    
+# ディレクトリ内のファイル一覧を取得する。
+Common.esc_print(Common.ESC_FG_GREEN, "ファイル一覧")
+files = FileSystem.listFiles(dirName)
+for fn in files :
+    print(fn)
+
+# ディレクトリ内のサブディレクトリ一覧を取得する。
+Common.esc_print(Common.ESC_FG_YELLOW, "ディレクトリ一覧")
+dirs = FileSystem.listDirectories(dirName)
+for d in dirs :
+    print(d)
+    
+# 終了コードを設定
+exit(err)
+</code></pre>
+<br />
+
+
+
+<h3>サンプル4 (test/Py365Lib/F03.py)</h3>
+<p>パスとパス名の操作を行うサンプル</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+path = "/home/user/bin/rmcr.pl"
+
+# ディレクトリ名を得る。
+print(FileSystem.getDirectoryName(path))
+# ファイル名を得る。
+print(FileSystem.getFileName(path))
+# 拡張子を得る。（先頭はドット）
+print(FileSystem.getExtension(path))
+
+# 現在の位置を得る。
+print(FileSystem.getCurrentDirectory())
+# 親のディレクトリを得る。
+print(FileSystem.getParentDirectory("/home/user/bin"))
+# 相対パスから絶対パスにを得る。
+print(FileSystem.getAbsolutePath("../.."))
+
+# 一時ファイル名を得る。
+print(FileSystem.getTempFile())
+</code></pre>
+<br />
+
+
+
+<h3>サンプル5 (test/Py365Lib/F04.py)</h3>
+<p>ファイルを行ごとに処理する readAllLines 関数の使用例</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+buff = ""
+
+# アルファベットの小文字をすべて大文字にする。
+def toUpper(line) :
+  global buff
+  buff += Text.toupper(line)
+  buff += '\x0a'  # LF
+  return
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "ファイルを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+fileName = Common.args()[0]
+
+try :
+  # ファイルの内容を表示する。
+  FileSystem.readAllLines(fileName, toUpper)
+  print(buff)
+except Exception as e :
+  # 例外発生時の処理
+  Common.esc_print(Common.ESC_FG_RED, e.args)
+  err = 1
+
+if err == 0 :
+  print("正常終了。")
+else :
+  print("エラーを検出しました。エラーコード: {0:d}".format(err))
+
+# 終了コードを err とする。 (0 はエラーなし)
+exit(err)
+</code></pre>
+<br />
+
+
+
+
+</div>
+<p>&nbsp;</p>
+<p style="text-align:center;"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

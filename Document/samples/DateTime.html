@@ -1,0 +1,88 @@
+<!doctype>
+<html lang="ja-jp">
+<head>
+<meta charset="utf-8" />
+<title>DateTime クラス サンプル</title>
+<link rel="stylesheet" href="/css/default.css" />
+<style>
+div.i2 {
+  margin-left:7%;
+}
+
+pre.code {
+  margin-left:5%;
+  margin-right:5%;
+  border: solid thin silver;
+  box-shadow: 4px 4px 6px silver;
+  padding:4px;
+}
+</style>
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+ <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+<h1>DateTime クラス サンプル</h1>
+<p style="text-align:center;"><a href="../index.html">もどる</a></p>
+<div class="i2">
+
+<h3>サンプル１</h3>
+<pre class="code"><code>#!/usr/bin/python3
+# -*- code=utf-8 -*-
+#  テストプログラム DateTime
+import sys
+from Py365Lib import Common, DateTime as dt
+import time
+
+# テスト番号取得
+if Common.count_args() == 0 :
+    Common.stop(9, "テスト番号を指定してください。")
+else :
+    testNo = int(Common.args()[0])
+    Common.esc_print(Common.ESC_FG_GREEN, testNo)
+
+if testNo == 1 :
+    ti = dt.DateTime("2018-09-15 12:00:00")
+    print(ti.toString())
+    now = dt.now()
+    print(now)
+    utc = dt.utc()
+    print(utc)
+elif testNo == 2 :
+    ti = dt.DateTime("2018-09-15 12:00:00")
+    assert ti.year == 2018, "testNo2 year"
+    assert ti.month == 9, "testNo2 month"
+    assert ti.day == 15, "testNo2 day"
+    assert ti.hour == 12, "testNo2 hour"
+    assert ti.minute == 0, "testNo2 minute"
+    assert ti.second == 0, "testNo2 second"
+    assert ti.dayOfweek == 5, "testNo2 dayOfweek"
+    print("Test #2 OK")
+elif testNo == 3 :
+    ti = dt.DateTime("2018-09-15 12:00:00")
+    ti.addDays(2)
+    print(ti.toString())
+    ti.addWeeks(1)
+    print(ti.toString())
+    ti.addHours(3)
+    print(ti.toString())
+    ti.addMinutes(30)
+    print(ti.toString())
+    ti.addSeconds(30)
+    print(ti.toString())
+elif testNo == 4 :
+    t1 = dt.DateTime("2018-09-15 12:00:00")
+    print(t1.timestamp)
+else :
+    print("不正なテスト番号です。")
+</code></pre>
+
+</div>
+<p>&nbsp;</p>
+<p style="text-align:center;"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

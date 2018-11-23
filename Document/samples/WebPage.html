@@ -1,0 +1,531 @@
+<!doctype>
+<html lang="ja-jp">
+<head>
+<meta charset="utf-8" />
+<title>WebPage クラス サンプル</title>
+<link rel="stylesheet" href="/css/default.css" />
+<style>
+div.i2 {
+  margin-left:7%;
+}
+
+pre.code {
+  margin-left:5%;
+  margin-right:5%;
+  border: solid thin silver;
+  box-shadow: 4px 4px 6px silver;
+  padding:4px;
+}
+</style>
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+ <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+<h1>WebPage クラス サンプル</h1>
+<p style="text-align:center;"><a href="../index.html">もどる</a></p>
+<div class="i2">
+<h3>サンプル１</h3>
+<p>フォームとクッキーの使用例</p>
+<pre class="code"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト
+#   フォームとクッキー
+import WebPage as page
+import FileSystem as fsys
+# import os
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'text1' in self.params :
+        self.vars['message'] = self.params['text1'].value + "<br />\n"
+    else :
+        self.vars['message'] = fsys.FileSystem.getCurrentDirectory() + "<br />\n"  # os.getcwd()
+    self.cookie('key1', 'value1')
+    if 'key1' in self.cookies :
+        self.vars['message'] += (" cookie key1=" + self.cookies['key1'])
+
+# メイン開始位置
+wp = TestPage('templates/template.html')
+wp.echo()</code></pre>
+<br />
+<h4>templates/template.html</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用&lt;/title>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST">
+&lt;div style="float:left">
+&lt;label for="text1">text1&lt;/label>&lt;input type="text" name="text1" id="text1" />
+&lt;/div>
+&lt;div>&lt;input type="submit" value="submit" />
+&lt;/form>
+&lt;br style="clear:both;" />
+&lt;p style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html></code></pre>
+</div>
+<br />
+
+
+<div class="i2">
+<h3>サンプル２</h3>
+<p>MySQL モジュールを利用してテーブルにクエリーを行って、取得した内容を表として表示する。</p>
+<pre class="code"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト (1)
+#   MySQL を利用
+import WebPage as page
+import FileSystem as fsys
+import MySQL
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    try :
+      self.__mysql = MySQL.MySQL()
+      rows = self.__mysql.query("SELECT `date`, FORMAT(payment, 0) AS payment, info FROM smbcvisa")
+      self.vars['result'] = ""
+      # クエリー
+      self.getResult(rows)
+      self.vars['message'] = "クエリー OK"
+    except :
+      self.vars['message'] = "致命的エラーを検出。詳しくは Apache2 ログを参照。"
+
+  # クエリー結果を表にする。
+  def getResult(self, rows) :
+    result = ""
+    for row in rows :
+      result += page.WebPage.table_row(row)
+    self.vars['result'] = result
+    return
+
+# メイン開始位置
+wp = TestPage('templates/template1.html')
+wp.echo()</code></pre>
+<br />
+
+<h4>templates/template1.html</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>MySQL user.smbcvisa の内容&lt;/title>
+&lt;link rel="stylesheet" href="/css/default.css" />
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:crimson;padding:10px;">MySQL user.smbcvisa の内容&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;table style="width:60%">
+&lt;tr>&lt;th>date&lt;/th>&lt;th>payment&lt;/th>&lt;th>info&lt;/th>&lt;/tr>
+(*result*)
+&lt;/table>
+&lt;br />
+&lt;p style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html></code></pre>
+<br />
+</div>
+
+
+
+<div class="i2">
+<h3>サンプル３</h3>
+<p>ファイルのアップロードを行うサンプル</p>
+<pre class="code"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト (2)
+#   ファイルアップロード
+import WebPage as page
+import FileSystem as fsys
+import MySQL
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'file1' in self.params.keys() :
+      self.saveFile('file1', '/var/www/data')
+      file1 = self.params['file1']
+      self.vars['message'] = 'アップロードOK　' + file1.filename
+    else :
+      self.vars['message'] = 'ファイルを指定してください。'
+
+# メイン開始位置
+wp = TestPage('templates/template2.html')
+wp.echo()</code></pre>
+<br />
+
+<h4>templates/template2.html</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (2)&lt;/title>
+&lt;link rel="stylesheet" href="/css/default.css" />
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1>WebPage テスト (2)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST" enctype="multipart/form-data">
+&lt;div style="float:left">
+&lt;label for="file1">file1&lt;/label> &lt;input type="file" name="file1" id="file1" />
+&lt;/div>
+&lt;div>&lt;input type="submit" value="submit" />
+&lt;/form>
+&lt;br style="clear:both;" />
+&lt;p style="text-align:center;color:gray;">
+(*message*)
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html></code></pre>
+<br />
+</div>
+
+
+
+<div class="i2">
+<h3>サンプル４</h3>
+<p>ページのリダイレクトを行うサンプル</p>
+<pre class="code"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト (3)
+#   リダイレクト 
+import WebPage as page
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'text1' in self.params :
+        #self.vars['message'] = self.params['text1'] + "<br />\n"
+        self.redirect(self.params['text1'])
+    else :
+        self.vars['message'] = "指定URLへジャンプします。"
+
+# メイン開始位置
+wp = TestPage('templates/template3.html')
+wp.echo()</code></pre>
+<br />
+
+<h4>templates/template3.html</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (3)&lt;/title>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト (3)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST">
+&lt;div style="float:left">
+&lt;label for="text1">URL &lt;/label>&lt;input type="text" name="text1" id="text1" />
+&lt;/div>
+&lt;div>&lt;input type="submit" value=" Redirect " />
+&lt;/form>
+&lt;br style="clear:both;" />
+&lt;p style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html></code></pre>
+<br />
+</div>
+
+
+
+<div class="i2">
+<h3>サンプル５</h3>
+<p>Ajax を利用してプレーンテキストを取得するサンプル</p>
+<h4>fahren.cgi</h4>
+<pre class="code"><code>#!/usr/bin/env python3
+#  華氏温度と摂氏温度変換
+import WebPage as page
+
+class MyPage(page.WebPage) :
+  def __init__(self) :
+    super().__init__(self)
+    t = float(self.params['text1'].value)
+    fahren = self.params['temp'].value
+    if fahren == 'F' :
+      # 華氏温度へ
+      self.ct = 9.0 * t / 5.0 + 32.0
+    else :
+      # 摂氏温度へ
+      self.ct = 5.0 * (t - 32.0) / 9.0
+    MyPage.sendText(str(self.ct))    
+
+MyPage()</code></pre>
+<br />
+
+<h4>templates/template4.html</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (4)&lt;/title>
+&lt;script src="/js/jquery.min.js">&lt;/script>
+&lt;script>
+  function btnclick() {
+    var text1 = $('#text1').val();
+    var temp = $('input[name=temp]:checked').val();
+    $.get('/cgi-bin/PyOOLib/fahren.cgi',
+     {"text1":text1, "temp":temp}, 
+     function(data) { $('#message').text(data); });
+  }
+&lt;/script>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="color:crimson;">WebPage テスト (4)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST">
+&lt;div>
+&lt;label for="text1">温度　&lt;/label>&lt;input type="text" name="text1" id="text1" />
+&lt;/div>
+&lt;div>
+ &lt;label>&lt;input type="radio" name="temp" value="C" checked="checked" /> 華氏温度へ&lt;/label>
+ &lt;label>&lt;input type="radio" name="temp" value="F" /> 摂氏温度へ&lt;/label>
+&lt;/div>
+&lt;div>&lt;input type="button" value=" 変換する " id="btnConvert" onclick="btnclick();" />&lt;/div>
+&lt;/form>
+&lt;br />
+&lt;p id="message" style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html></code></pre>
+<br />
+</div>
+
+
+
+<div class="i2">
+<h3>サンプル６</h3>
+<p>Ajax を利用して JSON を取得して表示するサンプル</p>
+<h4>complex.cgi</h4>
+<pre class="code"><code>#!/usr/bin/env python3
+#  複素数の極形式変換
+import WebPage as page
+import cmath
+
+class MyPage(page.WebPage) :
+  def __init__(self) :
+    super().__init__(self)
+    z = complex(self.params['complex'].value)
+    pz = cmath.polar(z)
+    json = "[" + str(pz[0]) + "," + str(pz[1]) + "]"
+    MyPage.sendJson(json)    
+
+MyPage()</code></pre>
+<br />
+
+<h4>HTML</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (5)&lt;/title>
+&lt;script src="/js/jquery.min.js">&lt;/script>
+&lt;script>
+$(function() {
+  $('#button1').click(function() {
+    complex = $('#complex').val();
+    $.getJSON('/cgi-bin/PyOOLib/complex.cgi', {"complex":complex}, function(data) { $('#result').text(data); });
+  });
+});
+&lt;/script>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト (5)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;p style="margin-left:10%;margin-bottom:20px;">複素数の極形式を返す。&lt;/p>
+&lt;form method="POST">
+&lt;div>
+&lt;label for="complex">複素数(a+bj)　&lt;/label>&lt;input type="text" name="complex" id="complex" />
+&lt;/div>
+&lt;br />
+&lt;div>&lt;input type="button" id="button1" value="変換する" />&lt;/div>
+&lt;/form>
+&lt;br />
+&lt;p id="result" style="text-align:center;color:blue;">&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html></code></pre>
+<br />
+</div>
+
+
+<div class="i2">
+<h3>サンプル７</h3>
+<p>画像を返す CGI の例</p>
+<h4>image.cgi</h4>
+<pre class="code"><code>#!/usr/bin/env python3
+#  画像を返す。
+import WebPage as page
+import os
+
+class MyPage(page.WebPage) :
+  IMGDIR = '/var/www/html/img'
+
+  def __init__(self) :
+    super().__init__(self)
+    files = os.listdir(MyPage.IMGDIR)
+    img = int(self.params['img'].value)
+    path = MyPage.IMGDIR + "/" + files[img]
+    MyPage.sendImage(path)
+
+MyPage()</code></pre>
+<br />
+
+<h4>HTML</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (6)&lt;/title>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト (6)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;p style="text-align:center;color:blue;">
+  &lt;img src="/cgi-bin/PyOOLib/image.cgi?img=0" />
+  &lt;img src="/cgi-bin/PyOOLib/image.cgi?img=1" />
+  &lt;img src="/cgi-bin/PyOOLib/image.cgi?img=2" />
+  &lt;img src="/cgi-bin/PyOOLib/image.cgi?img=3" />
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html></code></pre>
+<br />
+</div>
+
+
+<div class="i2">
+<h3>サンプル８</h3>
+<p>TextArea, Select, CheckBox, Radio 使用例</p>
+<h4>CGI</h4>
+<pre class="code"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト (7)
+#   TextArea, Select, CheckBox, Radio
+import WebPage as page
+import os
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'text1' in self.params :
+        self.vars['message'] = self.getValues()
+    else :
+        self.vars['message'] = os.getcwd()
+
+  # コントロールの値を得る。
+  def getValues(self) :
+    buff = ""
+    buff += page.WebPage.tag('pre', self.params['text1'].value)
+    buff += page.WebPage.tag('p', "Select1 = " + self.params['select1'].value)
+    buff += page.WebPage.tag('p', "Check1 = " + self.params['check1'].value if 'check1' in self.params.keys() else 'Check1 is not checked')
+    buff += page.WebPage.tag('p', "Radio1 = " + self.params['radio1'].value)
+    return buff
+
+# メイン開始位置
+wp = TestPage('templates/template7.html')
+wp.echo()</code></pre>
+<br />
+<h4>HTML</h4>
+<pre class="code"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (7)&lt;/title>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト (7)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+
+&lt;form method="POST">
+&lt;div>
+ &lt;label for="text1">text1 &lt;textarea name="text1" id="text1" rows="4" cols="80">オレンジマーマレード
+チョコレートクリーム
+ピーナッツバター
+イチゴジャム
+ &lt;/textarea>&lt;/label>
+&lt;/div>
+&lt;div>
+ &lt;label for="select1">select1 &lt;/label>
+ &lt;select name="select1" id="select1">
+  &lt;option value="1">さくら&lt;/option>
+  &lt;option value="2">みずほ&lt;/option>
+  &lt;option value="3">つばめ&lt;/option>
+  &lt;option value="4">のぞみ&lt;/option>
+  &lt;option value="5">ひかり&lt;/option>
+  &lt;option value="6">こだま&lt;/option>
+ &lt;/select>
+&lt;/div>
+&lt;div>
+ &lt;label for="check1">&lt;input type="checkbox" name="check1" id="check1" value="C" /> check1&lt;/label>
+&lt;/div>
+&lt;div>
+ &lt;label for="radio1">&lt;input type="radio" name="radio1" id="radio11" value="A" checked="checked" /> A&lt;/label>
+ &lt;label for="radio1">&lt;input type="radio" name="radio1" id="radio12" value="B" /> B&lt;/label>
+&lt;/div>
+&lt;br />
+&lt;div>&lt;input type="submit" value=" submit " />
+&lt;/form>
+
+&lt;br />
+&lt;hr />
+&lt;p style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p style="text-align:center;"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype>
+<html lang="ja-jp">
+<head>
+<meta charset="utf-8" />
+<title>MySQL クラス サンプル</title>
+<link rel="stylesheet" href="/css/default.css" />
+<style>
+div.i2 {
+  margin-left:7%;
+}
+
+pre.code {
+  margin-left:5%;
+  margin-right:5%;
+  border: solid thin silver;
+  box-shadow: 4px 4px 6px silver;
+  padding:4px;
+}
+</style>
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+ <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+<h1>MySQL クラス サンプル</h1>
+<p style="text-align:center;"><a href="../index.html">もどる</a></p>
+<div class="i2">
+
+<h3>サンプル１</h3>
+<p>MySQL 接続情報を AppConf.ini から読み取って使用する例。AppConf.iniの例を下に示す。</p>
+<pre class="code">uid=user
+pwd=?????????
+db=user
+host=localhost
+</pre>
+<br />
+<pre class="code"><code>#!/usr/bin/python3
+# -*- coding=utf-8 -*-
+#  MySQL クラスのテスト
+import MySQL as mysql
+import sys
+
+# テスト番号取得
+if len(sys.argv) == 1 :
+    print("テスト番号を指定してください。")
+    exit(9)
+else :
+    testNo = int(sys.argv[1])
+
+client = mysql.MySQL()
+
+if testNo == 1 :
+    print(client.connectInfo)
+elif testNo == 2 :
+    rows = client.query("SELECT * FROM m_tables")
+    if client.rows > 0 :
+        for row in rows :
+            print(row)
+elif testNo == 3:
+    client.execute("INSERT INTO YJFX_Asset(`date`,`asset`,`profit_loss`) VALUES('2011-09-16',4574314,-874320)")
+else :
+    print("不正なテスト番号です。")</code></pre>
+<br />
+
+
+<h3>サンプル２</h3>
+<p>MySQL 接続情報をコンストラクタで指定する例</p>
+<pre class="code"><code>#!/usr/bin/python3
+# -*- coding=utf-8 -*-
+#  MySQL クラスのテスト (2)
+import MySQL as mysql
+import sys
+
+# テスト番号取得
+if len(sys.argv) == 1 :
+    print("テスト番号を指定してください。")
+    exit(9)
+else :
+    testNo = int(sys.argv[1])
+
+client = mysql.MySQL("user", "********", "user", "localhost")
+
+if testNo == 1 :
+     # 接続情報を表示
+    print(client.connectInfo)
+elif testNo == 2 :
+     # SELECT クエリー
+    rows = client.query("SELECT * FROM smbcvisa")
+    if client.rows > 0 :
+        for row in rows :
+            print(row[0] + "," + str(row[1]))
+elif testNo == 3:
+    # SQL (INSERT) の実行
+    client.execute("INSERT INTO smbcvisa VALUES('2018-09-11',4574314, 'テスト')")
+elif testNo == 4 :
+    # カーソルの使用
+    cur = client.cursor("SELECT * FROM smbcvisa")
+    for (dt, pay, info) in cur :
+        print(dt, pay, info)
+else :
+    print("不正なテスト番号です。")</code></pre>
+</div>
+<p>&nbsp;</p>
+<p style="text-align:center;"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>
