@@ -316,21 +316,24 @@ recursive: True ならファイルやサブディレクトリも削除</td><td>�
 <p><a href="samples/Text.html">Text のサンプル</a></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
- <tr><td>__init__(s)</td><td>s: 文字列</td><td>N/A</td><td>コンストラクタ</td><td>コンストラクタ</td></tr>
+ <tr><td>__init__(s)</td><td>s: 文字列</td><td>N/A</td><td>Text クラスのコンストラクタ</td><td>Text クラスのコンストラクタ</td></tr>
  <tr><td>length</td><td>なし</td><td>現在の文字列の長さ</td><td>現在の文字列の長さを得る。</td><td>Text クラスの R/O property</td></tr>
+ <tr><td>toString()</td><td>なし</td><td>このインスタンスの文字列</td><td>このインスタンスの文字列を返す。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>append(s)</td><td>s: 文字列</td><td>なし</td><td>現在の文字列に s を追加する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substring(start, length)</td><td>start: 開始位置<br />length: 長さ</td><td>部分文字列</td><td>start の位置から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substr(start, end)</td><td>start: 開始位置<br />end: 終了位置</td><td>部分文字列</td><td>start の位置から end 手前までの文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>left(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の先頭から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>right(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の最後から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>times(c, n)</td><td>c: 文字<br />n: 回数</td><td>なし</td><td>文字 c を n 回繰り返した文字列をオブジェクトの文字列にする。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>clear()</td><td>なし</td><td>なし</td><td>オブジェクトの内容をクリアする。</td><td>Text クラスのメソッド</td></tr>
  <tr><td>isdigit(a)</td><td>a: 文字</td><td>数字なら True、そうでないなら False</td><td>数字かどうかを判別する</td><td>関数</td></tr>
  <tr><td>isalpha(a)</td><td>a: 文字</td><td>アルファベットなら True、そうでないなら False</td><td>アルファベットかどうかを判別する</td><td>関数</td></tr>
  <tr><td>isdelim(a)</td><td>a: 文字</td><td>区切り文字なら True、そうでないなら False</td><td>区切り文字かどうかを判別する</td><td>関数</td></tr>
  <tr><td>isprint(a)</td><td>a: 文字</td><td>表示可能文字なら True、そうでないなら False</td><td>表示可能文字なら True、そうでないなら False</td><td>関数</td></tr>
  <tr><td>tolower(s)</td><td>s: 文字列</td><td>大文字に変換された文字列</td><td>文字列に含まれる小文字をすべて大文字にする。</td><td>関数</td></tr>
  <tr><td>toupper(s)</td><td>s: 文字列</td><td>小文字に変換された文字列</td><td>文字列に含まれる大文字をすべて小文字にする。</td><td>関数</td></tr>
- <tr><td>append(s)</td><td>s: 文字列</td><td>なし</td><td>現在の文字列に s を追加する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>substring(start, length)</td><td>start: 開始位置<br />length: 長さ</td><td>部分文字列</td><td>start の位置から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>substr(start, end)</td><td>start: 開始位置<br />end: 終了位置</td><td>部分文字列</td><td>start の位置から end 手前までの文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>left(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の先頭から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>right(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の最後から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>trim(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の両端の空白を削除する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>chomp(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の復帰改行文字を削除する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>trim(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の両端の空白を削除する。</td><td>関数</td></tr>
+ <tr><td>chomp(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の復帰改行文字を削除する。</td><td>関数</td></tr>
  <tr><td>split(c, s)</td><td>c: 区切り文字<br />s: 文字列</td><td>分割された文字列のリスト</td><td>c で現在の文字列を分割してリストとして返す。</td><td>関数</td></tr>
  <tr><td>join(c, array)</td><td>c: 結合文字<br />array: 文字列リスト</td><td>結合された文字列</td><td>c で array の要素をすべて結合する。</td><td>関数</td></tr>
  <tr><td>contain(str, s)</td><td>str: 検索文字列<br />
@@ -345,9 +348,6 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>parseDouble(s)</td><td>s: 文字列</td><td>浮動小数点数</td><td>可能なら文字列を浮動小数点数に変換する。</td><td>関数</td></tr>
  <tr><td>char(n)</td><td>n: 整数</td><td>文字</td><td>整数を文字に変換する。</td><td>関数</td></tr>
  <tr><td>asc(a)</td><td>a: 文字</td><td>整数</td><td>文字を整数に変換する。</td><td>関数</td></tr>
- <tr><td>toString()</td><td>なし</td><td>このインスタンスの文字列</td><td>このインスタンスの文字列を返す。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>times(c, n)</td><td>c: 文字<br />n: 回数</td><td>なし</td><td>このインスタンスの文字列を文字 c を n 回繰り返す文字列で置き換える。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>clear()</td><td>なし</td><td>なし</td><td>このインスタンスの文字列を "" で置き換える。</td><td>Text クラスのメソッド</td></tr>
  <tr><td>re_contain(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>検索文字列が含まれていれば True</td><td>
    対象の文字列を正規表現で検索して、検索文字列が含まれているか判別する。 </td><td>関数</td></tr>
  <tr><td>re_search(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td>
