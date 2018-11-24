@@ -1,5 +1,5 @@
 # -*- code=utf-8 -*-
-# Version 1.00  2018-11-21
+# Version 1.01  2018-11-24
 import datetime as dt
 import time
 
@@ -34,7 +34,7 @@ class DateTime :
     # 現在のオブジェクトの時刻部分を文字列として返す。
     def toTimeString(self, f="") :
         if f == "" :
-            return self.__dtime.strftime("%H-%M-%S")
+            return self.__dtime.strftime("%H:%M:%S")
         else :
             return self.__dtime.strftime(f)
 
@@ -68,17 +68,8 @@ class DateTime :
         return self.__dtime.weekday()
     
     # 演算
-    def addWeeks(self, weeks) :
-        self.__dtime += dt.timedelta(weeks=weeks)
-
     def addDays(self, days) :
         self.__dtime += dt.timedelta(days=days)
-
-    def addHours(self, hours) :
-        self.__dtime += dt.timedelta(hours=hours)
-
-    def addMinutes(self, minutes) :
-        self.__dtime += dt.timedelta(minutes=minutes)
 
     def addSeconds(self, seconds) :
         self.__dtime += dt.timedelta(seconds=seconds)

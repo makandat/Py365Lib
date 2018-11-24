@@ -348,7 +348,7 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>parseDouble(s)</td><td>s: 文字列</td><td>浮動小数点数</td><td>可能なら文字列を浮動小数点数に変換する。</td><td>関数</td></tr>
  <tr><td>char(n)</td><td>n: 整数</td><td>文字</td><td>整数を文字に変換する。</td><td>関数</td></tr>
  <tr><td>asc(a)</td><td>a: 文字</td><td>整数</td><td>文字を整数に変換する。</td><td>関数</td></tr>
- <tr><td>re_contain(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>検索文字列が含まれていなければ None</td><td>
+ <tr><td>re_contain(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>検索文字列が含まれていれば True、含まれていなければ False</td><td>
    対象の文字列を正規表現で検索して、検索文字列が含まれているか判別する。 </td><td>関数</td></tr>
  <tr><td>re_search(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td>
   <td>見つかった部分文字列のリスト</td><td>対象の文字列を正規表現で検索して、部分文字列を抽出する。</td><td>関数</td></tr>
@@ -381,11 +381,7 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>minute</td><td>なし</td><td>このインスタンスの分部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
  <tr><td>hour</td><td>なし</td><td>このインスタンスの時部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
  <tr><td>addDays(days)</td><td>days: 日数</td><td>なし</td><td>このインスタンスに days を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addMonths(months)</td><td>months: 月数</td><td>なし</td><td>このインスタンスに months を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addYears(years)</td><td>years: 年数</td><td>なし</td><td>このインスタンスに years を加える。</td><td>DateTime クラスのメソッド</td></tr>
  <tr><td>addSeconds(seconds)</td><td>seconds: 秒数</td><td>なし</td><td>このインスタンスに seconds を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addMinutes(minutes)</td><td>minutes: 分数</td><td>なし</td><td>このインスタンスに minutes を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addHours(hours)</td><td>hours: 時間数</td><td>なし</td><td>このインスタンスに hours を加える。</td><td>DateTime クラスのメソッド</td></tr>
  <tr><td>timestamp</td><td>なし</td><td>Unix タイム</td><td>このインスタンスのタイムスタンプ (実数)</td><td>DateTime クラスの R/O property</td></tr>
 </table>
 

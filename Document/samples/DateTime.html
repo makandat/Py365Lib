@@ -28,7 +28,7 @@ pre.code {
 <p style="text-align:center;"><a href="../index.html">もどる</a></p>
 <div class="i2">
 
-<h3>サンプル１</h3>
+<h3>サンプル１ (test/testDateTime.py)</h3>
 <pre class="code"><code>#!/usr/bin/python3
 # -*- code=utf-8 -*-
 #  テストプログラム DateTime
@@ -64,12 +64,6 @@ elif testNo == 3 :
     ti = dt.DateTime("2018-09-15 12:00:00")
     ti.addDays(2)
     print(ti.toString())
-    ti.addWeeks(1)
-    print(ti.toString())
-    ti.addHours(3)
-    print(ti.toString())
-    ti.addMinutes(30)
-    print(ti.toString())
     ti.addSeconds(30)
     print(ti.toString())
 elif testNo == 4 :
@@ -78,6 +72,63 @@ elif testNo == 4 :
 else :
     print("不正なテスト番号です。")
 </code></pre>
+<br />
+
+
+<h3>サンプル２ (test/Py356Lib/D01.py)</h3>
+<p>現在の時刻と日付時刻の要素を扱うサンプル</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import DateTime as dt, Common, Text
+from pprint import pprint
+
+# 現在の日時を得る。DateTime クラスをインスタンス化するとその中身が現在の日時に設定される。
+dt1 = dt.DateTime()
+print(dt1.toString())
+
+# 現在の日時を得る。
+print("今の日時：{0:%x %X}".format(dt.now()))
+
+# 日付の要素
+print("{0}/{1}/{2}".format(dt1.year, dt1.month, dt1.day))
+print("{0}:{1}:{2}".format(dt1.hour, dt1.minute, dt1.second))
+
+</code></pre>
+<br />
+
+<h3>サンプル３ (test/Py356Lib/D01.py)</h3>
+<p>日付時刻の演算を行うメソッドのサンプル</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import DateTime as dt, Common, Text
+from pprint import pprint
+
+# 現在の日時を得る。DateTime クラスをインスタンス化するとその中身が現在の日時に設定される。
+dt1 = dt.DateTime()
+print(dt1.toString())
+
+# 明日
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addDays(1)
+print(dt1.toDateString())
+
+# 昨日
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addDays(-1)
+print(dt1.toDateString())
+
+# １時間後
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addSeconds(3600)
+print(dt1.toTimeString())
+
+# １時間前
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addSeconds(-3600)
+print(dt1.toTimeString())
+
+</code></pre>
+<br />
+
+
 
 </div>
 <p>&nbsp;</p>

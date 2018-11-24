@@ -131,7 +131,7 @@ def asc(a:str) -> int:
 def re_contain(rstr:str, s:str) -> bool :
   ro = re.compile(rstr)
   m = ro.match(s)
-  return m
+  return m != None
 
 # 正規表現 rstr が文字列 s に含まれていれば、その一致した部分文字列の集合を返す。
 def re_search(rstr:str, s:str) -> re.match :

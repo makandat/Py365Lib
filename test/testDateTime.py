@@ -33,12 +33,6 @@ elif testNo == 3 :
     ti = dt.DateTime("2018-09-15 12:00:00")
     ti.addDays(2)
     print(ti.toString())
-    ti.addWeeks(1)
-    print(ti.toString())
-    ti.addHours(3)
-    print(ti.toString())
-    ti.addMinutes(30)
-    print(ti.toString())
     ti.addSeconds(30)
     print(ti.toString())
 elif testNo == 4 :

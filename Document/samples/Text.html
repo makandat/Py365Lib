@@ -28,7 +28,7 @@ pre.code {
 <p style="text-align:center;"><a href="../index.html">もどる</a></p>
 <div class="i2">
 
-<h3>サンプル１</h3>
+<h3>サンプル１ (test/testText.py)</h3>
 <pre class="code"><code>#!/usr/bin/python3
 #  Text クラスのテスト
 import sys
@@ -138,6 +138,93 @@ elif testNo == 8 :
     print("Test #8 OK.")
 else :
     print("不正な番号です。")
+</code></pre>
+<br />
+
+
+<h3>サンプル２ (test/Py365Lib/T01.py)</h3>
+<p>Text オブジェクトの作成、オブジェクトの内容への追加、部分文字列などの例</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import Common, Text as txt
+
+# Text オブジェクトを構築
+to = txt.Text("0123456789")
+
+# 結合
+to.append("ABCDEF")
+print(to.toString())
+
+# 部分文字列
+print(to.substring(1, 4))  # 位置 1 から 4 文字分
+print(to.substr(1, 4))     # 位置 1 から位置 4 まで
+print(to.left(4))   # 左側 4 文字分
+print(to.right(4))  # 右側 4 文字分
+
+# 同じ文字の繰り返し
+to.times('*', 10)
+print(to.toString())
+
+# クリア
+to.clear()
+print(to.toString())
+</code></pre>
+<br />
+
+<h3>サンプル３ (test/Py365Lib/T02.py)</h3>
+<p>正規表現を使った文字列処理関数の例</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+from pprint import pprint
+
+str1 = "-rw-r--r-- 1 user user  406 11月 22 11:02 A02.log"
+
+# 第一引数が含まれるか
+b = Text.re_contain(r"^.*\.log$", str1)
+print(b)
+b = Text.re_contain(r"^.*\.py$", str1)
+print(b)
+# 最初の一致オブジェクトを取得
+m = Text.re_search(r"^.*user.*", str1)
+pprint(m)
+m = Text.re_search(r"^.*USER.*", str1)
+pprint(m)
+# 文字列を分割
+a1 = Text.re_split(r"\s+", str1)
+pprint(a1)
+# 文字列を置換
+str2 = Text.re_replace(r"\s+", "~", str1)
+print(str2)
+</code></pre>
+<br />
+
+<h3>サンプル４ (test/Py365Lib/T04.py)</h3>
+<p>書式化、分割結合、検索、置換関数の例</p>
+<pre class="code"><code>#!/usr/bin/env python3
+from Py365Lib import *
+from pprint import pprint
+
+# 文字列から数値への変換とフォーマット化
+n = Text.parseInt("1024")
+f = Text.parseDouble("-3.61e+2")
+s1 = Text.format("n = {0:8d}, f = {1:10.2f}", n, f)
+print(s1)
+
+# split, join
+s2 = Text.join(",", ["5098", "1989", "320", "298"])
+print(s2)
+a2 = Text.split(",", s2)
+pprint(a2)
+
+# contain, indexOf
+s3 = "ABCDEFGHIJKL"
+print(Text.contain("CD", s3))
+print(Text.contain("cd", s3))
+print(Text.indexOf("CD", s3))
+print(Text.indexOf("1", s3))
+
+# replace
+s4 = Text.replace("GHIJ", "0123", s3)
+print(s4)
 </code></pre>
 
 </div>
