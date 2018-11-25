@@ -16,6 +16,16 @@ pre.code {
   box-shadow: 4px 4px 6px silver;
   padding:4px;
 }
+
+img {
+  border: solid thin gray;
+}
+
+figure {
+  margin-top:4px;
+  margin-bottom:4px;
+  padding:6px;
+}
 </style>
 <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css">
@@ -28,10 +38,364 @@ pre.code {
 <p style="text-align:center;"><a href="../index.html">もどる</a></p>
 <div class="i2">
 
-<h3>サンプル１</h3>
-<pre class="code"><code>
 
+
+
+<h3>サンプル１ (HTApp\test\test_HTApp1.py)</h3>
+<p></p>
+<figure>
+ <img src="img/test_HTApp1.png" />
+</figure>
+<figure>
+ <img src="img/test_HTApp1a.png" />
+</figure>
+
+<pre class="code"><code>#!/usr/bin/env python3
+#  HTApp のテスト (1)
+import os
+import urllib
+import http.server
+import HTApp
+from pprint import pprint
+from syslog import syslog
+
+# / のハンドラ
+def root(path) :
+  html = """&lt;html>
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;title>HTApp1&lt;/title>
+ &lt;style>
+  body {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  h1 {
+    padding: 8px;
+    color: crimson;
+  }
+ &lt;/style>
+&lt;/head>
+&lt;body>
+ &lt;h1>HTApp1 (test_HTApp1.py)&lt;/h1>
+ &lt;p>root (/) の応答&lt;/p>
+ &lt;ul>
+   &lt;li>&lt;a href="/about">/about&lt;/a>&lt;/li>
+ &lt;/ul>
+&lt;/body>
+&lt;/html>
+  """
+  return ('text/html', html)
+
+# /about のハンドラ
+def about(path) :
+  with open(HTApp.TEMPLATES + "/about.html") as f :
+    html = f.read()
+  # AppConf の内容を表示する。
+  itemlist = ""
+  for k, v in conf.items() :
+    itemlist += HTApp.tag("li", f"{k}: {v}")
+  html = html.replace("(*appconf*)", itemlist)
+  return ('text/html', html)
+
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/about'] = about
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
 </code></pre>
+<br />
+
+
+<h3>サンプル２ (HTApp\test\test_HTApp2.py)</h3>
+<p></p>
+<figure>
+ <img src="img/test_HTApp2.png" />
+</figure>
+<figure>
+ <img src="img/test_HTApp2a.png" />
+</figure>
+
+<pre class="code"><code>#!/usr/bin/env python3
+#  HTApp のテスト (2)
+import os
+import urllib
+import http.server
+import HTApp
+from pprint import pprint
+from syslog import syslog
+
+# / のハンドラ
+def root(path) :
+  with open(HTApp.TEMPLATES + "/index2.html") as f :
+    html = f.read()
+  return ('text/html', html)
+
+# /about のハンドラ
+def about(path) :
+  with open(HTApp.TEMPLATES + "/about.html") as f :
+    html = f.read()
+  # AppConf の内容を表示する。
+  itemlist = ""
+  for k, v in conf.items() :
+    itemlist += HTApp.tag("li", f"{k}: {v}")
+  html = html.replace("(*appconf*)", itemlist)
+  return ('text/html', html)
+
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/about'] = about
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+
+
+<h3>サンプル３ (HTApp\test\test_HTApp3.py)</h3>
+<p></p>
+<figure>
+ <img src="img/test_HTApp3.png" />
+</figure>
+<figure>
+ <img src="img/test_HTApp3a.png" />
+</figure>
+<pre class="code"><code>#!/usr/bin/env python3
+#  HTApp のテスト (3)
+import os
+import http.server
+import HTApp
+import urllib.parse as urlparse
+from pprint import pprint
+from syslog import syslog
+
+# / のハンドラ
+def root(path) :
+  with open(HTApp.TEMPLATES + "/index3.html") as f :
+    html = f.read()
+  params = {}
+  try :
+    n = path.index('?') + 1
+    qs = path[n:len(path)]
+    params = urlparse.parse_qs(qs)
+    litems = ""
+    for k, v in params.items() :
+      vv = v[0]
+      litems += HTApp.tag("li", f"{k} = {vv}")
+    html = html.replace("(*params*)", litems)
+  except :
+    html = html.replace("(*params*)", "")
+  return ('text/html', html)
+
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/AppCreator'] = root
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+
+
+<h3>サンプル４ (HTApp\test\test_HTApp4.py)</h3>
+<p></p>
+<figure>
+ <img src="img/test_HTApp4.png" />
+</figure>
+<pre class="code"><code>#!/usr/bin/env python3
+#  HTApp のテスト (4)
+import os
+import http.server
+import http.cookies
+import HTApp
+import urllib.parse as urlparse
+from pprint import pprint
+from syslog import syslog
+
+# / のハンドラ
+def root(path) :
+  with open(HTApp.TEMPLATES + "/index4.html") as f :
+    html = f.read()
+  if 'count' in HTApp.cookies :
+    count = int(HTApp.cookies['count']) + 1
+  else :
+    count = 0
+  HTApp.cookies['count'] = str(count)
+  HTApp.vars['count'] = str(count)
+  html = HTApp.embed(html)
+  return ('text/html', html)
+
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/AppCreator'] = root
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+
+
+<h3>サンプル５ (HTApp\test\test_HTApp5.py)</h3>
+<p></p>
+<figure>
+ <img src="img/test_HTApp5.png" />
+</figure>
+<pre class="code"><code>#!/usr/bin/env python3
+#  HTApp のテスト (5)
+#    Ajax
+import os, io
+import http.server
+import http.cookies
+import HTApp
+import json
+import urllib.parse as urlparse
+from pprint import pprint
+from syslog import syslog
+
+MAXBYTES = 1024 * 16
+
+# / のハンドラ
+def root(path) :
+  with open(HTApp.TEMPLATES + "/index5.html") as f :
+    html = f.read()
+  HTApp.vars['result'] = ""
+  html = HTApp.embed(html)
+  return ('text/html', html)
+
+# フォームのハンドラ
+def convert(path) :
+  with open(HTApp.TEMPLATES + "/index5.html") as f :
+    html = f.read()
+  data = ""
+  try :
+    n = path.index('?')
+    data = path[n+1:len(path)]
+  except :
+    pass
+  param = urlparse.parse_qs(data)
+  f = float(param['fahren'][0])
+  c = 5.0 / 9.0 * (f - 32.0)
+  result = '{"result":' + str(c) + "}"
+  return ('application/json', result)
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/Fahren'] = convert
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+
+
+<h3>サンプル６ (HTApp\test\test_HTApp6.py)</h3>
+<p>現在のバージョンでは POST メソッドでフォームを送信することはできない。</p>
+<figure>
+ <img src="img/test_HTApp6.png" />
+</figure>
+<pre class="code"><code>#!/usr/bin/env python3
+#  HTApp のテスト (6)
+#    POST のテスト
+import os, io
+import http.server
+import http.cookies
+import HTApp
+import urllib.parse as urlparse
+from pprint import pprint
+from syslog import syslog
+
+MAXBYTES = 1024 * 16
+
+# / のハンドラ
+def root(path) :
+  with open(HTApp.TEMPLATES + "/index6.html") as f :
+    html = f.read()
+  HTApp.vars['message'] = ""
+  html = HTApp.embed(html)
+  return ('text/html', html)
+
+# フォームのハンドラ
+def PostHandler(path) :
+  with open(HTApp.TEMPLATES + "/index6.html") as f :
+    html = f.read()
+  # param = io.BufferedIOBase(HTApp.posted_file).read(MAXBYTES)
+  HTApp.vars['message'] = "POST のパラメータはサポートされません。"
+  html = HTApp.embed(html)
+  return ('text/html', html)
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/Post'] = PostHandler
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
 
 </div>
 <p>&nbsp;</p>

@@ -16,6 +16,10 @@ pre.code {
   box-shadow: 4px 4px 6px silver;
   padding:4px;
 }
+
+img {
+  padding:5px;
+}
 </style>
 <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css">
@@ -28,10 +32,284 @@ pre.code {
 <p style="text-align:center;"><a href="../index.html">もどる</a></p>
 <div class="i2">
 
-<h3>サンプル１</h3>
-<pre class="code"><code>
+<h3>サンプル１ (CursesApp/test/test_CursesApp1.py)</h3>
+<p>
+このサンプルは、画面属性の動作確認を行うプログラムである。</p>
+</p>
+<figure>
+ <img src="img/test_CursesApp1.png" />
+</figure>
 
+<pre class="code"><code>#!/usr/bin/python3
+
+from CursesApp import CursesApp
+import curses
+
+class Application(CursesApp) :
+  cls = False
+
+  # コンストラクタ
+  def __init__(self) :
+    super().__init__()
+
+  # オーバーライド：初期表示
+  def init_app(self) :
+    self.setColor(18, curses.COLOR_WHITE, curses.COLOR_RED)
+    self.print("Columns = " + str(self.Columns) + " Rows = " + str(self.Rows), 4, 1, 18)
+    self.print("'q': 終了", 8, 3, 5)
+    self.print("'c': 画面クリア ON / OFF", 8, 4, 5)
+    self.print("'h': カーソルを表示しない", 8, 5, 5)
+    self.print("'i': カーソルを表示する", 8, 6, 5)
+    self.print("'m': カーソルを (x:6, y:12) へ移動する", 8, 7, 5)
+    self.print("'a': 属性をセットする (TeraTerm 不可)", 8, 8, 5)
+    self.print("'o': 属性を OFF する", 8, 9, 5)
+    self.print("'n': 属性を ON する", 8, 10, 5)
+
+  # オーバーライド : キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    if key == 'c' : # 画面クリア
+        if self.cls == False :
+          self.clear()
+          self.cls = True
+        else :
+          self.init_app()
+          self.cls = False
+    elif key == 'h' : # カーソルを表示しない
+        self.hideCursor()
+    elif key == 'i' : # カーソルを表示する
+        self.showCursor()
+    elif key == 'm' : # カーソルを移動する
+        self.setCursorPosition(6, 12)
+        (x, y) = self.getCursorPosition()
+        self.stdscr.addstr(y, x, str(x) + ", " + str(y))
+    elif key == 'a' : # 属性をセットする
+        self.setAttr(curses.A_BLINK)
+        self.stdscr.addstr(13, 6, 'curses.A_BLINK')
+    elif key == 'o' : # 属性を OFF する
+        self.setAttrOff(curses.A_BLINK)
+        self.stdscr.addstr(13, 6, 'curses.A_BLINK')
+    elif key == 'n' : # 属性を ON する
+        self.setAttrOn(curses.A_BLINK)
+        self.stdscr.addstr(13, 6, 'curses.A_BLINK')
+    elif key == 'q' : # アプリ終了
+        rc = False
+    else :
+        pass
+    return rc
+        
+# インスタンス化して実行開始
+Application()
 </code></pre>
+<br />
+
+
+<h3>サンプル２ (CursesApp/test/test_CursesApp2.py)</h3>
+<p>このサンプルは、メッセージボックス、トーストの動作を確認するためのプログラムである。</p>
+<figure>
+<img src="img/test_CursesApp2.png" /><br />
+<img src="img/test_CursesApp2A.png" />
+</figure>
+<pre class="code"><code>#!/usr/bin/python3
+#  タイトルバー、ステータスバー、ヘルプウィンドウ、メッセージボックス
+from CursesApp import CursesApp
+import curses
+
+HELP_TEXT = """
+    タイトルバー、ステータスバー、ヘルプウィンドウ、メッセージボックスのテストプログラム
+      F1 キーでヘルプを表示する。任意のキー押すとヘルプを閉じる。
+      'o' で OKボタンのみを持つメッセージボックスを表示する。
+      'y' で YesボタンとNoボタンを持つメッセージボックスを表示する。
+      'c' で OKボタンとCancelボタンを持つメッセージボックスを表示する。
+      'i' で入力ボックスを表示する。入力文字列はステータスバーに表示される。
+      't' でトーストを表示する。
+      'q' でテストプログラムを終了する。
+
+       メッセージボックスで Enter キーを押すと、カーソルが点滅しているボタンが選ばれて
+       メッセージボックスが閉じる。
+       このとき、値 0 (CursesApp.BTN_OK) が返される。
+      Tab キーを押すと、ボタンの選択状態が交互に変化する。
+      Esc キーを押すと、No ボタンまたは Cancel ボタンが押されたのと同じく
+      メッセージボックスが閉じる。
+       このとき、値 1 (CursesApp.BTN_CANCEL) が返される。
+"""
+
+#
+#  アプリケーションクラス
+#  =====================
+class Application(CursesApp) :
+
+  # コンストラクタ
+  def __init__(self) :
+    super().__init__()
+
+  # オーバーライド：初期表示
+  def init_app(self) :
+    self.titlebar("プログラム test_CursesApp2.py", CursesApp.TB_ALIGN_CENTER, 18)
+    self.statusbar("初期化完了", 8)
+    self.redraw()
+    self.hideCursor()
+
+  # クライアント領域描画
+  def redraw(self) :
+    self.clear(client=True)
+    self.print("Screen [width x height] = " + str(self.Columns) + ", " + str(self.Rows), 7, 5)
+    self.print("'h' Help Window", 5, 7)
+    self.print("'o' OK MessageBox", 5, 8)
+    self.print("'y' Yes/No MessageBox", 5, 9)
+    self.print("'c' OK/Cancel MessageBox", 5, 10)
+    self.print("'i' InputBox", 5, 11)
+    self.print("'t' Toast", 5, 12)
+    self.print("'q' Quit", 5, 13)
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    self.statusbar(key, 8)
+    result = ""
+    if key == 'q' : # アプリ終了
+      rc = False
+    elif key == 'h' :
+      self.helpWindow(HELP_TEXT, "ヘルプウィンドウ (任意キーを押すとで閉じる)")
+    elif key == 'o' :
+      result = self.messageBox("   OK ボタンのみのメッセージボックス", CursesApp.MB_OKONLY)
+    elif key == 'y' :
+      result = self.messageBox("   Yes / No ボタンメッセージボックス", CursesApp.MB_YESNO)
+    elif key == 'c' :
+      result = self.messageBox("   OK / Cancel ボタンメッセージボックス", CursesApp.MB_OKCANCEL)
+    elif key == 'i' :
+      result = self.inputBox("値を入力します。")
+    elif key == 't' :
+      result = self.toast("一時的なメッセージ表示")
+    else :
+      pass
+    self.redraw()
+    self.statusbar("key=" + str(key) + " result=" + str(result), 8)
+    return rc
+
+
+# インスタンス化して実行開始
+Application()
+</code></pre>
+<br />
+
+
+<h3>サンプル３ (CursesApp/test/test_CursesApp3.py)</h3>
+<p>このサンプルはフォームの要素（ウィジェット）の動作を確認するプログラムである。</p>
+<figure>
+  <img src="img/test_CursesApp3.png" /><br />
+  <img src="img/test_CursesApp3A.png" />
+</figure>
+<pre class="code"><code>#!/usr/bin/python3
+#   フォーム
+from CursesApp import CursesApp
+import curses
+from syslog import syslog
+
+class Application(CursesApp) :
+  FORM1_DATA = '''[
+ {"type":"label", "name":"label1", "text":"label1: フォームのテスト", "left":5, "top":2, "width":20, "color":3, "attr":0},
+ {"type":"button", "name":"ok_button", "text":"  OK  ", "left":10, "top":4, "width":0, "color":9, "attr":0, "click":100},
+ {"type":"button", "name":"cancel_button", "text":"  Cancel  ", "left":26, "top":4, "width":0, "color":11, "attr":0, "click":101},
+ {"type":"checkbox", "name":"check1", "text":"Check1", "left":20, "top":6, "width":0, "checked":false, "color":1, "attr":0},
+ {"type":"radio", "name":"radio1", "text":"Radio1", "group":0, "left":40, "top":6, "width":0, "checked":true, "color":1, "attr":0},
+ {"type":"radio", "name":"radio2", "text":"Radio2", "group":0, "left":40, "top":7, "width":0, "checked":false, "color":1, "attr":0},
+ {"type":"selector", "name":"selector1","items":["APPLE", "GOOGLE", "AMAZON", "MICROSOFT"], "selected":0, "left":30, "top":9, "width":16, "color":5, "attr":0},
+ {"type":"textbox", "name":"textbox1", "text":"", "left":50, "top":10, "width":16, "color":8, "attr":0},
+ {"type":"label", "name":"label2","text":"Tab: Select, Enter: OK, Esc: Cancel", "left":10, "top":15, "width":16, "color":6, "attr":0}
+]'''
+
+  FORM1 ="form1"
+  tagidx = 0
+
+  # コンストラクタ
+  def __init__(self) :
+    super().__init__()
+
+  # オーバーライド：初期表示
+  def init_app(self) :
+    self.createForm(Application.FORM1, Application.FORM1_DATA)
+    self.titlebar("フォームのテスト", 1, 8)
+    self.statusbar("Ready", 8)
+    self.redraw()
+
+  # クライアント領域描画
+  def redraw(self) :
+    self.clear(True)
+    self.print("'f'キーを押してください。", 5, 4, 5)
+    data = ""  
+    data += "check1 = " + (self.formData['check1'] if "check1" in self.formData.keys() else "")
+    data += "\n"
+    data += "radio1 = " + (self.formData['radio1'] if "radio1" in self.formData.keys() else "")
+    data += "\n"
+    data += "radio2 = " + (self.formData['radio2'] if "radio2" in self.formData.keys() else "")
+    data += "\n"    
+    data += "textbox1 = " + (self.formData['textbox1'] if "textbox1" in self.formData.keys() else "")
+    data += "\n"
+    data += "selector1 = " + (self.formData['selector1'] if "selector1" in self.formData.keys() else "")
+    self.printLines(data, 8, 6)
+    self.hideCursor()
+      
+    
+  # オーバーライド : キー入力ハンドラ
+  def handler(self, key) :
+    rv = True  # 戻り値 (OK:True,Cancel:False)
+    form_name = self.selectedForm
+    if form_name == None :
+      if key == 'f' or key == 'F':
+        self.selectForm(Application.FORM1)
+      else :
+        self.forms[Application.FORM1] = None
+        rv = False
+    elif form_name == Application.FORM1 :
+      form1 = self.forms[Application.FORM1]
+      if key == '\t' :  # タブ(ウィジェットの移動)
+        self.tabidx = self.selectWidget()
+        widget = form1[self.tabidx]
+        self.setCursorToWidget(widget)  # カーソルをウィジェットへ移動
+        if widget['type'] == 'textbox' :
+          s = self.enterText(widget)
+          self.statusbar(s)
+      elif key == '\n' :  # Enter：　OK としてフォームを閉じる
+        widget = form1[self.tabidx]
+        click = self.buttonPressed(widget)
+        if click == 100 :  # OK
+          self.redraw()
+          self.selectedForm = None
+          self.statusbar('OK Clicked')
+          self.form_data = True
+          self.redraw()
+        elif click == 101 : # Cancel
+          self.redraw()
+          self.selectedForm = None
+          self.statusbar('Cancel Clicked')
+        else :
+          pass
+      elif key == '\x1b' : # Esc:　Cancel としてフォームを閉じる。
+        self.redraw()
+        self.selectedForm = None
+        rv = False
+      elif key == ' ' :  # チェックボックス、ラジオボタン
+        widget = form1[self.tabidx]
+        self.changeChecked(widget, form1)
+      elif str(key) == 'KEY_UP' :  # セレクタ
+        widget = form1[self.tabidx]
+        self.selectUp(widget)
+      elif str(key) == 'KEY_DOWN' :  # セレクタ
+        widget = form1[self.tabidx]
+        self.selectDown(widget)
+      else :  # その他のキーは無視
+        pass
+    else :
+      self.toast("Fatal Error")
+      rv = False
+    return rv
+        
+# インスタンス化して実行開始
+Application()
+</code></pre>
+<br />
+
 
 </div>
 <p>&nbsp;</p>
