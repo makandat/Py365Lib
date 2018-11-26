@@ -1,0 +1,20 @@
+[
+  {"type":"frame", "name":"north", "layout":"grid", "border":1, "relief":"flat", "container":[
+    {"type":"label", "name":"label1", "text":"label1", "layout":"grid", "column":0, "row":0, "anchor":"w"},
+    {"type":"text", "name":"text1", "text":"text1", "width":10, "layout":"grid", "column":1, "row":0, "anchor":"w"},
+    {"type":"label", "name":"label2", "text":"label2", "layout":"grid", "column":0, "row":1, "anchor":"w"},
+    {"type":"text", "name":"text2", "text":"text2", "layout":"grid", "column":1, "row":1, "anchor":"w"},
+    {"type":"label", "name":"label3", "text":"label3", "layout":"grid", "column":0, "row":2, "anchor":"w"},
+    {"type":"list", "name":"list1", "items":["Item1", "item2", "Item3", "Item4", "Item5"], "height":3, "layout":"grid", "column":1, "row":2, "anchor":"w"},
+    {"type":"check", "name":"check1", "text":"Check1", "layout":"grid", "column":0, "row":3, "anchor":"w"},
+    {"type":"frame", "name":"frameradio", "text":"radio buttons", "layout":"grid", "column":0, "row":4, "border":3, "relief":"groove", "width":80, "height":40, "container":[
+      {"type":"radio", "name":"radio1", "text":"Radio1", "layout":"pack", "value":0 },
+      {"type":"radio", "name":"radio2", "text":"Radio2", "layout":"pack", "value":1 }
+    ]},
+    {"type":"button", "name":"button1", "text":"OK", "layout":"grid", "column":0, "row":5, "anchor":"w", "command":"button1"},
+    {"type":"button", "name":"button2", "text":"Cancel", "layout":"grid", "column":1, "row":5, "anchor":"w","command":"button2"}
+  ]},
+  {"type":"frame", "name":"south", "layout":"pack", "border":1, "relief":"flat", "container":[
+    {"type":"label", "name":"statusbar", "text":"status", "anchor":"w"}
+  ]} 
+]

@@ -1,0 +1,8 @@
+[
+  {"type":"button", "name":"button1", "text":"Button1"},
+  {"type":"label", "name":"label1", "text":"Label1"},
+  {"type":"text", "name":"text1", "text":"Text1"},
+  {"type":"check", "name":"check1", "text":"Check1"},
+  {"type":"radio", "name":"radio1", "text":"Radio1", "value":0},
+  {"type":"radio", "name":"radio2", "text":"Radio2", "value":1}
+]

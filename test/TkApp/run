@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if test $# -le 0; then
+  n='1'
+else
+  n=$1
+fi
+
+python3 test_TkApp$n.py
+
