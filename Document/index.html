@@ -54,7 +54,9 @@ header, article, fooder {
    <li><a href="#HTApp">HTApp クラス (HTTP サーバ向け)</a></li>
   </ul>
  </li>
+ <li><a href="#tutorial">チュートリアル</a></li>
  <li><a href="#samples">サンプル</a></li>
+ <li><a href="#utilities">ユーティリティ</a></li>
 </ul>
 <br />
 
@@ -161,6 +163,20 @@ header, article, fooder {
 </ul>
 <br />
 
+<!-- チュートリアル -->
+<h2><a id="tutorial">チュートリアル</a></h2>
+<ul>
+  <li><a href="tutorial/Common.html">コンソールアプリ</a></li>
+  <li><a href="tutorial/MySQL.html">MySQL</a></li>
+  <li><a href="tutorial/AWSS3.html">AWS S3</a></li>
+  <li><a href="tutorial/WebPage.html">CGI</a></li>
+  <li><a href="tutorial/CursesApp.html">curses アプリ</a></li>
+  <li><a href="tutorial/TkApp.html">tkinterアプリ</a></li>
+  <li><a href="tutorial/HTApp.html">HTTP サーバ</a></li>
+</ul>
+<br />
+
+
 <!-- サンプル -->
 <h2><a id="samples">サンプル</a></h2>
 <ul>
@@ -174,6 +190,13 @@ header, article, fooder {
   <li><a href="samples/CursesApp.html">CursesApp クラス</a></li>
   <li><a href="samples/HTApp.html">HTApp クラス</a></li>
   <li><a href="samples/TkApp.html">TkApp クラス</a></li>
+</ul>
+<br />
+
+<!-- ユーティリティ -->
+<h2><a id="utilities">ユーティリティ</a></h2>
+<ul>
+  <li><a href="utilities/index.html">ユーティリティ一覧</a></li>
 </ul>
 <br />
 
@@ -196,7 +219,8 @@ code: 終了コード<br />message: 終了時に表示するメッセージ。<b
  <tr><td>shell(cmd)</td><td>cmd: コマンド(配列)</td><td>実行結果</td><td>コマンドを起動し、その結果を取得する。</td><td></td></tr>
  <tr><td>log(msg)</td><td>msg: メッセージ</td><td>なし</td><td>ログファイルにログ文字列を追加する。</td><td></td></tr>
  <tr><td>error(msg)</td><td>msg: メッセージ</td><td>なし</td><td>ログファイルにエラー文字列を追加する。</td><td></td></tr>
- <tr><td>isset(v)</td><td>v: 変数</td><td>v が有効なら True</td><td>変数が有効か判別する。</td><td></td></tr>
+ <tr><td>isset(v)</td><td>v: 変数</td><td>v が有効なら True</td><td>変数が有効(not None)か判別する。</td><td></td></tr>
+ <tr><td>isnull(v)</td><td>v: 変数</td><td>v が無効なら True</td><td>変数が無効(None)か判別する。</td><td></td></tr>
  <tr><td>is_str(x)</td><td>x: 変数</td><td>x が文字列なら True</td><td>変数が文字列型か判別する。</td><td></td></tr>
  <tr><td>is_int(x)</td><td>x: 変数</td><td>x が整数なら True</td><td>変数が整数型か判別する。</td><td></td></tr>
  <tr><td>is_float(x)</td><td>x: 変数</td><td>x が浮動小数点数なら True</td><td>変数が浮動小数点数型か判別する。</td><td></td></tr>
@@ -210,11 +234,11 @@ callback : タイムアウト時にコールされる関数 callback()
  <tr><td>is_windows()</td><td>なし</td><td>動作環境が Windows なら True</td><td>動作環境を判別する。</td><td></td></tr>
  <tr><td>to_bytes(s)</td><td>s: 文字列</td><td>バイト列</td><td>文字列をバイト列に変換する。</td><td></td></tr>
  <tr><td>from_bytes(b)</td><td>b: バイト列</td><td>文字列</td><td>バイト列を文字列に変換する。</td><td></td></tr>
- <tr><td>esc_print(code, text, reset=True)</td><td>code: 端末エスケープシーケンスコード<br />
+ <tr><td>esc_print(code, text, reset=True)</td><td>code: 端末エスケープシーケンスコードまたはそのタプルまたはカラー名<br />
 text: 表示文字列<br />
 reset: True なら前の状態にもどす。False ならそのまま。
- </td><td>なし</td><td>端末にエスケープシーケンスを出力後、文字列を出力する。</td><td></td></tr>
- <tr><td>is_main()</td><td>なし</td><td>メインなら True</td><td>メインプログラムとして実行されているか判別</td><td></td></tr>
+ </td><td>なし</td><td>端末にエスケープシーケンスを出力後、文字列を出力する。</td><td>(例) esc_print("blue", "青で表示")</td></tr>
+ <tr><td>readline(message=None)</td><td>message: メッセージ</td><td>入力文字列</td><td>文字列をキーボードから入力する。</td><td></td></tr>
  <tr><td>from_json(json)</td><td>json: JSON 形式文字列</td><td>Python オブジェクト</td><td>JSON 文字列を Python オブジェクトに変換する。</td><td></td></tr>
  <tr><td>to_json(obj)</td><td>obj: Python オブジェクト</td><td>JSON 形式文字列</td><td>Python オブジェクトを JSON 形式文字列に変換する。</td><td></td></tr>
 <table>

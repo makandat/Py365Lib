@@ -8,7 +8,7 @@
 #   ver 2.00  2018-11-16
 #   ver 2.10  2018-11-19
 #   ver 2.11  2018-11-20
-#   ver 2.12  2018-11-21
+#   ver 2.12  2018-11-27
 import sys
 import os
 import subprocess
@@ -71,42 +71,46 @@ def init_logger(filename=None) :
 
 # コマンド引数のリストを返す。
 def args() :
-	n = len(sys.argv)
-	a = []
-	if n > 1 :
-		for i in range(1, n) :
-			a.append(sys.argv[i])
-	return a
+  n = len(sys.argv)
+  a = []
+  if n > 1 :
+    for i in range(1, n) :
+      a.append(sys.argv[i])
+  return a
 
 # コマンド引数の数
 def count_args() :
-	return len(sys.argv) - 1
+  return len(sys.argv) - 1
 
 # プログラムの実行を停止する。
 def stop(code = 0, message ="", color=ESC_FG_RED) :
-	if message != "" :
-		esc_print(color, message)
-	exit(code)
+  if message != "" :
+    esc_print(color, message)
+  exit(code)
 
 # コマンドを起動する。(cmd は配列)
 def exec(cmd) :
-	return subprocess.check_call(cmd)
+  return subprocess.check_call(cmd)
 
 # コマンドを起動して、その結果を返す。(cmd は配列)
 def shell(cmd) :
-	return subprocess.check_output(args=cmd)
+  return subprocess.check_output(args=cmd)
 
 # ログ情報出力
 def log(msg) :
-	logger.info(msg)
+  logger.info(msg)
 
 # ログエラー出力
 def error(msg) :
-	logger.error(msg)
+  logger.error(msg)
 
 # 変数が有効かどうか
 def isset(v) :
-	return v != None
+  return v != None
+
+# 変数が無効かどうか
+def isnull(v) :
+  return v == None
 
 # 変数が文字列かどうか
 def is_str(x) :
@@ -155,15 +159,45 @@ def from_bytes(b) :
 
 # エスケープシーケンス出力
 def esc_print(code, text, reset=True) :
+  if is_str(code) :
+    if code == "red" :
+      code = ESC_FG_RED
+    elif code == "green" :
+      code = ESC_FG_GREEN
+    elif code == "blue" :
+      code = ESC_FG_BLUE
+    elif code == "cyan" :
+      code = ESC_FG_CYAN
+    elif code == "magenta" :
+      code = ESC_FG_MAGENTA
+    elif code == "yellow" :
+      code = ESC_FG_YELLOW
+    elif code == "bold" :
+      code = ESC_BOLD
+    elif code == "underline" :
+      code = ESC_UNDERLINE
+    elif code == "reverse" :
+      code = ESC_REVERSE
+    else :
+      pass
+  else :  # code はタプルとする。
+    cc = ""
+    for x in code :
+      cc += x
+    code = cc
   text = str(text)
   if reset :
     print(code + text + "\x1b[m")
   else :
     print(code + text)
+  return
 
-# メインプログラムか判別
-def is_main() :
-  return __name__ == "__main__"
+# 文字列入力
+def readline(message=None) :
+  if isset(message) :
+    print(message)
+  s = input()
+  return s
 
 # json データをオブジェクトに変換する。
 def from_json(jsonText) :
