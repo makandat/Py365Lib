@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>WebPage クラス サンプル</title>
-<link rel="stylesheet" href="/css/default.css" />
+<link rel="stylesheet" href="../default.css" />
 <style>
 div.i2 {
   margin-left:7%;
@@ -14,6 +14,14 @@ pre.code {
   margin-right:5%;
   border: solid thin silver;
   box-shadow: 4px 4px 6px silver;
+  padding:4px;
+}
+
+img {
+  border:solid thin gray;
+}
+
+figure {
   padding:4px;
 }
 </style>
@@ -27,8 +35,13 @@ pre.code {
 <h1>WebPage クラス サンプル</h1>
 <p style="text-align:center;"><a href="../index.html">もどる</a></p>
 <div class="i2">
+
 <h3>サンプル１</h3>
 <p>フォームとクッキーの使用例</p>
+<figure>
+ <img src="img/testWebPage0.png" />
+</figure>
+
 <pre class="code"><code>#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト
@@ -85,6 +98,9 @@ wp.echo()</code></pre>
 <div class="i2">
 <h3>サンプル２</h3>
 <p>MySQL モジュールを利用してテーブルにクエリーを行って、取得した内容を表として表示する。</p>
+<figure>
+ <img src="img/testWebPage1.png" />
+</figure>
 <pre class="code"><code>#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト (1)
@@ -153,6 +169,10 @@ wp.echo()</code></pre>
 <div class="i2">
 <h3>サンプル３</h3>
 <p>ファイルのアップロードを行うサンプル</p>
+<figure>
+ <img src="img/testWebPage2.png" />
+</figure>
+
 <pre class="code"><code>#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト (2)
@@ -211,6 +231,10 @@ wp.echo()</code></pre>
 <div class="i2">
 <h3>サンプル４</h3>
 <p>ページのリダイレクトを行うサンプル</p>
+<figure>
+ <img src="img/testWebPage3.png" />
+</figure>
+
 <pre class="code"><code>#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト (3)
@@ -265,6 +289,10 @@ wp.echo()</code></pre>
 <div class="i2">
 <h3>サンプル５</h3>
 <p>Ajax を利用してプレーンテキストを取得するサンプル</p>
+<figure>
+ <img src="img/testWebPage4.png" />
+</figure>
+
 <h4>fahren.cgi</h4>
 <pre class="code"><code>#!/usr/bin/env python3
 #  華氏温度と摂氏温度変換
@@ -333,6 +361,10 @@ MyPage()</code></pre>
 <div class="i2">
 <h3>サンプル６</h3>
 <p>Ajax を利用して JSON を取得して表示するサンプル</p>
+<figure>
+ <img src="img/testWebPage5.png" />
+</figure>
+
 <h4>complex.cgi</h4>
 <pre class="code"><code>#!/usr/bin/env python3
 #  複素数の極形式変換
@@ -391,6 +423,10 @@ $(function() {
 <div class="i2">
 <h3>サンプル７</h3>
 <p>画像を返す CGI の例</p>
+<figure>
+ <img src="img/testWebPage6.png" />
+</figure>
+
 <h4>image.cgi</h4>
 <pre class="code"><code>#!/usr/bin/env python3
 #  画像を返す。
@@ -438,6 +474,10 @@ MyPage()</code></pre>
 <div class="i2">
 <h3>サンプル８</h3>
 <p>TextArea, Select, CheckBox, Radio 使用例</p>
+<figure>
+ <img src="img/testWebPage7.png" />
+</figure>
+
 <h4>CGI</h4>
 <pre class="code"><code>#!/usr/bin/env python3
 # -*- code=utf-8 -*-

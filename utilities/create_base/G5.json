@@ -1,0 +1,20 @@
+[
+  {
+    "type":"menubar", "name":"menubar", "menulist":
+    [
+      { "type":"topmenu", "name":"topmenu1", "text":"Menu", "submenulist":
+        [
+          { "type":"menuitem", "name":"mnuOpen", "text":"Open", "command":"mnuOpen_Click" },
+          { "type":"separator" },
+          { "type":"menuitem", "name":"mnuQuit", "text":"Quit", "command":"mnuQuit_Click" }
+        ]
+      },
+      { "type":"topmenu", "name":"topmenu2", "text":"Help", "submenulist":
+        [
+          { "type":"menuitem", "name":"mnuAbout", "text":"About ..", "command":"mnuAbout_Click" }
+        ]
+      }
+    ]
+  },
+  { "type":"label", "name":"label1", "text":"Label1", "pady":20 }
+]

@@ -1,0 +1,6 @@
+[
+  { "type":"image", "name":"image1", "file":"rect1.png", "anchor":"nw", "side":"left", "padx":15, "pady":10 },
+  { "type":"label", "name":"label1", "text":"(rect1.png)", "anchor":"nw", "side":"left" },
+  { "type":"image", "name":"image2", "file":"circle1.png", "anchor":"nw", "side":"left", "padx":15, "pady":10 },
+  { "type":"label", "name":"label2", "text":"(circle1.png)", "anchor":"nw" }
+]

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja-jp">
+<!-- HTML ヘッダー -->
+<head>
+<meta charset="utf-8" />
+<title>Python3 Py365Lib ユーティリティ</title>
+<link rel="stylesheet" href="../default.css" />
+<style>
+table {
+  width:100%;
+  border:solid thin gray;
+}
+
+th {
+  border:solid thin gray;
+  background-color:gainsboro;
+}
+
+td {
+  border:solid thin gray;
+  vertical-align:top;
+}
+
+header, article, fooder {
+  margin-left:5%;
+  margin-right:5%;
+}
+</style>
+</head>
+
+
+<!-- HTML 本体 -->
+<body>
+<!-- ヘッダー -->
+<header>
+<h1 style="text-align:center;">Python3.6 Py365Lib ユーティリティ　<span style="font-size:14pt">(ver 2.0)</span></h1>
+<div style="text-align:center;"><a href="/">HOME</a></div>
+</header>
+
+<!-- 本文 -->
+<article>
+<h2>アプルケーションの基本形構築 (Py356Lib/utilities/create_base.py)</h2>
+<p>このユーティリティはアプリケーションの基本形をユーザが指定した場所に作成する。作成できるスケルトンは「コンソールアプリ」、「CGI」、
+「Cursesアプリ」、「HTTP 簡易サーバ」、「Tkinterアプリ」である。</p>
+<p>ユーザがスケルトンを作成する場所、アプリケーション名、アプリケーション種別を指定すると、そこにアプリケーションの基本形が作成される。</p>
+<br />
+
+
+<h2>Curses アプリケーション関連</h2>
+<h3>カラーペア番号表示 (utilities/CursesApp/color_table.py)</h3>
+<p>color_table.py は CursesApp クラスが初期化するカラーペアを実際に表示し、どのような色かを確認するためのツールである。</p>
+<figure>
+ <img src="color_table.png" />
+</figure>
+<br />
+
+<h3>表示属性番号表示 (utilities/CursesApp/text_attr.py)</h3>
+<p>text_attr.py は表示属性コードを指定した文字列を実際に表示し、そのような属性なのかを実際に確認するためのツールである。属性コードの値も確認できる。</p>
+<figure>
+ <img src="text_attr.png" />
+</figure>
+<br />
+
+<h3>キー入力コード表示 (utilities/CursesApp/key_input.py)</h3>
+<p>key_input.py はファンクションキーなど特殊なキーの値が、実際にどのような値なのかを表示するプログラムである。</p>
+<figure>
+ <img src="key_input.png" />
+</figure>
+<br />
+
+<h2>Tkinter アプリケーション関連</h2>
+<h3>ウィジェットリソース (json) 作成ツール</h3>
+<br />
+
+</article>
+
+<!-- フッター -->
+<footer>
+<p style="text-align:center;"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<footer>
+</body>
+</html>

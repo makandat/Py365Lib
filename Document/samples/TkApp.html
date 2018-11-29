@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>TkApp クラス サンプル</title>
-<link rel="stylesheet" href="/css/default.css" />
+<link rel="stylesheet" href="../default.css" />
 <style>
 div.i2 {
   margin-left:7%;
@@ -28,10 +28,332 @@ pre.code {
 <p style="text-align:center;"><a href="../index.html">もどる</a></p>
 <div class="i2">
 
-<h3>サンプル１</h3>
-<pre class="code"><code>
 
+
+
+<h2>サンプル１ (TkApp\test\test_TkApp1.py)</h2>
+<p></p>
+<figure>
+ <img src="img/TkApp1.png" />
+</figure>
+
+<h3>Python ソース</h3>
+<pre class="code"><code>#  注意　"python3 test_TkApp1.py" として実行すること。 
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp1", "left":100, "top":100, "width":400, "height":200, "fixedborder":True}
+app = tkapp.TkApp(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
 </code></pre>
+<br />
+<h3>Widget 定義ファイル</h3>
+<pre class="code"><code>[
+  {"type":"button", "name":"button1", "text":"Button1"},
+  {"type":"label", "name":"label1", "text":"Label1"},
+  {"type":"text", "name":"text1", "text":"Text1"},
+  {"type":"check", "name":"check1", "text":"Check1"},
+  {"type":"radio", "name":"radio1", "text":"Radio1", "value":0},
+  {"type":"radio", "name":"radio2", "text":"Radio2", "value":1}
+]
+</code></pre>
+<br />
+
+
+<h2>サンプル２ (TkApp\test\test_TkApp2.py)</h2>
+<p></p>
+<h3>Python ソース</h3>
+<figure>
+ <img src="img/TkApp2.png" />
+</figure>
+<pre class="code"><code>#  注意　"python3 test_TkApp2.py" として実行すること。 
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp2", "left":100, "top":100, "width":512, "height":320, "fixedborder":False}
+app = tkapp.TkApp(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+<h3>Widget 定義ファイル</h3>
+<pre class="code"><code>[
+  {"type":"frame", "name":"north", "layout":"pack", "border":3, "relief":"ridge", "container":[
+      { "type":"label", "name":"label01", "layout":"pack", "text":"Label01", "bg":"silver", "width":30 },
+      { "type":"label", "name":"label02", "layout":"pack", "text":"Label02", "bg":"wheat", "width":30 },
+      { "type":"label", "name":"label04", "layout":"pack", "text":"Label03", "bg":"coral", "width":30 }
+    ]
+  },
+  {"type":"frame", "name":"center", "layout":"grid", "border":3, "relief":"groove", "container":[
+      { "type":"label", "layout":"grid", "column":0, "row":0, "name":"label11", "text":"Label1", "bg":"silver" },
+      { "type":"label", "layout":"grid", "column":1, "row":0, "name":"label12", "text":"Label12", "bg":"gainsboro" },
+      { "type":"label", "layout":"grid", "column":0, "row":1, "name":"label13", "text":"Label13", "bg":"gray", "fg":"white" },
+      { "type":"label", "layout":"grid", "column":1, "row":1, "name":"label14", "text":"Label14", "bg":"whitesmoke" }
+    ]
+  },
+  {"type":"frame", "name":"south", "layout":"place", "border":1, "relief":"flat", "bg":"red", "width":300, "height":100, "container":[
+      { "type":"label", "layout":"place", "x":1, "y":1, "name":"label21", "text":"Label21", "bg":"yellow", "fg":"magenta" },
+      { "type":"label", "layout":"place", "x":50, "y":30, "name":"label22", "text":"Label22", "bg":"green", "fg":"lime" }
+    ]
+  }
+]
+</code></pre>
+<br />
+
+
+<h2>サンプル３ (TkApp\test\test_TkApp3.py)</h2>
+<p></p>
+<h3>Python ソース</h3>
+<figure>
+ <img src="img/TkApp3.png" />
+</figure>
+
+<pre class="code"><code>#  注意　"python3 test_TkApp3.py" として実行すること。 
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+# TkApp から継承するクラス
+class TkApp3(tkapp.TkApp) :
+  count = 0
+
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+    self.commands["button1"] = self.button1_click
+    self.setCommands()
+
+  def button1_click(self) :
+    self.setWidget("label1", "text", "button1_click " + str(self.count))
+    self.count += 1
+    return
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp3", "left":100, "top":100, "width":512, "height":320}
+app = TkApp3(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+<h3>Widget 定義ファイル</h3>
+<pre class="code"><code>[
+  {"type":"label", "name":"label1", "text":"Label1", "width":30, "fg":"green", "bg":"white",
+   "font":["", 16, "bold"], "anchor":"W", "pady":40},
+  {"type":"button", "name":"button1", "text":"Button1", "width":10, "command":"button1_click"}
+]
+</code></pre>
+<br />
+
+
+<h2>サンプル４ (TkApp\test\test_TkApp4.py)</h2>
+<p></p>
+<h3>Python ソース</h3>
+<figure>
+ <img src="img/TkApp4.png" />
+</figure>
+
+<pre class="code"><code>#  注意　"python3 test_TkApp4.py" として実行すること。 
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+# TkApp から継承するクラス
+class TkApp4(tkapp.TkApp) :
+  count = 0
+
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp4", "left":100, "top":100, "width":512, "height":320}
+app = TkApp4(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+<h3>Widget 定義ファイル</h3>
+<pre class="code"><code>[
+  { "type":"image", "name":"image1", "file":"rect1.png", "anchor":"nw", "side":"left", "padx":15, "pady":10 },
+  { "type":"label", "name":"label1", "text":"(rect1.png)", "anchor":"nw", "side":"left" },
+  { "type":"image", "name":"image2", "file":"circle1.png", "anchor":"nw", "side":"left", "padx":15, "pady":10 },
+  { "type":"label", "name":"label2", "text":"(circle1.png)", "anchor":"nw" }
+]
+</code></pre>
+<br />
+
+
+<h2>サンプル５ (TkApp\test\test_TkApp5.py)</h2>
+<p></p>
+<figure>
+ <img src="img/TkApp5.png" />
+</figure>
+
+<h3>Python ソース</h3>
+<pre class="code"><code>#  TkApp5.py
+# -*- coding: utf-8 -*-
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+
+# TkApp から継承するクラス
+class TkApp5(tkapp.TkApp) :
+
+  # コンストラクタ
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+    self.commands["mnuOpen_Click"] = self.mnuOpen_Click
+    self.commands["mnuQuit_Click"] = root.destroy
+    self.commands["mnuAbout_Click"] = self.mnuAbout_Click
+    self.setCommands()
+
+  # Open メニューハンドラ
+  def mnuOpen_Click(self) :
+    w = self.getWidget('label1')
+    w['text'] = "mnuOpen_Click"
+    return
+
+  # Help メニューハンドラ
+  def mnuAbout_Click(self) :
+    w = self.getWidget('label1')
+    w['text'] = "mnuAbout_Click"
+    return
+
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp5", "left":100, "top":100, "width":512, "height":320}
+app = TkApp5(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+<h3>Widget 定義ファイル</h3>
+<pre class="code"><code>[
+  {
+    "type":"menubar", "name":"menubar", "menulist":
+    [
+      { "type":"topmenu", "name":"topmenu1", "text":"Menu", "submenulist":
+        [
+          { "type":"menuitem", "name":"mnuOpen", "text":"Open", "command":"mnuOpen_Click" },
+          { "type":"separator" },
+          { "type":"menuitem", "name":"mnuQuit", "text":"Quit", "command":"mnuQuit_Click" }
+        ]
+      },
+      { "type":"topmenu", "name":"topmenu2", "text":"Help", "submenulist":
+        [
+          { "type":"menuitem", "name":"mnuAbout", "text":"About ..", "command":"mnuAbout_Click" }
+        ]
+      }
+    ]
+  },
+  { "type":"label", "name":"label1", "text":"Label1", "pady":20 }
+]
+</code></pre>
+<br />
+
+
+<h2>サンプル６ (TkApp\test\test_TkApp6.py)</h2>
+<p></p>
+<figure>
+ <img src="img/TkApp6.png" />
+</figure>
+
+<h3>Python ソース</h3>
+<pre class="code"><code>#  TkApp6.py
+# -*- coding: utf-8 -*-
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+
+# TkApp から継承するクラス
+class TkApp6(tkapp.TkApp) :
+
+  # コンストラクタ
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+    self.commands["button1"] = self.button1_click
+    self.commands["button2"] = root.destroy
+    self.setCommands()
+
+  def button1_click(self) :
+    message = "text1="
+    message += self.getWidgetValue('text1')
+    message += ", text2="
+    message += self.getWidgetValue('text2')
+    message += ", list1="
+    message += str(self.getWidgetValue('list1'))
+    message += ", check1="
+    message += str(self.getWidgetValue('check1'))
+    self.messageBox(message, "info")
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp6", "left":100, "top":100, "width":512, "height":320}
+app = TkApp6(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+<h3>Widget 定義ファイル</h3>
+<pre class="code"><code>[
+  {"type":"frame", "name":"north", "layout":"grid", "border":1, "relief":"flat", "container":[
+    {"type":"label", "name":"label1", "text":"label1", "layout":"grid", "column":0, "row":0, "anchor":"w"},
+    {"type":"text", "name":"text1", "text":"text1", "width":10, "layout":"grid", "column":1, "row":0, "anchor":"w"},
+    {"type":"label", "name":"label2", "text":"label2", "layout":"grid", "column":0, "row":1, "anchor":"w"},
+    {"type":"text", "name":"text2", "text":"text2", "layout":"grid", "column":1, "row":1, "anchor":"w"},
+    {"type":"label", "name":"label3", "text":"label3", "layout":"grid", "column":0, "row":2, "anchor":"w"},
+    {"type":"list", "name":"list1", "items":["Item1", "item2", "Item3", "Item4", "Item5"], "height":3, "layout":"grid", "column":1, "row":2, "anchor":"w"},
+    {"type":"check", "name":"check1", "text":"Check1", "layout":"grid", "column":0, "row":3, "anchor":"w"},
+    {"type":"frame", "name":"frameradio", "text":"radio buttons", "layout":"grid", "column":0, "row":4, "border":3, "relief":"groove", "width":80, "height":40, "container":[
+      {"type":"radio", "name":"radio1", "text":"Radio1", "layout":"pack", "value":0 },
+      {"type":"radio", "name":"radio2", "text":"Radio2", "layout":"pack", "value":1 }
+    ]},
+    {"type":"button", "name":"button1", "text":"OK", "layout":"grid", "column":0, "row":5, "anchor":"w", "command":"button1"},
+    {"type":"button", "name":"button2", "text":"Cancel", "layout":"grid", "column":1, "row":5, "anchor":"w","command":"button2"}
+  ]},
+  {"type":"frame", "name":"south", "layout":"pack", "border":1, "relief":"flat", "container":[
+    {"type":"label", "name":"statusbar", "text":"status", "anchor":"w"}
+  ]} 
+]
+</code></pre>
+<br />
+
 
 </div>
 <p>&nbsp;</p>

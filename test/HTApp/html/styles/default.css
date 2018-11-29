@@ -1,0 +1,43 @@
+/* default.css */
+body {
+  margin-left: 5%;
+  margin-right: 5%;
+  color: dimgray;
+  background-color: white;
+}
+
+h1 {
+  text-align: center;
+  padding: 8px;
+  color: mediumblue;
+}
+
+h2 {
+  padding: 5px;
+  color: seagreen;
+}
+
+h3 {
+  color: darkcyan;
+}
+
+table, td, th {
+  border-collapse: collapse;
+  border: solid thin silver;
+}
+
+th {
+  background-color: whitesmoke;
+  padding:4px;
+}
+
+td {
+  background-color: white;
+  padding: 3px;
+  font-size: smaller;
+}
+
+a:link, a:visited {
+  color: darkcyan;
+  text-decoration: none;
+}

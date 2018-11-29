@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>Python3 Py365Lib</title>
-<link rel="stylesheet" href="/css/default.css" />
+<link rel="stylesheet" href="default.css" />
 <style>
 table {
   width:100%;
@@ -54,7 +54,9 @@ header, article, fooder {
    <li><a href="#HTApp">HTApp クラス (HTTP サーバ向け)</a></li>
   </ul>
  </li>
+ <li><a href="#tutorial">チュートリアル</a></li>
  <li><a href="#samples">サンプル</a></li>
+ <li><a href="#utilities">ユーティリティ</a></li>
 </ul>
 <br />
 
@@ -161,6 +163,20 @@ header, article, fooder {
 </ul>
 <br />
 
+<!-- チュートリアル -->
+<h2><a id="tutorial">チュートリアル</a></h2>
+<ul>
+  <li><a href="tutorial/Common.html">コンソールアプリ</a></li>
+  <li><a href="tutorial/MySQL.html">MySQL</a></li>
+  <li><a href="tutorial/AWSS3.html">AWS S3</a></li>
+  <li><a href="tutorial/WebPage.html">CGI</a></li>
+  <li><a href="tutorial/CursesApp.html">curses アプリ</a></li>
+  <li><a href="tutorial/TkApp.html">tkinterアプリ</a></li>
+  <li><a href="tutorial/HTApp.html">HTTP サーバ</a></li>
+</ul>
+<br />
+
+
 <!-- サンプル -->
 <h2><a id="samples">サンプル</a></h2>
 <ul>
@@ -174,6 +190,13 @@ header, article, fooder {
   <li><a href="samples/CursesApp.html">CursesApp クラス</a></li>
   <li><a href="samples/HTApp.html">HTApp クラス</a></li>
   <li><a href="samples/TkApp.html">TkApp クラス</a></li>
+</ul>
+<br />
+
+<!-- ユーティリティ -->
+<h2><a id="utilities">ユーティリティ</a></h2>
+<ul>
+  <li><a href="utilities/index.html">ユーティリティ一覧</a></li>
 </ul>
 <br />
 
@@ -196,7 +219,8 @@ code: 終了コード<br />message: 終了時に表示するメッセージ。<b
  <tr><td>shell(cmd)</td><td>cmd: コマンド(配列)</td><td>実行結果</td><td>コマンドを起動し、その結果を取得する。</td><td></td></tr>
  <tr><td>log(msg)</td><td>msg: メッセージ</td><td>なし</td><td>ログファイルにログ文字列を追加する。</td><td></td></tr>
  <tr><td>error(msg)</td><td>msg: メッセージ</td><td>なし</td><td>ログファイルにエラー文字列を追加する。</td><td></td></tr>
- <tr><td>isset(v)</td><td>v: 変数</td><td>v が有効なら True</td><td>変数が有効か判別する。</td><td></td></tr>
+ <tr><td>isset(v)</td><td>v: 変数</td><td>v が有効なら True</td><td>変数が有効(not None)か判別する。</td><td></td></tr>
+ <tr><td>isnull(v)</td><td>v: 変数</td><td>v が無効なら True</td><td>変数が無効(None)か判別する。</td><td></td></tr>
  <tr><td>is_str(x)</td><td>x: 変数</td><td>x が文字列なら True</td><td>変数が文字列型か判別する。</td><td></td></tr>
  <tr><td>is_int(x)</td><td>x: 変数</td><td>x が整数なら True</td><td>変数が整数型か判別する。</td><td></td></tr>
  <tr><td>is_float(x)</td><td>x: 変数</td><td>x が浮動小数点数なら True</td><td>変数が浮動小数点数型か判別する。</td><td></td></tr>
@@ -210,11 +234,11 @@ callback : タイムアウト時にコールされる関数 callback()
  <tr><td>is_windows()</td><td>なし</td><td>動作環境が Windows なら True</td><td>動作環境を判別する。</td><td></td></tr>
  <tr><td>to_bytes(s)</td><td>s: 文字列</td><td>バイト列</td><td>文字列をバイト列に変換する。</td><td></td></tr>
  <tr><td>from_bytes(b)</td><td>b: バイト列</td><td>文字列</td><td>バイト列を文字列に変換する。</td><td></td></tr>
- <tr><td>esc_print(code, text, reset=True)</td><td>code: 端末エスケープシーケンスコード<br />
+ <tr><td>esc_print(code, text, reset=True)</td><td>code: 端末エスケープシーケンスコードまたはそのタプルまたはカラー名<br />
 text: 表示文字列<br />
 reset: True なら前の状態にもどす。False ならそのまま。
- </td><td>なし</td><td>端末にエスケープシーケンスを出力後、文字列を出力する。</td><td></td></tr>
- <tr><td>is_main()</td><td>なし</td><td>メインなら True</td><td>メインプログラムとして実行されているか判別</td><td></td></tr>
+ </td><td>なし</td><td>端末にエスケープシーケンスを出力後、文字列を出力する。</td><td>(例) esc_print("blue", "青で表示")</td></tr>
+ <tr><td>readline(message=None)</td><td>message: メッセージ</td><td>入力文字列</td><td>文字列をキーボードから入力する。</td><td></td></tr>
  <tr><td>from_json(json)</td><td>json: JSON 形式文字列</td><td>Python オブジェクト</td><td>JSON 文字列を Python オブジェクトに変換する。</td><td></td></tr>
  <tr><td>to_json(obj)</td><td>obj: Python オブジェクト</td><td>JSON 形式文字列</td><td>Python オブジェクトを JSON 形式文字列に変換する。</td><td></td></tr>
 <table>
@@ -316,21 +340,24 @@ recursive: True ならファイルやサブディレクトリも削除</td><td>�
 <p><a href="samples/Text.html">Text のサンプル</a></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
- <tr><td>__init__(s)</td><td>s: 文字列</td><td>N/A</td><td>コンストラクタ</td><td>コンストラクタ</td></tr>
+ <tr><td>__init__(s)</td><td>s: 文字列</td><td>N/A</td><td>Text クラスのコンストラクタ</td><td>Text クラスのコンストラクタ</td></tr>
  <tr><td>length</td><td>なし</td><td>現在の文字列の長さ</td><td>現在の文字列の長さを得る。</td><td>Text クラスの R/O property</td></tr>
+ <tr><td>toString()</td><td>なし</td><td>このインスタンスの文字列</td><td>このインスタンスの文字列を返す。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>append(s)</td><td>s: 文字列</td><td>なし</td><td>現在の文字列に s を追加する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substring(start, length)</td><td>start: 開始位置<br />length: 長さ</td><td>部分文字列</td><td>start の位置から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substr(start, end)</td><td>start: 開始位置<br />end: 終了位置</td><td>部分文字列</td><td>start の位置から end 手前までの文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>left(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の先頭から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>right(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の最後から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>times(c, n)</td><td>c: 文字<br />n: 回数</td><td>なし</td><td>文字 c を n 回繰り返した文字列をオブジェクトの文字列にする。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>clear()</td><td>なし</td><td>なし</td><td>オブジェクトの内容をクリアする。</td><td>Text クラスのメソッド</td></tr>
  <tr><td>isdigit(a)</td><td>a: 文字</td><td>数字なら True、そうでないなら False</td><td>数字かどうかを判別する</td><td>関数</td></tr>
  <tr><td>isalpha(a)</td><td>a: 文字</td><td>アルファベットなら True、そうでないなら False</td><td>アルファベットかどうかを判別する</td><td>関数</td></tr>
  <tr><td>isdelim(a)</td><td>a: 文字</td><td>区切り文字なら True、そうでないなら False</td><td>区切り文字かどうかを判別する</td><td>関数</td></tr>
  <tr><td>isprint(a)</td><td>a: 文字</td><td>表示可能文字なら True、そうでないなら False</td><td>表示可能文字なら True、そうでないなら False</td><td>関数</td></tr>
  <tr><td>tolower(s)</td><td>s: 文字列</td><td>大文字に変換された文字列</td><td>文字列に含まれる小文字をすべて大文字にする。</td><td>関数</td></tr>
  <tr><td>toupper(s)</td><td>s: 文字列</td><td>小文字に変換された文字列</td><td>文字列に含まれる大文字をすべて小文字にする。</td><td>関数</td></tr>
- <tr><td>append(s)</td><td>s: 文字列</td><td>なし</td><td>現在の文字列に s を追加する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>substring(start, length)</td><td>start: 開始位置<br />length: 長さ</td><td>部分文字列</td><td>start の位置から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>substr(start, end)</td><td>start: 開始位置<br />end: 終了位置</td><td>部分文字列</td><td>start の位置から end 手前までの文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>left(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の先頭から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>right(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の最後から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>trim(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の両端の空白を削除する。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>chomp(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の復帰改行文字を削除する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>trim(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の両端の空白を削除する。</td><td>関数</td></tr>
+ <tr><td>chomp(s)</td><td>s: 文字列</td><td>なし</td><td>文字列の復帰改行文字を削除する。</td><td>関数</td></tr>
  <tr><td>split(c, s)</td><td>c: 区切り文字<br />s: 文字列</td><td>分割された文字列のリスト</td><td>c で現在の文字列を分割してリストとして返す。</td><td>関数</td></tr>
  <tr><td>join(c, array)</td><td>c: 結合文字<br />array: 文字列リスト</td><td>結合された文字列</td><td>c で array の要素をすべて結合する。</td><td>関数</td></tr>
  <tr><td>contain(str, s)</td><td>str: 検索文字列<br />
@@ -345,10 +372,7 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>parseDouble(s)</td><td>s: 文字列</td><td>浮動小数点数</td><td>可能なら文字列を浮動小数点数に変換する。</td><td>関数</td></tr>
  <tr><td>char(n)</td><td>n: 整数</td><td>文字</td><td>整数を文字に変換する。</td><td>関数</td></tr>
  <tr><td>asc(a)</td><td>a: 文字</td><td>整数</td><td>文字を整数に変換する。</td><td>関数</td></tr>
- <tr><td>toString()</td><td>なし</td><td>このインスタンスの文字列</td><td>このインスタンスの文字列を返す。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>times(c, n)</td><td>c: 文字<br />n: 回数</td><td>なし</td><td>このインスタンスの文字列を文字 c を n 回繰り返す文字列で置き換える。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>clear()</td><td>なし</td><td>なし</td><td>このインスタンスの文字列を "" で置き換える。</td><td>Text クラスのメソッド</td></tr>
- <tr><td>re_contain(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>検索文字列が含まれていれば True</td><td>
+ <tr><td>re_contain(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>検索文字列が含まれていれば True、含まれていなければ False</td><td>
    対象の文字列を正規表現で検索して、検索文字列が含まれているか判別する。 </td><td>関数</td></tr>
  <tr><td>re_search(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td>
   <td>見つかった部分文字列のリスト</td><td>対象の文字列を正規表現で検索して、部分文字列を抽出する。</td><td>関数</td></tr>
@@ -381,11 +405,7 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>minute</td><td>なし</td><td>このインスタンスの分部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
  <tr><td>hour</td><td>なし</td><td>このインスタンスの時部分</td><td></td><td>DateTime クラスの R/O property</td></tr>
  <tr><td>addDays(days)</td><td>days: 日数</td><td>なし</td><td>このインスタンスに days を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addMonths(months)</td><td>months: 月数</td><td>なし</td><td>このインスタンスに months を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addYears(years)</td><td>years: 年数</td><td>なし</td><td>このインスタンスに years を加える。</td><td>DateTime クラスのメソッド</td></tr>
  <tr><td>addSeconds(seconds)</td><td>seconds: 秒数</td><td>なし</td><td>このインスタンスに seconds を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addMinutes(minutes)</td><td>minutes: 分数</td><td>なし</td><td>このインスタンスに minutes を加える。</td><td>DateTime クラスのメソッド</td></tr>
- <tr><td>addHours(hours)</td><td>hours: 時間数</td><td>なし</td><td>このインスタンスに hours を加える。</td><td>DateTime クラスのメソッド</td></tr>
  <tr><td>timestamp</td><td>なし</td><td>Unix タイム</td><td>このインスタンスのタイムスタンプ (実数)</td><td>DateTime クラスの R/O property</td></tr>
 </table>
 

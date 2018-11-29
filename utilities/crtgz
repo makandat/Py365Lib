@@ -1,0 +1,16 @@
+#!/bin/bash
+
+rm -v create_base.tgz
+cp -uv ../Common.py ./create_base/
+cp -uv ../FileSystem.py ./create_base/
+cp -uv ../Text.py ./create_base/
+cp -uv ../DateTime.py ./create_base/
+cp -uv ../MySQL.py ./create_base/
+cp -uv ../AWSS3.py ./create_base/
+cp -uv ../AWSS3.py ./create_base/
+cp -uv ../../CursesApp/CursesApp.py ./create_base/
+cp -uv ../../HTApp/HTApp.py ./create_base/
+cp -uv ../../TkApp/TkApp.py ./create_base/
+cp -uv ../../WebApp/WebPage.py ./create_base/
+tar cfvz create_base.tgz create_base/
+

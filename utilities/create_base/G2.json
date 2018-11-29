@@ -1,0 +1,20 @@
+[
+  {"type":"frame", "name":"north", "layout":"pack", "border":3, "relief":"ridge", "container":[
+      { "type":"label", "name":"label01", "layout":"pack", "text":"Label01", "bg":"silver", "width":30 },
+      { "type":"label", "name":"label02", "layout":"pack", "text":"Label02", "bg":"wheat", "width":30 },
+      { "type":"label", "name":"label04", "layout":"pack", "text":"Label03", "bg":"coral", "width":30 }
+    ]
+  },
+  {"type":"frame", "name":"center", "layout":"grid", "border":3, "relief":"groove", "container":[
+      { "type":"label", "layout":"grid", "column":0, "row":0, "name":"label11", "text":"Label1", "bg":"silver" },
+      { "type":"label", "layout":"grid", "column":1, "row":0, "name":"label12", "text":"Label12", "bg":"gainsboro" },
+      { "type":"label", "layout":"grid", "column":0, "row":1, "name":"label13", "text":"Label13", "bg":"gray", "fg":"white" },
+      { "type":"label", "layout":"grid", "column":1, "row":1, "name":"label14", "text":"Label14", "bg":"whitesmoke" }
+    ]
+  },
+  {"type":"frame", "name":"south", "layout":"place", "border":1, "relief":"flat", "bg":"red", "width":300, "height":100, "container":[
+      { "type":"label", "layout":"place", "x":1, "y":1, "name":"label21", "text":"Label21", "bg":"yellow", "fg":"magenta" },
+      { "type":"label", "layout":"place", "x":50, "y":30, "name":"label22", "text":"Label22", "bg":"green", "fg":"lime" }
+    ]
+  }
+]

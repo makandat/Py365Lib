@@ -1,5 +1,5 @@
 # -*- code=utf-8 -*-
-# Version 1.00  2018-11-21
+# Version 1.01  2018-11-28
 from typing import List
 import re
 
@@ -87,7 +87,7 @@ def chomp(s: str) -> str:
   return s
 
 # 文字 c で文字列 s を分割してリストとして返す。
-def split(c:str, s:str) -> List[str]:
+def split(c:bytes, s:str) -> List[str]:
   return s.split(c)
 
 # リスト array の要素を文字 c で連結する。
