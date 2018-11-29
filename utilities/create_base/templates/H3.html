@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja-JP">
+<head>
+<meta charset="utf-8" />
+<title>index3.html</title>
+<link rel="stylesheet" href="/styles/default.css" />
+<script src="/scripts/jquery.min.js"></script>
+<script>
+</script>
+<style>
+.fr {
+  margin-left:10%;
+  padding: 7px;
+}
+</style>
+</head>
+
+<body>
+<h1>フォーム (test_HTApp3.py)</h1>
+<p>&nbsp;</p>
+<form method="GET" action="/AppCreator">
+ <div class="fr"><label>保存先　　<input type="text" name="savepath" size="80" value="~/temp" /></label></div>
+ <div class="fr"><label>名前　　　<input type="text" name="appname" size="20" value="app" /></label></div>
+ <div class="fr"><label>種別　　　<select name="apptype">
+  <option value="0">コンソール (通常)</option>
+  <option value="1">コンソール (curses)</option>
+  <option value="2">グラフィカル (Tk)</option>
+  <option value="3">ウェブ (CGI)</option>
+  <option value="4">ウェブ (HTTP Server)</option>
+ </select></label></div>
+ <div class="fr" style="margin-left:60%;"><button type="submit">作成</button></div>
+</form>
+<br />
+<ul>
+ (*params*)
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

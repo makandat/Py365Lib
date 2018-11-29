@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja-JP">
+<head>
+<meta charset="utf-8" />
+<title>index5.html</title>
+<link rel="stylesheet" href="/styles/default.css" />
+<script src="/scripts/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('button').click(function() {
+            data = {"fahren": $('input[name="fahren"]').val()}
+            $.getJSON('/Fahren', data, function(json) {
+                $('#result').text("摂氏 " + json['result'] + "度");
+            });
+        });
+    });
+</script>
+<style>
+.fr {
+  margin-left:10%;
+  padding: 7px;
+  font-size:larger;
+  color:magenta;
+}
+</style>
+</head>
+
+<body>
+<h1>Ajax (test_HTApp5.py)</h1>
+<p>&nbsp;</p>
+<div style="margin-left:10%">
+	<p>華氏温度を摂氏に変換します。<p>
+	<form>
+		 <div style="margin-left:25%;"><label>華氏温度　<input type="text" name="fahren" style="width:100px;" value="32.0" /></label></div>
+		 <div style="margin-left:35%;margin-top:25px;"><label><button type="button"> CONVERT </label></div>
+	</form>
+	<br >
+	<p id="result" class="fr"></p>
+</div>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

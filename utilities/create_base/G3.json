@@ -1,0 +1,5 @@
+[
+  {"type":"label", "name":"label1", "text":"Label1", "width":30, "fg":"green", "bg":"white",
+   "font":["", 16, "bold"], "anchor":"W", "pady":40},
+  {"type":"button", "name":"button1", "text":"Button1", "width":10, "command":"button1_click"}
+]

@@ -1,3 +1,24 @@
-A0,コマンドライン引数のあるコンソールアプリケーション
-A1,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル一括読み込み。
-A2,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル行単位処理。
+A0,コマンドライン引数のあるコンソールアプリケーション,A0.py
+A1,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル一括読み込み。,A1.py
+A2,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル行単位処理。,A2.py
+A3,構成ファイル(AppConf.ini)、コマンドライン引数があるンソールアプリケーション。,A3.py,AppConf.ini
+C0,基本の CGI,C0.cgi,templates/C0.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C1,フォームとクッキー,C1.cgi,templates/C1.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C2,MySQL を使用する,C2.cgi,templates/C2.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C3,ファイルアップロード,C3.cgi,templates/C3.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C4,リダイレクトページ,C4.cgi,jquery.min.js,templates/C4.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C5,Ajax get text,C5.cgi,jquery.min.js,templates/C5.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C6,Ajax get JSON,C6.cgi,jquery.min.js,templates/C6.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C7,Ajax get image,C7.cgi,jquery.min.js,templates/C7.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C8,フォームと各種コントロール,C8.cgi,jquery.min.js,templates/C8.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+T0,基本の curses アプリケーション,T0.py
+T1,curses による画面制御,T1.py
+T2,メッセージボックス、入力ボックス、トースト,T2.py
+T3,フォームと各種ウィジェット,T3.py
+H0,基本の簡易 HTTP サーバ,H0.py,templates/H0.html,favicon.ico,img/H0.png
+H1,フォームを利用する,H0.py,templates/H0.html,favicon.ico
+H2,Ajax,H2.py,templates/H0.html,favicon.ico
+G0,基本の Tk アプリケーション,G0.py
+G1,フォーム,G0.py,G0.json
+G2,メニュー,G2.py,G2.json
+G3,ウィンドウ,G3.py,G3.json

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja-jp">
+<head>
+<meta charset="utf-8" />
+<title>WebPage テスト用 (2)</title>
+<link rel="stylesheet" href="/css/default.css" />
+<style>
+ input[type="text"] {
+   border-radius: 5px;
+   height: 28px;
+ }
+ input[type="submit"] {
+   border-radius: 5px;
+   height: 32px;
+   background-color: lime;
+ }
+ a:link, a:visited {
+   color: royalblue;
+   text-decoration: none;
+ }
+</style>
+</head>
+
+<body style="margin-left:5%;margin-right:5%">
+<h1>WebPage テスト (2)</h1>
+<p style="margin-left:10%;"><a href="/cgi">CGI Index</a></p>
+<br />
+<form method="POST" enctype="multipart/form-data">
+<div style="float:left">
+<label for="file1">file1</label> <input type="file" name="file1" id="file1" />
+</div>
+<div><input type="submit" value="submit" />
+</form>
+<br style="clear:both;" />
+<p style="text-align:center;color:gray;">
+(*message*)
+</p>
+<p>&nbsp;</p>
+</body>
+</html>
