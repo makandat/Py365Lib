@@ -1,24 +1,32 @@
-A0,コマンドライン引数のあるコンソールアプリケーション,A0.py
-A1,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル一括読み込み。,A1.py
-A2,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル行単位処理。,A2.py
-A3,構成ファイル(AppConf.ini)、コマンドライン引数があるンソールアプリケーション。,A3.py,AppConf.ini
+A0,コマンドライン引数のあるコンソールアプリケーション,A0.py,Common.py,FileSystem.py,Text.py,DateTime.py
+A1,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル一括読み込み。,A1.py,Common.py,FileSystem.py,Text.py,DateTime.py
+A2,コマンドライン引数があり、ログを取るコンソールアプリケーション。ファイル行単位処理。,A2.py,Common.py,FileSystem.py,Text.py,DateTime.py
+A3,構成ファイル(AppConf.ini)、コマンドライン引数があるンソールアプリケーション。,A3.py,AppConf.ini,Common.py,FileSystem.py,Text.py,DateTime.py
+A4,MySQL クラス使用例。,A4.py,AppConf.ini,Common.py,FileSystem.py,Text.py,DateTime.py,MySQL.py
+A5,AWSS3 クラス使用例。,A5.py,AppConf.ini,Common.py,FileSystem.py,Text.py,DateTime.py,AWSS3.py
 C0,基本の CGI,C0.cgi,templates/C0.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C1,フォームとクッキー,C1.cgi,templates/C1.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C2,MySQL を使用する,C2.cgi,templates/C2.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C3,ファイルアップロード,C3.cgi,templates/C3.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C4,リダイレクトページ,C4.cgi,jquery.min.js,templates/C4.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
-C5,Ajax get text,C5.cgi,jquery.min.js,templates/C5.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
-C6,Ajax get JSON,C6.cgi,jquery.min.js,templates/C6.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
-C7,Ajax get image,C7.cgi,jquery.min.js,templates/C7.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C5,Ajax 文字列取得,C5.cgi,jquery.min.js,templates/C5.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C6,Ajax JSON 取得,C6.cgi,jquery.min.js,templates/C6.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C7,Ajax 画像取得,C7.cgi,jquery.min.js,templates/C7.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C8,フォームと各種コントロール,C8.cgi,jquery.min.js,templates/C8.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
-T0,基本の curses アプリケーション,T0.py
-T1,curses による画面制御,T1.py
-T2,メッセージボックス、入力ボックス、トースト,T2.py
-T3,フォームと各種ウィジェット,T3.py
-H0,基本の簡易 HTTP サーバ,H0.py,templates/H0.html,favicon.ico,img/H0.png
-H1,フォームを利用する,H0.py,templates/H0.html,favicon.ico
-H2,Ajax,H2.py,templates/H0.html,favicon.ico
-G0,基本の Tk アプリケーション,G0.py
-G1,フォーム,G0.py,G0.json
-G2,メニュー,G2.py,G2.json
-G3,ウィンドウ,G3.py,G3.json
+T0,基本の curses アプリケーション,T0.py,CursesApp.py
+T1,curses による画面制御,T1.py,CursesApp.py
+T2,メッセージボックス、入力ボックス、トースト,T2.py,CursesApp.py
+T3,フォームと各種ウィジェット,T3.py,CursesApp.py
+H0,基本の簡易 HTTP サーバ,H0.py,HTApp.py,html/favicon.ico,html/styles/default.css,html/scripts/jquery.min.js
+H1,フォームを利用する,H1.py,HTApp.py,html/favicon.ico,html/styles/default.css,html/scripts/jquery.min.js
+H2,静的な要素(画像)などを利用する例,H2.py,HTApp.py,templates/H2.html,html/styles/default.css,html/scripts/jquery.min.js,html/images/register_color.svg,html/images/LoveLive.jpg,,html/images/kirino1.gif,,html/images/home.png,,html/images/globa_link.png,,html/images/form.png
+H3,フォームと各種コントロール,H3.py,HTApp.py,templates/H0.html,,html/styles/default.css,html/scripts/jquery.min.js
+H4,クッキーの使用例,H4.py,HTApp.py,templates/H4.html,,html/styles/default.css,html/scripts/jquery.min.js
+H5,Ajax (華氏温度を摂氏温度に変換),H5.py,HTApp.py,templates/H0.html,html/styles/default.css,html/scripts/jquery.min.js
+G0,基本の Tk アプリケーション,G0.py,TkApp.py
+G1,基本ウィジェットの表示例,G1.py,G1.json,TkApp.py
+G2,ウィジェットの配置例,G2.py,G2.json,TkApp.py
+G3,イベントハンドラ,G3.py,G3.json,TkApp.py
+G4,画像を表示する,G4.py,G4.json,TkApp.py,rect1.png,circle1.png
+G5,メニューの使用,G5.py,G5.json,TkApp.py
+G6,各種ウィジェットと値の取得,G6.py,G6.json,TkApp.py

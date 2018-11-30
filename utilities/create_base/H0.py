@@ -1,28 +1,42 @@
 #!/usr/bin/env python3
-#  HTApp のテスト (3)
+#  HTApp のテスト (1)
 import os
+import urllib
 import http.server
 import HTApp
-import urllib.parse as urlparse
 from pprint import pprint
 from syslog import syslog
 
 # / のハンドラ
 def root(path) :
-  with open(HTApp.TEMPLATES + "/index3.html") as f :
-    html = f.read()
-  params = {}
-  try :
-    n = path.index('?') + 1
-    qs = path[n:len(path)]
-    params = urlparse.parse_qs(qs)
-    litems = ""
-    for k, v in params.items() :
-      vv = v[0]
-      litems += HTApp.tag("li", f"{k} = {vv}")
-    html = html.replace("(*params*)", litems)
-  except :
-    html = html.replace("(*params*)", "")
+  html = """<html>
+<head>
+ <meta charset="utf-8" />
+ <title>HTApp1</title>
+ <style>
+  body {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  h1 {
+    padding: 8px;
+    color: coral;
+    text-align: center;
+  }
+  .message {
+    font-size: 2em;
+    color: orchid;
+    text-align: center;
+  }
+ </style>
+</head>
+<body>
+ <h1>Hello world</h1>
+ <br />
+ <p class="message">Hello, world!</p>
+</body>
+</html>
+  """
   return ('text/html', html)
 
 
@@ -32,7 +46,6 @@ try :
   conf = HTApp.readConf()
   #  ハンドラを登録する。
   HTApp.routes['/'] = root
-  HTApp.routes['/AppCreator'] = root
   #  サーバを作成
   server_name = conf['server_name']
   port = int(conf['port'])

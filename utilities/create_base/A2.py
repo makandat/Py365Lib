@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from Py365Lib import *
+import Common, Text, FileSystem
 
 
 # コメントを緑色で表示する。
