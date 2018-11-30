@@ -60,47 +60,91 @@ def get_subtype(atype:str) -> int:
   n = -1
   if atype == 'A' :
     # contlist のキー "A?"
-    print("1 基本のコンソールアプリケーション")
-    print("2 ログあり、ファイル一括読み込み処理")
-    print("3 ログあり、ファイル行単位読み込み処理")
-    print("4 ログなし、INI ファイル読み込み")
+    print("0 基本のコンソールアプリケーション")
+    print("1 ログあり、ファイル一括読み込み処理")
+    print("2 ログあり、ファイル行単位読み込み処理")
+    print("3 ログなし、INI ファイル読み込み")
+    print("4 MySQL")
+    print("5 AWS S3")
     s = Common.readline("番号を入力してください。")
-    n = int(s) - 1
+    try :
+      n = int(s)
+      if n >= 0 and n <= 5 :
+        pass
+      else :
+        Common.stop(8, "中断しました。")
+    except :
+      Common.stop(8, "中断しました。")
   elif atype == 'C' :
     # contlist のキー "C?"
-    print("1 基本の CGI")
-    print("2 フォームとクッキー")
-    print("3 MySQLを使用する")
-    print("4 ファイルアップロード")
-    print("5 リダイレクト")
-    print("6 Ajax get text")
-    print("7 Ajax get JSON")
-    print("8 Ajax get image")
-    print("9 ォームと各種コントロール")
+    print("0 基本の CGI")
+    print("1 フォームとクッキー")
+    print("2 MySQLを使用する")
+    print("3 ファイルアップロード")
+    print("4 リダイレクト")
+    print("5 Ajax get text")
+    print("6 Ajax get JSON")
+    print("7 Ajax get image")
+    print("8 フォームと各種コントロール")
     s = Common.readline("番号を入力してください。")
-    n = int(s) - 1
+    try :
+      n = int(s)
+      if n >= 0 and n <= 8 :
+        pass
+      else :
+        Common.stop(8, "中断しました。")
+    except :
+      Common.stop(8, "中断しました。")
   elif atype == 'T' :
     # contlist のキー "T?"
-    print("1 基本の curses アプリケーション")
-    print("2 リソースファイルを使った Form")
-    print("3 オーバーライドメソッドを使った Form")
+    print("0 基本の curses アプリケーション")
+    print("1 リソースファイルを使った Form")
+    print("2 タイトルバー、ステータスバー、ヘルプウィンドウ、メッセージボックス")
+    print("3 フォーム上のウィジェットの値取得")
     s = Common.readline("番号を入力してください。")
-    n = int(s) - 1
+    try :
+      n = int(s)
+      if n >= 0 and n <= 3 :
+        pass
+      else :
+        Common.stop(8, "中断しました。")
+    except :
+      Common.stop(8, "中断しました。")
   elif atype == 'H' :
     # contlist のキー "H?"
-    print("1 基本の簡易 HTTP サーバ")
-    print("2 フォームを利用する")
-    print("3 Ajax")
+    print("0 基本の簡易 HTTP サーバ")
+    print("1 リンクと新しいページ")
+    print("2 静的な HTML 要素へのリンク")
+    print("3 フォーム")
+    print("4 クッキー")
+    print("5 Ajax")
     s = Common.readline("番号を入力してください。")
-    n = int(s) - 1
+    try :
+      n = int(s)
+      if n >= 0 and n <= 5 :
+        pass
+      else :
+        Common.stop(8, "中断しました。")
+    except :
+      Common.stop(8, "中断しました。")
   elif atype == 'G' :
     # contlist のキー "G?"
-    print("1 基本の Tk アプリケーション")
-    print("2 フォーム")
-    print("3 メニュー")
-    print("4 ウィンドウ")
+    print("0 基本の Tk アプリケーション")
+    print("1 フォーム")
+    print("2 メニュー")
+    print("3 イベントハンドラ")
+    print("4 画像")
+    print("5 メニュー")
+    print("6 フォームの値取得")
     s = Common.readline("番号を入力してください。")
-    n = int(s) - 1
+    try :
+      n = int(s)
+      if n >= 0 and n <= 6 :
+        pass
+      else :
+        Common.stop(8, "中断しました。")
+    except :
+      Common.stop(8, "中断しました。")
   else :
     pass
   return n
@@ -162,7 +206,9 @@ def create_contlist() :
     kv = txt.split(",", line)
     if len(kv) >= 2 :
       key = kv[0]
+      # ソースファイル
       files.append([key])
+      # ソース以外の追加ファイル
       files1 = files[len(files) - 1]
       contlist[key] = kv[1]
       # コピーするファイル名を files に設定する。

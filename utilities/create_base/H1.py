@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#  HTApp のテスト (1)
+#  HTApp のテスト (2)
 import os
 import urllib
 import http.server
@@ -9,30 +9,8 @@ from syslog import syslog
 
 # / のハンドラ
 def root(path) :
-  html = """<html>
-<head>
- <meta charset="utf-8" />
- <title>HTApp1</title>
- <style>
-  body {
-    margin-left: 5%;
-    margin-right: 5%;
-  }
-  h1 {
-    padding: 8px;
-    color: crimson;
-  }
- </style>
-</head>
-<body>
- <h1>HTApp1 (test_HTApp1.py)</h1>
- <p>root (/) の応答</p>
- <ul>
-   <li><a href="/about">/about</a></li>
- </ul>
-</body>
-</html>
-  """
+  with open(HTApp.TEMPLATES + "/index2.html") as f :
+    html = f.read()
   return ('text/html', html)
 
 # /about のハンドラ
