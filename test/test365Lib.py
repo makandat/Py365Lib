@@ -24,7 +24,6 @@ if testNo == 1 :
   rc = Common.exec(['tail', '-n', '4', Common.LOGFILE])
   print(rc)
   print(Common.shell(['ls', '/']))
-  print(s)
 
   # isset(v)
   ooo = None

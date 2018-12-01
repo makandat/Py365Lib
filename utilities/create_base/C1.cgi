@@ -19,5 +19,5 @@ class TestPage(page.WebPage) :
         self.vars['message'] += (" cookie key1=" + self.cookies['key1'])
 
 # メイン開始位置
-wp = TestPage('templates/template.html')
+wp = TestPage('templates/C1.html')
 wp.echo()

@@ -4,7 +4,6 @@
 #   ファイルアップロード
 import WebPage as page
 import FileSystem as fsys
-import MySQL
 
 class TestPage(page.WebPage) :
   # コンストラクタ
@@ -18,5 +17,5 @@ class TestPage(page.WebPage) :
       self.vars['message'] = 'ファイルを指定してください。'
 
 # メイン開始位置
-wp = TestPage('templates/template2.html')
+wp = TestPage('templates/C3.html')
 wp.echo()

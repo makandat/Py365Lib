@@ -11,5 +11,5 @@ class Hello(page.WebPage) :
     self.vars['message'] = "Hello, world!"
 
 # メイン開始位置
-wp = Hello('templates/hellow_world.html')
+wp = Hello('templates/C0.html')
 wp.echo()

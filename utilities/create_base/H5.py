@@ -14,7 +14,7 @@ MAXBYTES = 1024 * 16
 
 # / のハンドラ
 def root(path) :
-  with open(HTApp.TEMPLATES + "/index5.html") as f :
+  with open(HTApp.TEMPLATES + "/H5.html") as f :
     html = f.read()
   HTApp.vars['result'] = ""
   html = HTApp.embed(html)
@@ -22,7 +22,7 @@ def root(path) :
 
 # フォームのハンドラ
 def convert(path) :
-  with open(HTApp.TEMPLATES + "/index5.html") as f :
+  with open(HTApp.TEMPLATES + "/H5.html") as f :
     html = f.read()
   data = ""
   try :
