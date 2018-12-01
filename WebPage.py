@@ -64,10 +64,12 @@ class WebPage :
     for s in self.headers :
       print(s)
     print()
+    return
 
   # クッキーを登録する。
   def cookie(self, key, value) :
-      self.cookies[key] =value
+    self.cookies[key] =value
+    return
   
   # AppConf.ini を読む。
   def readConf(self) :
@@ -83,13 +85,14 @@ class WebPage :
           key = kv[0].strip()
           value = kv[1].strip()
           self.conf[key] = value
-  return
+    return
 
   # アップロードされたファイルを保存する。
   def saveFile(self, key, dir) :
     filename = os.path.basename(self.params[key].filename)
     with open(f"{dir}/{filename}", "wb") as f :
       f.write(self.params[key].file.read())
+    return
 
   # リダイレクト
   def redirect(self, url, wait=1) :
