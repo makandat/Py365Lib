@@ -72,7 +72,7 @@ class MySQL :
         return n
 
     # 値を1つだけ返すクエリーを実行し、その値を得る。
-    def getValue(sql) :
+    def getValue(self, sql) :
         result = None
         self.__cursor.execute(sql)
         self.__rows = self.__cursor.fetchall()
