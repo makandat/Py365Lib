@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding=utf-8 -*-
 #  MySQL クラスのテスト
-import MySQL as mysql
+from Py365Lib import MySQL as mysql
 import sys
 
 # テスト番号取得
@@ -22,6 +22,9 @@ elif testNo == 2 :
             print(row)
 elif testNo == 3:
     n = client.execute("INSERT INTO YJFX_Asset(`date`,`asset`,`profit_loss`) VALUES('2011-09-16',4574314,-874320)")
+    print(n)
+elif testNo == 4:
+    n = client.getValue("SELECT count(*) FROM YJFX_Asset")
     print(n)
 else :
     print("不正なテスト番号です。")

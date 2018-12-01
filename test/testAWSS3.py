@@ -2,7 +2,7 @@
 # -*- coding=utf-8 -*-
 #  AWSS3 クラスのテスト
 import sys
-import AWSS3 as aws
+from Py365Lib import AWSS3 as aws
 
 # テスト番号取得
 if len(sys.argv) == 1 :
