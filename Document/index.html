@@ -326,6 +326,11 @@ recursive: True ならファイルやサブディレクトリも削除</td><td>�
  <tr><td>getCurrentDirectory()</td><td>なし</td><td>カレントディレクトリ</td><td>pwd() の別名</td><td>関数</td></tr>
  <tr><td>getTempFile()</td><td>なし</td><td>一時ファイルのパス名</td><td>一時ファイルを得る。</td><td>関数</td></tr>
  <tr><td>changeExt(path, ext)</td><td>path: ファイルのパス名<br />ext: 新しい拡張子（先頭はドットであること）</td><td>新しいパス名</td><td>ファイルの拡張子を変更する。</td><td>関数</td></tr>
+ <tr><td>readCsv(path, header=True, delim=",", lterm="\n")</td><td>path: CSVファイルのパス名<br />
+header=True: 1行目をヘッダーとして読み飛ばす。<br />
+ delim=",": 区切り文字<br />
+ lterm="\n":行末</td>
+ <td>リスト</td><td>CSV ファイルを読む</td><td>関数</td></tr>
 </table>
 
 
@@ -427,7 +432,6 @@ host: ホストのアドレス<br />
  <tr><td>cursor(sql)</td><td>sql: SELECT を含む SQL</td><td>カーソル</td><td>結果 (ResultSet) を返すクエリーを実行してカーソルを得る。</td><td></td></tr>
  <tr><td>query(sql)</td><td>sql: SELECT を含む SQL</td><td>tuple配列</td><td>結果 (ResultSet) を返すクエリーを実行する。</td><td></td></tr>
  <tr><td>execute(sql)</td><td>sql: SELECT を含まない SQL</td><td>None</td><td>結果 (ResultSet) を返さないクエリーを実行する。</td><td></td></tr>
- <tr><td>getValue(sql)</td><td>sql: 値を1つだけ返すSELECT文</td><td>SELECT が返す値</td><td>値を1つだけ返すSELECT文を実行する。</td><td></td></tr>
  <tr><td>rows</td><td>なし</td><td>N/A</td><td>クエリー結果の行数</td><td>R/O property</td></tr>
  <tr><td>cursorClose()</td><td>なし</td><td>N/A</td><td>カーソルを閉じる。</td><td></td></tr>
 </table>
