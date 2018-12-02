@@ -15,5 +15,5 @@ class TestPage(page.WebPage) :
         self.vars['message'] = "指定URLへジャンプします。"
 
 # メイン開始位置
-wp = TestPage('templates/template3.html')
+wp = TestPage('templates/C4.html')
 wp.echo()

@@ -6,7 +6,7 @@ A4,MySQL クラス使用例。,A4.py,AppConf.ini,Common.py,FileSystem.py,Text.py
 A5,AWSS3 クラス使用例。,A5.py,AppConf.ini,Common.py,FileSystem.py,Text.py,DateTime.py,AWSS3.py
 C0,基本の CGI,C0.cgi,templates/C0.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C1,フォームとクッキー,C1.cgi,templates/C1.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
-C2,MySQL を使用する,C2.cgi,templates/C2.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
+C2,MySQL を使用する,C2.cgi,templates/C2.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py,MySQL.py,AppConf.ini
 C3,ファイルアップロード,C3.cgi,templates/C3.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C4,リダイレクトページ,C4.cgi,jquery.min.js,templates/C4.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
 C5,Ajax 文字列取得,C5.cgi,jquery.min.js,templates/C5.html,WebPage.py,Common.py,FileSystem.py,Text.py,DateTime.py
@@ -17,13 +17,13 @@ T0,基本の curses アプリケーション,T0.py,CursesApp.py
 T1,curses による画面制御,T1.py,CursesApp.py
 T2,メッセージボックス、入力ボックス、トースト,T2.py,CursesApp.py
 T3,フォームと各種ウィジェット,T3.py,CursesApp.py
-H0,基本の簡易 HTTP サーバ,H0.py,HTApp.py,html/favicon.ico,html/styles/default.css,html/scripts/jquery.min.js
-H1,フォームを利用する,H1.py,HTApp.py,html/favicon.ico,html/styles/default.css,html/scripts/jquery.min.js
-H2,静的な要素(画像)などを利用する例,H2.py,HTApp.py,templates/H2.html,html/styles/default.css,html/scripts/jquery.min.js,html/images/register_color.svg,html/images/LoveLive.jpg,,html/images/kirino1.gif,,html/images/home.png,,html/images/globa_link.png,,html/images/form.png
-H3,フォームと各種コントロール,H3.py,HTApp.py,templates/H0.html,,html/styles/default.css,html/scripts/jquery.min.js
-H4,クッキーの使用例,H4.py,HTApp.py,templates/H4.html,,html/styles/default.css,html/scripts/jquery.min.js
-H5,Ajax (華氏温度を摂氏温度に変換),H5.py,HTApp.py,templates/H0.html,html/styles/default.css,html/scripts/jquery.min.js
-G0,基本の Tk アプリケーション,G0.py,TkApp.py
+H0,基本の簡易 HTTP サーバ,H0.py,HTApp.py,Common.py,html/favicon.ico,html/styles/default.css,html/scripts/jquery.min.js
+H1,フォームを利用する,H1.py,Common.py,HTApp.py,templates/about.html,html/favicon.ico,html/styles/default.css,html/scripts/jquery.min.js
+H2,静的な要素(画像)などを利用する例,H2.py,HTApp.py,Common.py,templates/H2.html,html/styles/default.css,html/scripts/jquery.min.js,html/about.html,html/images/register_color.svg,html/images/LoveLive.jpg,html/images/kirino1.gif,html/images/home.png,html/images/globe_link.png,html/images/form.png
+H3,フォームと各種コントロール,H3.py,HTApp.py,Common.py,templates/H3.html,html/styles/default.css,html/scripts/jquery.min.js
+H4,クッキーの使用例,H4.py,HTApp.py,templates/H4.html,Common.py,html/styles/default.css,html/scripts/jquery.min.js
+H5,Ajax (華氏温度を摂氏温度に変換),H5.py,HTApp.py,Common.py,templates/H5.html,html/styles/default.css,html/scripts/jquery.min.js
+G0,基本の Tk アプリケーション,G0.py,TkApp.py,FileSystem.py
 G1,基本ウィジェットの表示例,G1.py,G1.json,TkApp.py
 G2,ウィジェットの配置例,G2.py,G2.json,TkApp.py
 G3,イベントハンドラ,G3.py,G3.json,TkApp.py

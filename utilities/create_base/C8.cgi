@@ -24,5 +24,5 @@ class TestPage(page.WebPage) :
     return buff
 
 # メイン開始位置
-wp = TestPage('templates/template7.html')
+wp = TestPage('templates/C8.html')
 wp.echo()

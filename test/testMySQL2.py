@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding=utf-8 -*-
 #  MySQL クラスのテスト (2)
-import MySQL as mysql
+from Py365Lib import MySQL as mysql
 import sys
 
 # テスト番号取得

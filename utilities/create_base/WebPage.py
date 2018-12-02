@@ -2,6 +2,7 @@
 # Version 0.70  2018-10-06
 # Version 0.71  2018-10-10 redirect
 # Version 0.72  2018-10-10 readConf
+# Version 1.00  2018-12-91 bug fix
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -72,18 +73,18 @@ class WebPage :
   # AppConf.ini を読む。
   def readConf(self) :
     self.conf = {}
-    if not os.path.exists(CursesApp.APPCONF) :
+    if not os.path.exists(WebPage.APPCONF) :
       return
-    with open(CursesApp.APPCONF) as f :
+    with open(WebPage.APPCONF) as f :
       for line in f :
-        if line.startwith('#') or line.startwith('[') or len(line) == 0:
+        if line[0] =='#' or line[0] == '[' or len(line) == 0:
           continue
         kv = line.split('=')
         if len(kv) == 2 :
           key = kv[0].strip()
           value = kv[1].strip()
           self.conf[key] = value
-  return
+    return
 
   # アップロードされたファイルを保存する。
   def saveFile(self, key, dir) :

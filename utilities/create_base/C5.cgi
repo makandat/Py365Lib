@@ -11,5 +11,5 @@ class TestPage(page.WebPage) :
     self.params['message'] = ''
 
 # メイン開始位置
-wp = TestPage('templates/template4.html')
+wp = TestPage('templates/C5.html')
 wp.echo()

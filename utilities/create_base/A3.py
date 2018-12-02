@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import Common, FileSystem
+from Py365Lib import *
 
 # コマンドライン引数のチェック
 if Common.count_args() == 0 :

@@ -12,7 +12,7 @@ def root(path) :
   html = """<html>
 <head>
  <meta charset="utf-8" />
- <title>HTApp1</title>
+ <title>H0</title>
  <style>
   body {
     margin-left: 5%;
@@ -24,14 +24,14 @@ def root(path) :
     text-align: center;
   }
   .message {
-    font-size: 2em;
+    font-size: 5em;
     color: orchid;
     text-align: center;
   }
  </style>
 </head>
 <body>
- <h1>Hello world</h1>
+ <h1>(H0.py)</h1>
  <br />
  <p class="message">Hello, world!</p>
 </body>

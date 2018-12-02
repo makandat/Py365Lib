@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-#  HTApp のテスト (4)
+#  HTApp のテスト (3)
 import os
 import http.server
-import http.cookies
 import HTApp
 import urllib.parse as urlparse
 from pprint import pprint
@@ -10,15 +9,20 @@ from syslog import syslog
 
 # / のハンドラ
 def root(path) :
-  with open(HTApp.TEMPLATES + "/index4.html") as f :
+  with open(HTApp.TEMPLATES + "/H3.html") as f :
     html = f.read()
-  if 'count' in HTApp.cookies :
-    count = int(HTApp.cookies['count']) + 1
-  else :
-    count = 0
-  HTApp.cookies['count'] = str(count)
-  HTApp.vars['count'] = str(count)
-  html = HTApp.embed(html)
+  params = {}
+  try :
+    n = path.index('?') + 1
+    qs = path[n:len(path)]
+    params = urlparse.parse_qs(qs)
+    litems = ""
+    for k, v in params.items() :
+      vv = v[0]
+      litems += HTApp.tag("li", f"{k} = {vv}")
+    html = html.replace("(*params*)", litems)
+  except :
+    html = html.replace("(*params*)", "")
   return ('text/html', html)
 
 
