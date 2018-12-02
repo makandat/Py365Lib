@@ -326,6 +326,11 @@ recursive: True ならファイルやサブディレクトリも削除</td><td>�
  <tr><td>getCurrentDirectory()</td><td>なし</td><td>カレントディレクトリ</td><td>pwd() の別名</td><td>関数</td></tr>
  <tr><td>getTempFile()</td><td>なし</td><td>一時ファイルのパス名</td><td>一時ファイルを得る。</td><td>関数</td></tr>
  <tr><td>changeExt(path, ext)</td><td>path: ファイルのパス名<br />ext: 新しい拡張子（先頭はドットであること）</td><td>新しいパス名</td><td>ファイルの拡張子を変更する。</td><td>関数</td></tr>
+ <tr><td>readCsv(path, header=True, delim=",", lterm="\n")</td><td>path: CSVファイルのパス名<br />
+header=True: 1行目をヘッダーとして読み飛ばす。<br />
+ delim=",": 区切り文字<br />
+ lterm="\n":行末</td>
+ <td>リスト</td><td>CSV ファイルを読む</td><td>関数</td></tr>
 </table>
 
 
