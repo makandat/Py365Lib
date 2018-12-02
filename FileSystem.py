@@ -1,5 +1,5 @@
 # FileSystem.py
-# Version 1.00  2018-11-21
+# Version 1.01  2018-12-02
 import os
 import shutil
 import glob
@@ -7,6 +7,7 @@ from pathlib import Path
 import tempfile
 import pwd
 import grp
+import csv
 
 # テキストファイルを読んでその内容を返す。
 def readAllText(file) :
@@ -191,3 +192,13 @@ def getCurrentDirectory() :
 def getTempFile() :
   return tempfile.NamedTemporaryFile().name
 
+# CSV ファイルを読む。
+def readCsv(path, header=True, delim=",", lterm="\n") :
+  rows = []
+  with open(path, "r") as fcsv :
+    f = csv.reader(fcsv, delimiter=delim , doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
+    if header :
+      next(f)  # ヘッダー読み飛ばし
+    for row in f :
+       rows.append(row)
+  return rows
