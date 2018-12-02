@@ -2,6 +2,7 @@
 # -*- coding=utf-8 -*-
 #  テストプログラム FileSystem
 import sys
+from pprint import pprint
 from Py365Lib import Common, FileSystem as fsys
 
 def method(s) :
@@ -87,6 +88,10 @@ elif testNo == 7 :
         print("rmdir error.")
         exit(9)
     print("Test #7 OK")
+elif testNo == 8 :
+    mslist = fsys.readCsv('test8.csv')
+    for m in mslist :
+        pprint(m)
 else :
     print("不正なテスト番号です。")
 
