@@ -1,5 +1,5 @@
 # FileSystem.py
-# Version 1.01  2018-12-02
+# Version 1.02  2018-12-02
 import os
 import shutil
 import glob
@@ -18,10 +18,11 @@ def readAllText(file) :
 
 # テキストをファイルに書く。
 def writeAllText(file, str, append=False) :
-  m = "w"
   if append == True :
-    m = "a"
-    with open(file, mode=m) as f :
+    with open(file, "a") as f :
+      f.write(str)
+  else :
+    with open(file, "w") as f :
       f.write(str)
   return
 
