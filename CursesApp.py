@@ -1,12 +1,7 @@
 #
 #  curses アプリケーションクラス
 #     ver 0.61 2018-10-14
-#     ver 1.00 2018-10-29
-#     ver 1.01 2018-11-03
-#     ver 1.02 2018-11-04
-#     ver 1.03 2018-11-06
-#     ver 1.04 2018-11-07
-#     ver 1.05 2018-11-29
+#     ver 1.10 2018-12-05
 #
 import curses
 import os, locale
@@ -399,6 +394,33 @@ class CursesApp :
         pass
     return
 
+  # ウィジェットのプロパティを変更する。
+  def setProperty(self, form, name, key, value) :
+     widgets = self.forms[form]
+     for w in widgets :
+        if w["name"] == name :
+          w[key] = value
+          self.drawWidgets(form)
+     return
+
+  # ウィジェットのプロパティを得る。
+  def getProperty(self, form, name, key) :
+     prop = None
+     widgets = self.forms[form]
+     for w in widgets :
+        if w["name"] == name :
+          prop = w[key]
+     return prop
+
+  # ラベルのテキストを得る。
+  def getLabel(self, name) :
+     return self.getProperty(self.selectedForm, name, "text")
+
+  # ラベルのテキストを変更する。
+  def setLabel(self, name, text) :
+     self.setProperty(self.selectedForm, name, "text", text)
+     return
+     
   # メッセージボックスを開く
   def messageBox(self, message, type=0) :
     value = CursesApp.BTN_OK  # OK

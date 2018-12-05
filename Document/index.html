@@ -166,6 +166,7 @@ header, article, fooder {
 <!-- チュートリアル -->
 <h2><a id="tutorial">チュートリアル</a></h2>
 <ul>
+  <li><a href="tutorial/index.html">もくじ</a></li>
   <li><a href="tutorial/Common.html">コンソールアプリ</a></li>
   <li><a href="tutorial/MySQL.html">MySQL</a></li>
   <li><a href="tutorial/AWSS3.html">AWS S3</a></li>
@@ -635,6 +636,24 @@ width: 幅
 text: 文字列(全角を含む)<br />
 width: 幅
 </td><td>中寄せ文字列</td><td>文字列を中寄せする。</td><td>スタティックメソッド</td></tr>
+<tr><td>getProperty(form, name, key)</td><td>
+form: フォームの名前<br />
+name: ウィジェットの名前<br />
+key: プロパティの名前
+</td><td>プロパティの値</td><td>指定したウィジェットのプロパティを得る。</td><td></td></tr>
+<tr><td>setProperty(form, name, key, value)</td><td>
+form: フォームの名前<br />
+name: ウィジェットの名前<br />
+key: プロパティの名前<br />
+value: 変更する値
+</td><td>なし</td><td>指定したウィジェットのプロパティを変更する。</td><td></td></tr>
+<tr><td>getLabel(name)</td><td>
+name: ウィジェット(Label, Button等であること)の名前
+</td><td>text プロパティの値</td><td>指定したウィジェットのtextプロパティを得る。</td><td></td></tr>
+<tr><td>setLabel(name, text)</td><td>
+name: ウィジェット(Label, Button等であること)の名前<br />
+text: 変更するtextプロパティの値
+</td><td>なし</td><td>指定したウィジェットのtextプロパティを変更する。</td><td></td></tr>
 </table>
 <br />
 <h4>定数定義</h4>

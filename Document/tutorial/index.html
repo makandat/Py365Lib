@@ -24,6 +24,11 @@ header, article, fooder {
   margin-left:5%;
   margin-right:5%;
 }
+pre {
+  border:solid thin gray;
+  padding: 4px;
+  font-size:10pt;
+}
 </style>
 </head>
 
@@ -31,13 +36,15 @@ header, article, fooder {
 
 <body>
 <header>
-<h1 style="text-align:center;">Python3.6 Py365Lib 仕様書　<span style="font-size:14pt">(ver 2.0)</span></h1>
-<div style="text-align:center;"><a href="/">HOME</a></div>
+<h1 style="text-align:center;">Py365Lib チュートリアル　<span style="font-size:14pt">(ver 2.0)</span></h1>
+<div style="text-align:center;"><a href="../index.html">もどる</a></div>
 </header>
 
 
 <article>
+<h2>もくじ</h2>
 <ul>
+  <li><a href="#1">使用準備</a></li>
   <li><a href="Common.html">コンソールアプリ</a></li>
   <li><a href="MySQL.html">MySQL</a></li>
   <li><a href="AWSS3.html">AWS S3</a></li>
@@ -46,7 +53,58 @@ header, article, fooder {
   <li><a href="TkApp.html">tkinterアプリ</a></li>
   <li><a href="HTApp.html">HTTP サーバ</a></li>
 </ul>
+<br />
 
+
+
+<!-- 使用準備 -->
+<h2><a id="1">使用準備</a></h2>
+<!--  パッケージのインストール -->
+<h3>パッケージのインストール</h3>
+<p>これは必須ではありませんが、パッケージをインストールしておくとモジュールを個別に管理する必要がないので便利です。</p>
+<p>Py365Lib パッケージは次のようになっています。これをディレクトリごと適切な場所にコピーして環境変数 PYTHONLIB に設定すると、"from Py365Lib import *" という文でパッケージ内のモジュールが使えるようになります。</p>
+<p>例えば /home/user/lib/python3 というディレクトリの下に Py365Lib を置いたとします。Py365Lib フォルダの中身は下のようになります。
+<pre>
+$ ls Py365Lib/
+AWSS3.py   CursesApp.py  FileSystem.py  MySQL.py  TkApp.py    __init__.py
+Common.py  DateTime.py   HTApp.py       Text.py   WebPage.py
+</pre>
+<br />
+<p>__init__.py の内容は次のようになります。</p>
+<pre>
+# package must have __init__.py
+
+#   from Py365Lib import * で下記のモジュールが読み込まれる。
+__all__ = ['Common', 'FileSystem', 'Text', 'DateTime', 'MySQL', 'AWSS3', 'WebPage', 'CursesApp', 'TkApp', 'HTApp' ]
+</pre>
+<br />
+
+
+<!--  モジュールの概要 -->
+<h3>モジュールの概要</h3>
+<p>パッケージ Py365Lib のモジュール一覧を下に示します。</p>
+<table>
+<tr><th>モジュール</th><th>含まれるクラス</th><th>説明</th></tr>
+<tr><td>Common.py</td><td>なし</td><td>コンソールアプリケーション用関数、その他</td></tr>
+<tr><td>FileSystem.py</td><td>なし</td><td>ファイルシステム、ファイル入出力関数など</td></tr>
+<tr><td>Text.py</td><td>Text</td><td>文字列処理関数とクラス</td></tr>
+<tr><td>DateTime.py</td><td>DateTime</td><td>日付時刻に関する関数とクラス</td></tr>
+<tr><td>MySQL.py</td><td>MySQL</td><td>MySQL 簡単アクセス用クラス。mysql.connector がインストールされていること。</td></tr>
+<tr><td>AWSS3.py</td><td>AWSS3</td><td>AWS S3 簡単アクセス用クラス。boto3 がインストールされていること。</td></tr>
+<tr><td>WebPage.py</td><td>WebPage</td><td>簡単 Python CGI クラス</td></tr>
+<tr><td>CursesApp.py</td><td>CursesApp</td><td>簡単 curses アプリ構築クラス</td></tr>
+<tr><td>HTApp.py</td><td>HTApp</td><td>簡単 HTTP サーバ構築クラス</td></tr>
+<tr><td>TkApp.py</td><td>TkApp</td><td>簡単 Tkinter GUI アプリ構築クラス</td></tr>
+</table>
+<br />
+<h3>モジュールの使用例</h3>
+<p>(注意) Py365Lib はパッケージとしてインストールしてある場合のみ。そうでない場合は、アプリケーションと同じフォルダにモジュールをコピーしておく。</p>
+<pre>
+import FileSystem
+import Text as txt
+from Py365Lib import *
+from Py365Lib import CursesApp as cap, Common, FileSystem as fs
+</pre>
 
 </article>
 
