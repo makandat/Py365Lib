@@ -332,7 +332,11 @@ header=True: 1行目をヘッダーとして読み飛ばす。<br />
  delim=",": 区切り文字<br />
  lterm="\n":行末</td>
  <td>リスト</td><td>CSV ファイルを読む</td><td>関数</td></tr>
-</table>
+<<tr><td>readJson(path)</td><td>path: JSONファイルのパス名</td><td>オブジェクト</td><td>JSONファイルを読む</td><td>関数</td></tr>
+<<tr><td>writeJson(path, data, pretty=False)</td><td>path: JSONファイルのパス名<br />
+data: オブジェクト<br />pretty: True なら見やすい形式で保存する。
+</td><td>なし</td><td>オブジェクトをJSONファイルとしてファイルに書く。</td><td>関数</td></tr>
+ /table>
 
 
 
@@ -654,6 +658,10 @@ name: ウィジェット(Label, Button等であること)の名前
 name: ウィジェット(Label, Button等であること)の名前<br />
 text: 変更するtextプロパティの値
 </td><td>なし</td><td>指定したウィジェットのtextプロパティを変更する。</td><td></td></tr>
+<tr><td>readFormData(name, fileName)</td><td>
+name: フォームの名前<br />
+fileName: JSON ファイルのパス名
+</td><td>なし</td><td>指定したJSONファイルからnameという名前のフォームオブジェクトを構築する。</td><td></td></tr>
 </table>
 <br />
 <h4>定数定義</h4>

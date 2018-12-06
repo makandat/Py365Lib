@@ -1,7 +1,6 @@
 #
 #  curses アプリケーションクラス
-#     ver 0.61 2018-10-14
-#     ver 1.10 2018-12-05
+#     Version 1.11 2018-12-06
 #
 import curses
 import os, locale
@@ -350,17 +349,31 @@ class CursesApp :
       if w["type"] == 'label' :
         text = w["text"]
         self.formData[w['name']] = text
-        if w["width"] > 0 :
+        if "width" in w and w["width"] > 0 :
           text = CursesApp.center_justify(text, w["width"])
-        form.addstr(w["top"], w["left"], text, curses.color_pair(w["color"]) + w["attr"])
+        if "color" in w.keys() :
+          form.addstr(w["top"], w["left"], text, curses.color_pair(w["color"]))
+          if "attr" in w.keys() :
+            form.addstr(w["top"], w["left"], text, curses.color_pair(w["color"]) + w["attr"])
+        else :
+          form.addstr(w["top"], w["left"], text, curses.color_pair(1))              
       elif w["type"] == 'button' :
         self.formData[w['name']] = str(w['click'])
-        form.addstr(w["top"], w["left"], "  " + w["text"] + "  ", curses.color_pair(w["color"]))
-      elif w["type"] == 'textbox' :
+        if "color" in w.keys() :
+          form.addstr(w["top"], w["left"], "  " + w["text"] + "  ", curses.color_pair(w["color"]))
+        else :
+          form.addstr(w["top"], w["left"], "  " + w["text"] + "  ", curses.color_pair(8))
+      elif w["type"] == 'textbox' or w["type"] == "text":
         self.formData[w['name']] = ""
-        form.addstr(w["top"], w["left"], " " * w["width"], curses.color_pair(w["color"]))
-        if w["text"] != "" :
-          form.addstr(w["top"], w["left"], w["text"], curses.color_pair(w["color"]))
+        cpair = curses.color_pair(8)
+        if "color" in w.keys() :
+          cpair = curses.color_pair(w["color"])
+        textw = 15
+        if "width" in w.keys() :
+          textw = w["width"]
+        form.addstr(w["top"], w["left"], " " * textw, cpair)
+        if "text" in w.keys() and w["text"] != "" :
+          form.addstr(w["top"], w["left"], w["text"], cpair)
       elif w["type"] == 'checkbox' :
         check = "["
         if w["checked"] :
@@ -386,10 +399,13 @@ class CursesApp :
       elif w["type"] == 'selector' :
         self.formData[w['name']] = "0"
         items = w["items"]
-        form.addstr(w["top"], w["left"], items[0], curses.color_pair(w["color"]) + curses.A_REVERSE)
+        cpair = curses.color_pair(1)
+        if "color" in w.keys() :
+          cpair = curses.color_pair(w["color"])
+        form.addstr(w["top"], w["left"], items[0], cpair + curses.A_REVERSE)
         n = len(items)
         for i in range(1, n) :
-           form.addstr(w["top"] + i, w["left"], items[i], curses.color_pair(w["color"]))
+           form.addstr(w["top"] + i, w["left"], items[i], cpair)
       else :
         pass
     return
@@ -525,16 +541,22 @@ class CursesApp :
     if widget['type'] == 'radio' or widget['type'] == 'checkbox' :
       self.setCursorPosition(widget['left'] + 1, widget['top'])
     elif widget['type'] == 'button' :
-      p = int(widget['width'] / 2)
+      if "width" in widget.keys() :
+        p = int(widget['width'] / 2)
+      else:
+        p = 2
       self.setCursorPosition(widget['left'] + p, widget['top'])
     else :
       self.setCursorPosition(widget['left'], widget['top'])
 
   # キー入力
   def enterText(self, widget) :
-    if widget['type'] == 'textbox' :
+    if widget['type'] == 'textbox' or widget['type'] == 'text':
       curses.echo()
-      s = self.stdscr.getstr(widget['width'] - 1).decode('utf-8').strip()
+      if "width" in widget.keys() :
+        s = self.stdscr.getstr(widget['width'] - 1).decode('utf-8').strip()
+      else :
+        s = self.stdscr.getstr(14).decode('utf-8').strip()
       curses.noecho()
       self.stdscr.addstr(widget['top'], widget['left'], s, curses.A_REVERSE)
       self.formData[widget['name']] = s
@@ -614,10 +636,13 @@ class CursesApp :
   # ボタンが押されたとき
   def buttonPressed(self, widget) :
     if widget['type'] == 'button' :
-      self.stdscr.addstr(widget['top'], widget['left'], widget['text'], curses.color_pair(widget['color']) + curses.A_REVERSE)
+      cpair = 8
+      if "color" in widget.keys() :
+        cpair = curses.color_pair(widget['color'])
+      self.stdscr.addstr(widget['top'], widget['left'], " " + widget['text'] + " ", cpair + curses.A_REVERSE)
       self.stdscr.refresh()
-      curses.napms(500)
-      self.stdscr.addstr(widget['top'], widget['left'], widget['text'], curses.color_pair(widget['color']))
+      curses.napms(300)
+      self.stdscr.addstr(widget['top'], widget['left'], " " + widget['text'] + " ", cpair)
       self.stdscr.refresh()
       return widget['click']
     else :
@@ -660,3 +685,11 @@ class CursesApp :
     # 後ろに半角空白を追加する。
     text2 = text2 + " " * n2
     return text2
+
+  # フォームのウィジェット定義を読んでフォームを構築する。
+  def readFormData(self, name, fileName) :
+    data = None
+    with open(fileName) as f :
+      str = f.read()
+      self.createForm(name, str)
+    return 
