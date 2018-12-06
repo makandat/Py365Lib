@@ -1,5 +1,5 @@
 # FileSystem.py
-# Version 1.02  2018-12-02
+# Version 1.03  2018-12-06
 import os
 import shutil
 import glob
@@ -8,6 +8,7 @@ import tempfile
 import pwd
 import grp
 import csv
+import json
 
 # テキストファイルを読んでその内容を返す。
 def readAllText(file) :
@@ -203,3 +204,21 @@ def readCsv(path, header=True, delim=",", lterm="\n") :
     for row in f :
        rows.append(row)
   return rows
+
+# JSON ファイルを読む。
+def readJson(path) :
+  data = None
+  with open(path, "r") as f :
+    str = f.read()
+    data = json.loads(str)
+  return data
+
+# JSON ファイルに書く。
+def writeJson(path, data, pretty=False) :
+  if pretty :
+    str = json.dumps(data, sort_keys=True, indent=2)
+  else :
+    str = json.dumps(data)
+  with open(path, "w") as f :
+    f.write(str)
+  return
