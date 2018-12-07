@@ -1,6 +1,6 @@
 #
 #  curses アプリケーションクラス
-#     Version 1.11 2018-12-06
+#     Version 1.20 2018-12-07
 #
 import curses
 import os, locale
@@ -26,18 +26,31 @@ class CursesApp :
   MB_OKONLY = 0
   MB_YESNO = 1
   MB_OKCANCEL = 2
-  # ボタン
+  # ボタンがクリックされたときのコード
   BTN_OK = 0
   BTN_CANCEL = 1
-  # 文字コード
+  # 特殊文字コード (ハンドラで使用)
   LF  = '\x0a'
   TAB = '\x09'
   ESC = '\x1b'
+  # 色のコード (print関数などで使用)
+  COL_WHITE = 1
+  COL_RED = 2
+  COL_GREEN = 3
+  COL_BLUE = 4
+  COL_YELLOW = 5
+  COL_MAGENTA = 6
+  COL_CYAN = 7
+  REV_WHITE = 8
+  REV_RED = 9
+  REV_GREEN = 10
+  REV_BLUE = 11
+  REV_YELLOW = 12
+  REV_MAGENTA = 13
+  REV_CYAN = 14
 
   # フォームのコレクション
   forms = {}
-  #  ラジオボタングループ
-  group = []
   # 選択されたフォーム
   selectedForm = None
   # 現在のタブインデックス
@@ -344,7 +357,6 @@ class CursesApp :
     # ウィジェットリストを取得
     widgets = self.forms[name]
     # それぞれのウィジェットについて描画する。
-    self.group = []
     for w in widgets :
       if w["type"] == 'label' :
         text = w["text"]
@@ -374,7 +386,7 @@ class CursesApp :
         form.addstr(w["top"], w["left"], " " * textw, cpair)
         if "text" in w.keys() and w["text"] != "" :
           form.addstr(w["top"], w["left"], w["text"], cpair)
-      elif w["type"] == 'checkbox' :
+      elif w["type"] == 'checkbox' or w["type"] == 'check':
         check = "["
         if w["checked"] :
           check += "X] "
@@ -384,7 +396,7 @@ class CursesApp :
           check += " ] "       
         check += w["text"]
         form.addstr(w["top"], w["left"], check)
-      elif w["type"] == 'radio' :
+      elif w["type"] == 'radio' or w["type"] == 'radiobutton':
         check = "["
         if w["checked"] :
           check += "O] "
@@ -394,7 +406,6 @@ class CursesApp :
           check += " ] "
         check += " "
         check += w["text"]
-        self.group.append({"name":w['name'], "x":w["left"], "y":w["top"], "checked":w["checked"]})
         form.addstr(w["top"], w["left"], check)
       elif w["type"] == 'selector' :
         self.formData[w['name']] = "0"
@@ -538,7 +549,7 @@ class CursesApp :
   # 指定したウィジェットへカーソルを移動する。
   def setCursorToWidget(self, widget) :
     self.showCursor()
-    if widget['type'] == 'radio' or widget['type'] == 'checkbox' :
+    if widget['type'] == 'radio' or widget['type'] == 'radiobutton' or widget['type'] == 'checkbox' or widget['type'] == 'check':
       self.setCursorPosition(widget['left'] + 1, widget['top'])
     elif widget['type'] == 'button' :
       if "width" in widget.keys() :
@@ -567,33 +578,41 @@ class CursesApp :
 
   # チェックボックス、ラジオボタン　空白キー
   def changeChecked(self, widget, form) :
-    if widget['type'] == 'checkbox' :  # チェックボックス
+    if widget['type'] == 'checkbox' or widget['type'] == 'check': # チェックボックス
       if widget['checked'] :
         self.stdscr.addch(' ')
-        self.formData[widget['name']] = "True"
-        self.setCursorPosition(widget['left'] + 1, widget['top'])
+        self.formData[widget['name']] = "False"
       else :
         self.stdscr.addch('X')
-        self.formData[widget['name']] = "False"
-        self.setCursorPosition(widget['left'] + 1, widget['top'])
-    elif widget['type'] == 'radio' :  # ラジオボタン
+        self.formData[widget['name']] = "True"
+      self.setCursorPosition(widget['left'] + 1, widget['top'])
+    elif widget['type'] == 'radio' or widget['type'] == 'radiobutton':  # ラジオボタン
       # グループをいったんクリア
       for w in form :
-        if w['type'] == 'radio' :
+        if w['type'] == 'radio' or w['type'] == 'radiobutton':
           w['checked'] = False
-      for w in self.group :
-        self.formData[w['name']] = "False"
-        # このラジオボタンを選択状態にする。
-        if w['name'] == widget['name'] :
-          w['checked'] = True
-          self.formData[widget['name']] = "True"
-          self.stdscr.addch(widget['top'], widget['left'] + 1, 'O')
+          self.formData[w['name']] = "False"
+          # このラジオボタンを選択状態にする。
+          if w['name'] == widget['name'] :
+            w['checked'] = True
+            self.formData[widget['name']] = "True"
+            self.stdscr.addch(widget['top'], widget['left'] + 1, 'O')
+          else :
+            self.stdscr.addch(w['top'], w['left'] + 1, ' ')
+            w['checked'] = False
         else :
-          self.stdscr.addch(w['y'], w['x'] + 1, ' ')
-          w['checked'] = False
+          pass
       self.setCursorPosition(widget['left'] + 1, widget['top'])
     else :
       pass
+
+  # チェックボックスまたはラジオボタンがチェック状態なら True を返す。
+  def isChecked(self, name) :
+    wt = self.getProperty(self.selectedForm, name, "type")
+    if wt == "check" or wt == "checkbox" or wt == "radio" or wt == "radiobutton" :
+      return self.getProperty(self.selectedForm, name, "checked")
+    else :
+       return False
 
   # セレクタ UP キー
   def selectUp(self, widget) :

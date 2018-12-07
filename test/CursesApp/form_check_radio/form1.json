@@ -1,0 +1,9 @@
+[
+ {"type":"checkbox", "name":"check1", "text":"Check1", "left":20, "top":6, "width":0, "checked":false},
+ {"type":"radio", "name":"radio1", "text":"Radio1", "group":0, "left":40, "top":6, "checked":true},
+ {"type":"radio", "name":"radio2", "text":"Radio2", "group":0, "left":40, "top":7, "checked":false},
+ {"type":"radio", "name":"radio3", "text":"Radio3", "group":0, "left":40, "top":8, "checked":false},
+ {"type":"label", "name":"label1", "text":"status", "left":20, "top":10, "color":3},
+ {"type":"button", "name":"btnOK", "text":" OK ", "left":30, "top":12, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel", "text":"Cancel", "left":42, "top":12, "color":16, "click":101}
+]

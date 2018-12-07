@@ -1,0 +1,7 @@
+[
+ {"type":"label", "name":"label1", "text":"Select carrier", "left":25, "top":2, "color":6},
+ {"type":"selector", "name":"selector1", "items":["ANA", "JAL", "SKY", "ADO", "SFJ"], "selected":0, "left":30, "top":3, "width":10},
+ {"type":"label", "name":"label2", "text":"status", "left":30, "top":13, "color":3},
+ {"type":"button", "name":"btnOK", "text":" OK ", "left":30, "top":15, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel", "text":"Cancel", "left":42, "top":15, "color":16, "click":101}
+]
