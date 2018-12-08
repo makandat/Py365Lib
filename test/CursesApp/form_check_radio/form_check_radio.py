@@ -8,7 +8,7 @@ class Application(cap.CursesApp) :
   def init_app(self) :
     formName = self.conf['form']
     self.readFormData(formName, formName + ".json")
-    self.titlebar(self.conf['title'], 1, 8)
+    self.titlebar(self.conf['title'], Application.TB_ALIGN_CENTER, 8)
     self.statusbar(self.conf['status'], 8)
     self.selectForm(formName)
     form1 = self.forms[formName]

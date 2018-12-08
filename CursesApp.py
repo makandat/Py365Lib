@@ -1,6 +1,6 @@
 #
 #  curses アプリケーションクラス
-#     Version 1.20 2018-12-07
+#     Version 1.21 2018-12-08
 #
 import curses
 import os, locale
@@ -345,7 +345,6 @@ class CursesApp :
     self.tabidx = 0
     self.selectedForm = name
     self.clear(True)  # クライアント領域のみクリア
-    self.formData = {}
     self.drawWidgets(name)
     self.tabidx = self.selectWidget()   
     return
@@ -360,7 +359,7 @@ class CursesApp :
     for w in widgets :
       if w["type"] == 'label' :
         text = w["text"]
-        self.formData[w['name']] = text
+        CursesApp.formData[w['name']] = text
         if "width" in w and w["width"] > 0 :
           text = CursesApp.center_justify(text, w["width"])
         if "color" in w.keys() :
@@ -370,13 +369,13 @@ class CursesApp :
         else :
           form.addstr(w["top"], w["left"], text, curses.color_pair(1))              
       elif w["type"] == 'button' :
-        self.formData[w['name']] = str(w['click'])
+        CursesApp.formData[w['name']] = str(w['click'])
         if "color" in w.keys() :
           form.addstr(w["top"], w["left"], "  " + w["text"] + "  ", curses.color_pair(w["color"]))
         else :
           form.addstr(w["top"], w["left"], "  " + w["text"] + "  ", curses.color_pair(8))
       elif w["type"] == 'textbox' or w["type"] == "text":
-        self.formData[w['name']] = ""
+        CursesApp.formData[w['name']] = ""
         cpair = curses.color_pair(8)
         if "color" in w.keys() :
           cpair = curses.color_pair(w["color"])
@@ -386,13 +385,14 @@ class CursesApp :
         form.addstr(w["top"], w["left"], " " * textw, cpair)
         if "text" in w.keys() and w["text"] != "" :
           form.addstr(w["top"], w["left"], w["text"], cpair)
+          CursesApp.formData[w['name']] = w['text']
       elif w["type"] == 'checkbox' or w["type"] == 'check':
         check = "["
         if w["checked"] :
           check += "X] "
-          self.formData[w['name']] = "True"
+          CursesApp.formData[w['name']] = "True"
         else :
-          self.formData[w['name']] = "False"
+          CursesApp.formData[w['name']] = "False"
           check += " ] "       
         check += w["text"]
         form.addstr(w["top"], w["left"], check)
@@ -400,15 +400,15 @@ class CursesApp :
         check = "["
         if w["checked"] :
           check += "O] "
-          self.formData[w['name']] = "True"
+          CursesApp.formData[w['name']] = "True"
         else :
-          self.formData[w['name']] = "False"
+          CursesApp.formData[w['name']] = "False"
           check += " ] "
         check += " "
         check += w["text"]
         form.addstr(w["top"], w["left"], check)
       elif w["type"] == 'selector' :
-        self.formData[w['name']] = "0"
+        CursesApp.formData[w['name']] = "0"
         items = w["items"]
         cpair = curses.color_pair(1)
         if "color" in w.keys() :
@@ -570,7 +570,7 @@ class CursesApp :
         s = self.stdscr.getstr(14).decode('utf-8').strip()
       curses.noecho()
       self.stdscr.addstr(widget['top'], widget['left'], s, curses.A_REVERSE)
-      self.formData[widget['name']] = s
+      CursesApp.formData[widget['name']] = s
       self.tabidx += 1
       return s
     else :
@@ -581,21 +581,21 @@ class CursesApp :
     if widget['type'] == 'checkbox' or widget['type'] == 'check': # チェックボックス
       if widget['checked'] :
         self.stdscr.addch(' ')
-        self.formData[widget['name']] = "False"
+        CursesApp.formData[widget['name']] = "False"
       else :
         self.stdscr.addch('X')
-        self.formData[widget['name']] = "True"
+        CursesApp.formData[widget['name']] = "True"
       self.setCursorPosition(widget['left'] + 1, widget['top'])
     elif widget['type'] == 'radio' or widget['type'] == 'radiobutton':  # ラジオボタン
       # グループをいったんクリア
       for w in form :
         if w['type'] == 'radio' or w['type'] == 'radiobutton':
           w['checked'] = False
-          self.formData[w['name']] = "False"
+          CursesApp.formData[w['name']] = "False"
           # このラジオボタンを選択状態にする。
           if w['name'] == widget['name'] :
             w['checked'] = True
-            self.formData[widget['name']] = "True"
+            CursesApp.formData[widget['name']] = "True"
             self.stdscr.addch(widget['top'], widget['left'] + 1, 'O')
           else :
             self.stdscr.addch(w['top'], w['left'] + 1, ' ')
@@ -627,7 +627,7 @@ class CursesApp :
       for i in range(len(items)) :
         if i == widget['selected'] :
           self.stdscr.addstr(y, x, items[i], curses.A_REVERSE)
-          self.formData[widget['name']] = str(i)
+          CursesApp.formData[widget['name']] = str(i)
         else :
           self.stdscr.addstr(y, x, items[i])
         y += 1
@@ -646,7 +646,7 @@ class CursesApp :
       for i in range(len(items)) :
         if i == widget['selected'] :
           self.stdscr.addstr(y, x, items[i], curses.A_REVERSE)
-          self.formData[widget['name']] = str(i)
+          CursesApp.formData[widget['name']] = str(i)
         else :
           self.stdscr.addstr(y, x, items[i])
         y += 1

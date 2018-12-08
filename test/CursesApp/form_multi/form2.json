@@ -1,0 +1,7 @@
+[
+ {"type":"label", "name":"label2", "text":"Page 2", "left":25, "top":2, "color":7},
+ {"type":"label", "name":"label3", "text":"Persons", "left":25, "top":5},
+ {"type":"text", "name":"text1", "text":"1", "left":35, "top":5},
+ {"type":"button", "name":"btnOK2", "text":"Next", "left":30, "top":15, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel2", "text":"Back", "left":42, "top":15, "color":16, "click":101}
+]

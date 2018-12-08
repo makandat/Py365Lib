@@ -52,7 +52,7 @@ class Application(cap.CursesApp) :
       if click == 100 :
         # OK button
         # formData を使うと次のように簡単に書ける。
-        self.setLabel("label2", "Select index = {0}".format(self.formData['selector1']))
+        self.setLabel("label2", "Select index = {0}".format(Application.formData['selector1']))
         self.redraw()
       elif click == 101 :
         # Cancel button

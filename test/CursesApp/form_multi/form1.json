@@ -1,0 +1,7 @@
+[
+ {"type":"label", "name":"label1", "text":"Page 1", "left":25, "top":2, "color":6},
+ {"type":"check", "name":"check1", "text":"Use Ltd.Express", "left":30, "top":4, "checked":true},
+ {"type":"check", "name":"check2", "text":"Use Green-Car", "left":30, "top":5, "checked":false},
+ {"type":"button", "name":"btnOK1", "text":" Next ", "left":30, "top":15, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel1", "text":"Close", "left":42, "top":15, "color":16, "click":101}
+]

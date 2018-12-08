@@ -11,7 +11,7 @@ class Application(cap.CursesApp) :
 
   #
   def redraw(self) :
-    self.titlebar("Title bar", 1, 14)
+    self.titlebar("Title bar", Application.TB_ALIGN_CENTER, 14)
     self.statusbar("Status bar", 16)
     x = int((self.Columns - 5) / 2)
     y = int(self.Rows / 2)
