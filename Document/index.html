@@ -434,9 +434,17 @@ pwd: パスワード<br />
 db: データベース<br />
 host: ホストのアドレス<br />
 </td><td>N/A</td><td>コンストラクタ</td><td>パラメータを使って接続する。</td></tr>
- <tr><td>cursor(sql)</td><td>sql: SELECT を含む SQL</td><td>カーソル</td><td>結果 (ResultSet) を返すクエリーを実行してカーソルを得る。</td><td></td></tr>
+ <tr><td>cursor(sql)</td><td>sql: SELECT を含む SQL</td><td>カーソル</td><td>結果 (ResultSet) を返すクエリーを実行してカーソルを得る。</td><td>
+カーソルメソッドには次のようなものがある。<ul>
+ <li>fetchone()</li>
+ <li>fetchmany(n)</li>
+ <li>fetchall()</li>
+ <li>scroll(value, mode)</li>
+</ul>
+</td></tr>
  <tr><td>query(sql)</td><td>sql: SELECT を含む SQL</td><td>tuple配列</td><td>結果 (ResultSet) を返すクエリーを実行する。</td><td></td></tr>
  <tr><td>execute(sql)</td><td>sql: SELECT を含まない SQL</td><td>None</td><td>結果 (ResultSet) を返さないクエリーを実行する。</td><td></td></tr>
+ <tr><td>getValue(sql)</td><td>sql: 値を一つ返すSQL</td><td>値</td><td>値を得る。</td><td></td></tr>
  <tr><td>rows</td><td>なし</td><td>N/A</td><td>クエリー結果の行数</td><td>R/O property</td></tr>
  <tr><td>cursorClose()</td><td>なし</td><td>N/A</td><td>カーソルを閉じる。</td><td></td></tr>
 </table>
@@ -450,38 +458,29 @@ host: ホストのアドレス<br />
 <p><a href="samples/AWSS3.html">AWSS3 クラスのサンプル</a></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
- <tr><td>__init__(region)</td><td>region: リージョン</td><td>N/A</td><td>コンストラクタ</td><td></td></tr>
- <tr><td>query_buckets()</td><td>なし</td><td>バケットのリスト</td><td>バケットのリストを得る。</td><td></td></tr>
- <tr><td>query_objects(bucket, key)</td><td>bucket: バケット<br />key: キー</td><td>キー key を持つオブジェクト一覧を得る。</td><td></td><td></td></tr>
- <tr><td>get_file(bucket, key, file)</td><td>
-	bucket: バケット<br />
+ <tr><td>__init__()</td><td></td><td>N/A</td><td>コンストラクタ</td><td></td></tr>
+ <tr><td>buckets</td><td>なし</td><td></td><td>バケットのリスト</td><td></td></tr>
+ <tr><td>query_folders(bucketName, key, callback)</td><td>bucketName: バケットの名前<br />key: フォルダ名<br />callback(key): フォルダが見つかるごとに呼び出される関数</td><td>フォルダリスト</td><td>指定したバケットの指定した深さのフォルダリストを得る。</td><td></td></tr>
+ <tr><td>query_files(bucketName, key, callback)</td><td>bucketName: バケットの名前<br />key: フォルダキー<br />callback(key): ファイルが見つかるごとに呼び出される関数</td><td>ファイルリスト</td><td>指定したバケットの指定したフォルダのファイルリストを得る。</td><td></td></tr>
+ <tr><td>exists(bucketName, key)</td><td>bucketName: バケットの名前<br />key: ファイルまたはフォルダキー</td><td>オブジェクトが存在すれば True、存在しなければ False</td><td>指定したバケットの指定したキーが存在するかを得る。</td><td></td></tr>
+ <tr><td>put_file(bucketName, key, fileName)</td><td>
+ 	bucketName: バケット<br />
 	key: 取得するファイルのキー<br />
-	file: 取得したファイルの保存先
- </td><td>ファイルのサイズ</td><td>bucket, key で指定されたファイルをダウンロードして file に保存する。</td><td></td></tr>
- <tr><td>put_file(bucket, key, file)</td><td>
- 	bucket: バケット<br />
+	fileName: 取得したファイルの保存先
+</td><td>なし</td><td>bucketName, key で指定されたオブジェクトにローカルファイル fileName をアップロードする。</td><td></td></tr>
+ <tr><td>get_file(bucketName, key, fileName)</td><td>
+	bucketName: バケット<br />
 	key: 取得するファイルのキー<br />
-	file: 取得したファイルの保存先
-</td><td>アップロードしたファイルのサイズ</td><td>bucket, key で指定されたオブジェクトにローカルファイル file をアップロードする。</td><td></td></tr>
- <tr><td>set_public(bucket, key)</td><td>
- 	bucket: バケット<br />
-	key: 取得するファイルのキー 
- </td><td>成功したら True、失敗したら False</td><td>bucket, key で指定したオブジェクトを公開する。</td><td></td></tr>
- <tr><td>set_private(bucket, key)</td><td>
- 	bucket: バケット<br />
-	key: 取得するファイルのキー 
- </td><td>成功したら True、失敗したら False</td><td>bucket, key で指定したオブジェクトを非公開にする。</td><td></td></tr>
- <tr><td>create_bucket(bucket)</td><td>bucket: バケット</td><td>成功したら True、失敗したら False</td><td>バケット bucket を作成する。</td><td></td></tr>
- <tr><td>create_key(bucket, key)</td><td>
-  	bucket: バケット<br />
-	key: 取得するファイルのキー 
-</td><td>成功したら True、失敗したら False<</td><td>bucket にキー key をさくせする。</td><td></td></tr>
- <tr><td>move_key(old_bucket, old_key, new_bucket, new_key)</td><td>
-	old_bucket: もとのバケット<br />
-	old_key: もとのキー<br />
-	new_bucket: 新しいバケット<br />
-	new_key: 新しいキー
- </td><td>成功したら True、失敗したら False</td><td>指定したオブジェクトを移動する。</td><td></td></tr>
+	fileName: 取得したファイルの保存先
+ </td><td>なし</td><td>bucketName, key で指定されたファイルをダウンロードして fileName に保存する。</td><td></td></tr>
+ <tr><td>make_folder(bucketName, key)</td><td>
+ 	bucketName: バケット<br />
+	key: フォルダのキー 
+ </td><td>なし</td><td>bucketName, key で指定したフォルダを作成する。</td><td></td></tr>
+ <tr><td>remove_object(self, bucketName, key)</td><td>
+ 	bucketName: バケット<br />
+	key: 削除するファイルのキー 
+ </td><td>なし</td><td>bucket, keyName で指定したオブジェクトを削除にする。</td><td></td></tr>
 </table>
 <br />
 

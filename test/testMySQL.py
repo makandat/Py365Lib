@@ -26,5 +26,12 @@ elif testNo == 3:
 elif testNo == 4:
     n = client.getValue("SELECT count(*) FROM YJFX_Asset")
     print(n)
+elif testNo == 5 :
+    cur = client.cursor("SELECT `database`, name FROM m_tables")
+    row = cur.fetchone()
+    print(row[0] + "." + row[1])
+    rows = cur.fetchmany(3)
+    for i in range(3) :
+      print(rows[i][0] + "." + rows[i][1])
 else :
     print("不正なテスト番号です。")
