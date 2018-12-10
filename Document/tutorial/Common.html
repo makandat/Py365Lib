@@ -24,7 +24,18 @@ header, article, fooder {
   margin-left:5%;
   margin-right:5%;
 }
+
+pre {
+  padding: 5px;
+  border: dotted thin gray;
+  margin-left:3%;
+  margin-right:3%;
+}
 </style>
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 
@@ -37,6 +48,211 @@ header, article, fooder {
 
 
 <article>
+<!-- Common モジュールとは -->
+<h2>Common モジュールとは</h2>
+<p>
+Common モジュールは主にコンソールアプリケーションでよく使うコードパターンを関数として集めたものです。
+</p>
+<p>
+これらの関数の機能はシンプルで中身のコードも短いので、Python に慣れたプログラマなら Common モジュールの関数など使わずに、直接、Python の標準関数などを使ってコーディングしたほうがいいかもしれません。
+</p>
+<p>
+しかし、Python に詳しくない初心者やたまにしか Python でのプログラミングをしない人にとっては、Common モジュールは便利かもしれません。特にある機能を利用しようとする場合、いろいろなモジュールをインポートする必要があり、Common モジュールの使用はそのような面倒を省くことができます。
+</p>
+<br />
+
+
+<!-- 基本的な使い方 -->
+<h2>基本的な使い方</h2>
+<p>
+Common モジュールは、Py356Lib パッケージに含まれているので、<a href="index.html#1">Py356Lib パッケージをインストール</a>してあれば、次のようにして利用できます。
+</p>
+<pre><code>from Py365Lib import Common</code></pre>
+<br />
+
+<p>Py356Lib パッケージをインストールしていない場合は、Common.py をアプリケーションと同じフォルダに配置しておけば次のようにして利用できます。</p>
+<pre><code>import Common</code></pre>
+<br />
+
+<p>利用環境は Linux を想定していますが、Windows でも Linux に依存する部分をコメントアウトすれば利用できるはずです。syslog は Linux のみの機能なので、syslog に関する部分を Common.py からコメントアウトしてください。</p>
+<br />
+
+
+<!-- Common モジュールの機能 -->
+<h2>Common モジュールの機能</h2>
+<p>
+Common モジュールは、次のような機能を簡単に利用できるような関数を用意しています。
+</p>
+<ul>
+ <li>コマンドライン引数の使用 (解析機能はない)</li>
+ <li>ロギング (Python 標準ログ機能と syslog)</li>
+ <li>プログラムの中断</li>
+ <li>プロセス(コマンド)の起動</li>
+ <li>変数の型判別と有効性判別</li>
+ <li>タイマーとスリープ</li>
+ <li>OS (Windows かどうか) の判別</li>
+ <li>バイト列と文字列の相互変換</li>
+ <li>JSON 文字列とオブジェクトの相互変換</li>
+ <li>コンソール画面表示のカラーや表示属性対応</li>
+ <li>キーボードからの入力</li>
+ <li>環境変数の取得</li>
+</ul>
+<br />
+
+
+<!-- コマンドライン引数の使用 -->
+<h2>コマンドライン引数の使用</h2>
+<p>count_args() 関数はコマンドライン引数の数を返すので、その関数値が 0 ならコマンドライン引数がないことを意味します。そのとき、プログラムの実行を中止する場合、stop() 関数が利用できます。</p>
+<p>コマンドライン引数は args() 関数により取得できます。この関数はコマンドライン引数のリストを返します。つまり、この関数の戻り値のリストの先頭が、最初のコマンドライン引数になります。</p>
+<br />
+<h4>test/Py365Lib/A01.py</h4>
+<p>このサンプルはコマンドライン引数で指定されたファイルの内容を表示します。コマンドライン引数がない場合は、エラーメッセージを表示し、終了コード 9 を返し終了します。</p>
+<p>このサンプルでは、次の Common モジュール関数が使われています。</p>
+<ul>
+ <li>count_args() : コマンドライン引数の数</li>
+ <li>args() : コマンドライン引数のリスト</li>
+ <li>esc_print() : 文字列のカラー表示</li>
+ <li>stop() : 実行の中止</li>
+</ul>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "パラメータを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+fileName = Common.args()[0]
+print(fileName)
+
+try :
+  # ファイルの内容を表示する。
+  content = FileSystem.readAllText(fileName)
+  print(content) 
+except Exception as e :
+  # 例外発生時の処理
+  Common.esc_print(Common.ESC_FG_RED, e.args)
+  err = 1
+
+if err == 0 :
+  print("正常終了。")
+else :
+  print("エラーを検出しました。エラーコード: {0:d}".format(err))
+
+# 終了コードを err とする。 (0 はエラーなし)
+exit(err)
+</code></pre>
+<br />
+
+
+<!-- ログを取る -->
+<h2>ログを取る</h2>
+<p>Common モジュールでは簡単にログが取れるような関数を用意しています。</p>
+<p>Common モジュールのログ機能には二つあって。一つは Python のログ機能を利用するもの、もう一つは Linux のシステムログ (syslog) を利用するものです。</p>
+<p>Python のログ機能を利用するものは、Windows 環境でも使えますが、syslog は Linux のみで使えます。</p>
+<p>syslog の場合、使い方は非常に簡単です。syslog_out() 関数にパラメータとしてメッセージを渡して呼び出すだけです。ログファイルは Ubuntu の場合、/var/log/syslog に記録されます。</p>
+<p>Python のログは OS に関係なく使えます。ただし、Python のログを使うには、init_logger() 関数で初期化をしておく必要があります。ログのメッセージは log() または error() 関数で記録します。普通、error() はエラーメッセージをログに記録するのに使います。</p>
+<p>次のコードは、Python のログ機能を利用する例です。</p>
+<br />
+<h4>test/Py365Lib/A02.py</h4>
+<pre><code>#!/usr/bin/env python3
+import sys
+from Py365Lib import *
+
+# ログファイルの名前を決める。
+logFile = FileSystem.changeExt(sys.argv[0], ".log")
+print("ログファイル名：" + logFile)
+
+# ロガーを初期化する。
+Common.init_logger(logFile)
+
+# ログにメッセージを出力する。
+Common.log("テスト用")
+Common.log("テスト テスト テスト")
+Common.log("test Test TEST")
+
+# ログにエラーメッセージを出力する。
+Common.error("テスト：エラーメッセージ")
+
+print("ログ出力終わり。内容は下記の通り。")
+
+# ログファイルの内容を表示する。
+log_content = FileSystem.readAllText(logFile)
+print(log_content)
+</code></pre>
+<br />
+
+
+<!-- プロセス(コマンド)の起動 -->
+<h2>プロセス(コマンド)の起動</h2>
+<p>Linux には多くの便利なコマンドがあるので、それらをうまく使うとプログラムを書かずに様々なことが可能です。</p>
+<p>Common モジュールでは、exec() と shell() メソッドを使ってコマンドを起動できます。
+exec() はコマンドの実行結果が OK か NG だったかを知るだけでよい場合に使います。
+shell() はコマンドの表示文字列を取得して解析したい場合に使用します。</p>
+<p>次のコードは、mkdir と rmdir コマンドを exec() 関数で実行する例と ls コマンドでフォルダの中身を取得してそれを表示する例を含みます。</p>
+<br />
+<h4>test/Py365Lib/A03.py</h4>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドを実行して終了コードを確認する。(パラメータは配列であることに注意)
+cmd = ["mkdir", "./testA03"]
+rc = Common.exec(cmd)
+print("戻り値 {0:d}".format(rc))
+cmd[0] = "rmdir"
+rc = Common.exec(cmd)
+print("戻り値 {0:d}".format(rc))
+
+# コマンドを実行してコマンド出力文字列を表示する。(パラメータは配列であることに注意)
+cmd = ["ls", "-l", "/home/user/bin"]
+b = Common.shell(cmd)
+# 結果はバイト列で返されるので UTF-8 に変換する。
+s = Common.from_bytes(b)
+print(s)
+</code></pre>
+<br />
+
+<!-- コンソール画面表示のカラーや表示属性対応 -->
+<h2>コンソール画面表示のカラーや表示属性対応</h2>
+<p>esc_print() 関数を使うと簡単に表示属性を変更できます。この関数の第一引数は、色と表示属性の指定で、第二引数が表示文字列です。</p>
+<p>第一引数は Common モジュールで定義されている色と属性コード(整数型)あるいは色と属性の名前(文字列型)です。これは次の物だけが使用できます。</p>
+<ul>
+ <li>"red"</li>
+ <li>"green"</li>
+ <li>"blue"</li>
+ <li>"cyan"</li>
+ <li>"magenta"</li>
+ <li>"yellow"</li>
+ <li>"bold"</li>
+ <li>"underline"</li>
+ <li>"reverse"</li>
+</ul>
+<p>色や属性を元にもどすには Common.ESC_NOMRAL を出力します。(esc_print 関数はデフォルトでCommon.ESC_NOMRAL が出力される) また、色や属性を組み合わせるには + 演算子を使います。</p>
+<p>esc_print() 関数と色と属性コードの使用例を下に示します。</p>
+<br />
+<h4>test/Py365Lib/A04.py</h4>
+<pre><code>#!/usr/bin/env python3
+import sys
+from Py365Lib import *
+
+# esc_print 関数を使うと簡単に表示属性を変更できる。
+Common.esc_print(Common.ESC_FG_GREEN, sys.argv[0])
+Common.esc_print(Common.ESC_UNDERLINE, sys.argv[0])
+Common.esc_print("red", sys.argv[0])
+Common.esc_print("bold", sys.argv[0])
+Common.esc_print((Common.ESC_FG_YELLOW, Common.ESC_BG_BLUE), sys.argv[0])
+
+# 直接、エスケープシーケンスを使うと、属性を組み合わせて使える。
+print(Common.ESC_FG_CYAN + Common.ESC_BG_BLUE + Common.ESC_BLINK + "Complex Escape Sequence" + Common.ESC_NORMAL)
+
+# ESC_NOMRAL でもとに戻ったか確認
+print("Reset")
+</code></pre>
+<br />
+
 
 
 </article>

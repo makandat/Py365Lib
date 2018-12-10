@@ -33,5 +33,6 @@ elif testNo == 5 :
     rows = cur.fetchmany(3)
     for i in range(3) :
       print(rows[i][0] + "." + rows[i][1])
+    client.cursorClose()
 else :
     print("不正なテスト番号です。")
