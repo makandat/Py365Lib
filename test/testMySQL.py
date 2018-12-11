@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding=utf-8 -*-
 #  MySQL クラスのテスト
-from Py365Lib import MySQL as mysql
+from Py365Lib import MySQL as mysql, Common
 import sys
 
 # テスト番号取得
@@ -28,11 +28,12 @@ elif testNo == 4:
     print(n)
 elif testNo == 5 :
     cur = client.cursor("SELECT `database`, name FROM m_tables")
-    row = cur.fetchone()
-    print(row[0] + "." + row[1])
-    rows = cur.fetchmany(3)
-    for i in range(3) :
-      print(rows[i][0] + "." + rows[i][1])
+    while True :
+        row = cur.fetchone()
+        if Common.isset(row) :
+            print(row[0] + "." + row[1])
+        else :
+            break
     client.cursorClose()
 else :
     print("不正なテスト番号です。")

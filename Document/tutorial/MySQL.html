@@ -24,23 +24,130 @@ header, article, fooder {
   margin-left:5%;
   margin-right:5%;
 }
+
+pre {
+  padding: 5px;
+  border: dotted thin gray;
+  margin-left:3%;
+  margin-right:3%;
+}
 </style>
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 
 
 <body>
+<!-- ヘッダー -->
 <header>
 <h1 style="text-align:center;">Py365Lib/MySQL チュートリアル　<span style="font-size:14pt">(ver 2.0)</span></h1>
-<div style="text-align:center;"><a href="/">HOME</a></div>
+<div style="text-align:center;"><a href="/">HOME</a>&nbsp;/&nbsp;<a href="index.html">BACK</a>&nbsp;/&nbsp;<a href="../index.html">UP</a></div>
 </header>
 
-
+<!-- 本文 -->
 <article>
+<!-- もくじ -->
+<h3>もくじ</h3>
+<ol>
+ <li><a href="#1">MySQL モジュールとは</a></li>
+ <li><a href="#2">基本的な使い方</a></li>
+ <li><a href="#3">MySQL モジュールの機能</a></li>
+ <li><a href="#4">結果を返すクエリーを行う</a></li>
+ <li><a href="#5">結果を返さないクエリーを行う</a></li>
+ <li><a href="#6">値を1つだけ返すクエリーを行う</a></li>
+ <li><a href="#7">カーソルを使ってクエリーを行う</a></li>
+</ol>
+<br />
 
+
+<!-- 1 MySQL モジュールとは -->
+<h2><a id="1">1 MySQL モジュールとは</a></h2>
+<p>MySQL モジュールは MySQL に簡単にアクセスするためのものです。このモジュールは、内部で <a href="https://www.mysql.com/jp/products/connector/" target="_blank">Python Driver for MySQL (MySQL コネクタ)</a> を使用しているので、これをインストールしておく必要があります。</p>
+<p>MySQL モジュールにはただひとつのクラス MySQL が含まれています。つまり、このモジュールのメンバーは MySQL クラスだけです。</p>
+<br />
+
+<!-- 2 基本的な使い方 -->
+<h2><a id="2">2 基本的な使い方</a></h2>
+<p>MySQL モジュールには MySQL クラスが含まれているので、この MySQL クラスをインスタンス化してメソッドを利用して MySQL にアクセスします。あるいは、MySQL クラスを基底クラスとしたクラスを派生させて、それを利用しても構いません。</p>
+<p>MySQL サーバへの接続情報は AppConf.ini というファイルから自動的に読み込みます。このファイルがないときは、2つ目のコンストラクタを利用して直接、接続情報をコンストラクタに与えることもできます。</p>
+<p>AppConf.ini には "host", "uid", "pwd", "db" というキーが必要です。これらは、それぞれ MySQL サーバのアドレスまたは URL、ユーザID、パスワード、データベース名を意味します。下に AppConf.ini の例を示します。</p>
+<p>AppConf.ini は他のクラスでも使い、共用するファイルなので、他のキーを含めても構いません。</p>
+<pre><code>host=localhost
+uid=user
+pwd=XXXXX
+db=mydb1</code></pre>
+<br />
+
+<!-- 3 MySQL モジュールの機能 -->
+<h2><a id="3">3 MySQL モジュール (MySQL クラス) の機能</a></h2>
+<p>MySQL クラスは次の機能を持つ。</p>
+<ul>
+<li>SELECT クエリーを行って結果をリストとして取得する。</li>
+<li>非 SELECT クエリー (INSERT,UPDATE,DELETE etc) を行う。</li>
+<li>値を１つだけ得る SELECT クエリーを行って値を得る。</li>
+<li>SELECT クエリーを行ってカーソルを取得する。</li>
+</ul>
+<br />
+
+
+<!-- 4 結果を返すクエリーを行う -->
+<h2><a id="4">4 結果セットを返すクエリーを行う</a></h2>
+<p>query(sql) メソッドは、SELECT クエリーにより得られる行のリストを返します。</p>
+<pre><code>#!/usr/bin/python3
+from Py365Lib import MySQL as mysql
+client = mysql.MySQL()
+
+rows = client.query("SELECT * FROM m_tables")
+ if client.rows > 0 :
+   for row in rows :
+      print(row)
+</code></pre>
+<br />
+
+
+<!-- 5 結果を返さないクエリーを行う -->
+<h2><a id="5">5 結果セットを返さないクエリーを行う</a></h2>
+<p>execute(sql) メソッドは結果を返さないクエリーを行う場合に使用します。</p>
+<pre><code>#!/usr/bin/python3
+from Py365Lib import MySQL as mysql
+client = mysql.MySQL()
+client.execute("INSERT INTO Asset(`date`,`asset`,`profit_loss`) VALUES('2011-09-16',4574314,-874320)")
+</code></pre>
+<br />
+
+<!-- 6 値を1つだけ返すクエリーを行う -->
+<h2><a id="6">6 値を1つだけ返すクエリーを行う</a></h2>
+<p>getValue(sql) メソッドは、値を１つだけ返すクエリーを行うとき使用します。</p>
+<pre><code>#!/usr/bin/python3
+from Py365Lib import MySQL as mysql
+client = mysql.MySQL()
+n = client.getValue("SELECT count(*) FROM YJFX_Asset")
+print(n)
+</code></pre>
+<br />
+
+<!-- 7 カーソルを使ってクエリーを行う -->
+<h2><a id="7">7 カーソルを使ってクエリーを行う</a></h2>
+<p>cursor(sql) メソッドは結果セットを返す SQL を実行することにより得られるカーソルを返します。結果セットの行数が多い場合、query(sql) ではリソースの消費が大きいため、カーソルを使うほうがよいです。</p>
+<pre><code>#!/usr/bin/python3
+from Py365Lib import MySQL as mysql
+cur = client.cursor("SELECT `database`, name FROM m_tables")
+while True :
+    row = cur.fetchone()
+    if Common.isset(row) :
+        print(row[0] + "." + row[1])
+    else :
+        break
+client.cursorClose()
+</code></pre>
+<br />
 
 </article>
 
+<!-- フッター -->
 <footer>
 <p style="text-align:center;"><a href="#top">TOP</a></p>
 <p>&nbsp;</p>

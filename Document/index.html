@@ -126,7 +126,7 @@ header, article, fooder {
   </ul>
   <li>Py365Lib の下に __init__.py を作成する。内容は次の通りとする。
     <pre>
-  __all__ = ['Common', 'FileSystem', 'Text', 'DateTime' ]
+  __all__ = ['Common', 'FileSystem', 'Text', 'DateTime', "MySQL", "AWSS3", "WebPage", "CursesApp", "HTApp", "TkApp" ]
     </pre></li>
    <li>環境変数 PYTHONPATH に Py365Lib の親フォルダを追加する。(例) "~/lib/python3" を追加<br />
    PYTHONPATH が自動的に設定されるように .bashrc に次のような１行を追加するとよい。
@@ -194,7 +194,8 @@ header, article, fooder {
 <!--  Common -->
 <h2><a id="Common">Common モジュール</a></h2>
 <p>Common モジュールは主にコンソールアプリを構築するのに便利な雑多な関数を含む。Common モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
-<p><a href="samples/Common.html">Common モジュールのサンプル</a></p>
+<p style="text-align:center;"><a href="samples/Common.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/Common.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>FileSystem モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>関数</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>init_log(filename)</td><td>filename: ログファイルのパス名。省略時は Py365Lib.log となる。</td><td>なし</td><td>ログ機能を有効にする。</td><td>logger モジュールのメソッドでログを出力する。</td></tr>
@@ -270,7 +271,8 @@ reset: True なら前の状態にもどす。False ならそのまま。
 <h2><a id="FileSystem">FileSystem モジュール</a></h2>
 <p>FileSystem モジュールは Python 関数の薄いラッパー (wrapper) である。Python に慣れた人は、このモジュールを利用する利点はあまりないかもしれない。ただ、たまにしか Python を使わない人や他の言語に経験があって、Python を始めた人などには便利に使えるかもしれない。</p>
 <p>FileSystem モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
-<p><a href="samples/FileSystem.html">FileSystem のサンプル</a></p>
+<p style="text-align:center;"><a href="samples/FileSystem.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/FileSystem.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>FileSystem モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>readAllText(file)</td><td>file: ファイルのパス名</td><td>読み込んだ文字列</td><td>ファイル内容を読み込んで文字列として返す。</td><td>関数</td></tr>
@@ -319,11 +321,11 @@ header=True: 1行目をヘッダーとして読み飛ばす。<br />
  delim=",": 区切り文字<br />
  lterm="\n":行末</td>
  <td>リスト</td><td>CSV ファイルを読む</td><td>関数</td></tr>
-<<tr><td>readJson(path)</td><td>path: JSONファイルのパス名</td><td>オブジェクト</td><td>JSONファイルを読む</td><td>関数</td></tr>
-<<tr><td>writeJson(path, data, pretty=False)</td><td>path: JSONファイルのパス名<br />
+<tr><td>readJson(path)</td><td>path: JSONファイルのパス名</td><td>オブジェクト</td><td>JSONファイルを読む</td><td>関数</td></tr>
+<tr><td>writeJson(path, data, pretty=False)</td><td>path: JSONファイルのパス名<br />
 data: オブジェクト<br />pretty: True なら見やすい形式で保存する。
 </td><td>なし</td><td>オブジェクトをJSONファイルとしてファイルに書く。</td><td>関数</td></tr>
- /table>
+ </table>
 
 
 
@@ -334,7 +336,8 @@ data: オブジェクト<br />pretty: True なら見やすい形式で保存す�
 <p>Text モジュールは Python 関数の薄いラッパー (wrapper) である。Python に慣れた人は、このモジュールを利用する利点はあまりないかもしれない。ただ、たまにしか Python を使わない人や他の言語に経験があって、Python を始めた人などには便利に使えるかもしれない。</p>
 <p>Text モジュールにはモジュール関数と Text クラスが含まれる。Text クラスは Text.Text として参照する必要があるので注意する。</p>
 <p>Text モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
-<p><a href="samples/Text.html">Text のサンプル</a></p>
+<p style="text-align:center;"><a href="samples/Text.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/Text.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>Text モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__(s)</td><td>s: 文字列</td><td>N/A</td><td>Text クラスのコンストラクタ</td><td>Text クラスのコンストラクタ</td></tr>
@@ -385,7 +388,8 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
 <p>DateTime モジュールは Python 関数の薄いラッパー (wrapper) である。Python に慣れた人は、このモジュールを利用する利点はあまりないかもしれない。ただ、たまにしか Python を使わない人や他の言語に経験があって、Python を始めた人などには便利に使えるかもしれない。</p>
 <p>DateTime モジュールにはモジュール関数と Text クラスが含まれる。DateTime クラスは DateTime.DateTime として参照する必要があるので注意する。</p>
 <p>DateTime モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
-<p><a href="samples/DateTime.html">DateTime のサンプル</a></p>
+<p style="text-align:center;"><a href="samples/DateTime.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/DateTime.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>DateTime モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__([s])</td><td>s: 日付時刻文字列</td><td>N/A</td><td>コンストラクタ</td><td>コンストラクタ</td></tr>
@@ -411,7 +415,8 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
 <h2><a id="MySQL">MySQL クラスとモジュール</a></h2>
 <p>このモジュールには MySQL クラスが含まれる。このクラスは MySQL を簡単に利用するためのメソッドが含まれるが、フルに MySQL を活用するにはこのクラスは非力である。</p>
 <p>このクラスは、Oracle の MySQL コネクタを利用しているので、pip3 を使ってインストールしておく必要がある。</p>
-<p><a href="samples/MySQL.html">MySQL クラスのサンプル</a></p>
+<p style="text-align:center;"><a href="samples/MySQL.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/MySQL.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>MySQL モジュール(クラス)のメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__()</td><td>なし</td><td>N/A</td><td>コンストラクタ</td><td>AppConf.ini のキーを使って接続する。</td></tr>
@@ -434,6 +439,7 @@ host: ホストのアドレス<br />
  <tr><td>getValue(sql)</td><td>sql: 値を一つ返すSQL</td><td>値</td><td>値を得る。</td><td></td></tr>
  <tr><td>rows</td><td>なし</td><td>N/A</td><td>クエリー結果の行数</td><td>R/O property</td></tr>
  <tr><td>cursorClose()</td><td>なし</td><td>N/A</td><td>カーソルを閉じる。</td><td></td></tr>
+ <tr><td>connectInfo</td><td>なし</td><td>接続情報</td><td>次のようなディクショナリが返される。{"user":uid, "password":pwd, "host":host, "database":db}</td><td></td></tr>
 </table>
 
 
@@ -442,7 +448,8 @@ host: ホストのアドレス<br />
 <h2><a id="AWSS3">AWS S3 クラス</a></h2>
 <p>このクラスは Amazon Web Service のストレージ (S3) を利用するためのクラスである。データをリモートに保存し共有したり、バックアップとするような場合に利用する。</p>
 <p>このクラスを利用するためには、アクセスキーを取得し、boto3 モジュールをインストールする必要がある。</p>
-<p><a href="samples/AWSS3.html">AWSS3 クラスのサンプル</a></p>
+<p style="text-align:center;"><a href="samples/AWSS3.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/AWSS3.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>AWSS3 モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__()</td><td></td><td>N/A</td><td>コンストラクタ</td><td></td></tr>
@@ -474,8 +481,9 @@ host: ホストのアドレス<br />
 
 <!--  WebPage -->
 <h2><a id="WebPage">WebPage クラス</a></h2>
-<p>このクラスは、Python で CGI を容易に作成するためのクラスである。</p>
-<p><a href="samples/WebPage.html">WebPage クラスのサンプル</a></p>
+<p>このモジュールは、Python で CGI を容易に作成するためのクラスである。</p>
+<p style="text-align:center;"><a href="samples/WebPage.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/WebPage.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>WebPage モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__(template="")</td><td>template: HTML ファイル</td><td>N/A</td><td>コンストラクタ</td><td>template を省略した場合は、手動でHTMLを html に設定する。</td></tr>
@@ -515,7 +523,8 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
 <!--  CursesApp -->
 <h2><a id="CursesApp">CursesApp クラス</a></h2>
 <p>CursesApp クラスは、curses アプリを構築するための基本クラスである。</p>
-<p><a href="samples/CursesApp.html">CursesApp クラスのサンプル</a></p>
+<p style="text-align:center;"><a href="samples/CursesApp.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/CursesApp.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>CursesApp モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__()</td>
@@ -689,7 +698,8 @@ fileName: JSON ファイルのパス名
 <!--  HTApp -->
 <h2><a id="HTApp">HTApp クラス</a></h2>
 <p>このクラスは http.server から派生したクラスであり、HTTP サーバ (独自アプリケーションサーバ) を容易に構築するための機能を有する。</p>
-<p><a href="samples/HTApp.html">HTApp クラスのサンプル</a></p>
+<p style="text-align:center;"><a href="samples/HTApp.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/HTApp.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>HTApp モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>readConf(filename="AppConf.ini")</td><td>filename: 構成ファイルのパス名</td><td>連想配列</td><td>構成ファイルを読んで連想配列として返す。</td><td>モジュール関数</td></tr>
@@ -714,7 +724,8 @@ attr: 完全な属性文字列
 <!--  TkApp -->
 <h2><a id="TkApp">TkApp クラス</a></h2>
 <p>このクラスは Tkinter を利用して GUI アプリを容易に構築するためのクラスである。</p>
-<p><a href="samples/TkApp.html">TkApp クラスのサンプル</a></p>
+<p style="text-align:center;"><a href="samples/TkApp.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/TkApp.html">チュートリアル</a></p><br />
+<p style="text-align:center;"><b>TkApp モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__(master, winprop, filename="")</td><td>
