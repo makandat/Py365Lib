@@ -142,19 +142,19 @@ def sleep(sec) :
   time.sleep(sec)
 
 # 環境変数
-def get_env(key) :
+def get_env(key: str) -> str:
   return os.environ[key]
 
 # OS 判別 (実行環境が Windows なら True)
-def is_windows() :
+def is_windows() -> bool:
   return os.name == 'nt'
 
 # バイト列と文字列変換
-def to_bytes(s) :
+def to_bytes(s:str) -> bytes:
   return s.encode(encoding='utf-8')
 
 # バイト列から文字列に変換
-def from_bytes(b) :
+def from_bytes(b:bytes) -> str:
   return b.decode(encoding='utf-8')
 
 # エスケープシーケンス出力
@@ -193,7 +193,7 @@ def esc_print(code, text, reset=True) :
   return
 
 # 文字列入力
-def readline(message=None) :
+def readline(message=None:str) -> str:
   if isset(message) :
     print(message)
   s = input()

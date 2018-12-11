@@ -25,11 +25,16 @@ if testNo == 1 :
   print(rc)
   print(Common.shell(['ls', '/']))
 
+elif testNo == 2 :
   # isset(v)
   ooo = None
   print(Common.isset(ooo))
-  print(Common.isset(rc))
-elif testNo == 2 :
+  ooo = 1
+  print(Common.isset(ooo))
+  ooo = None
+  print(Common.isnull(ooo))
+  ooo = 1
+  print(Common.isnull(ooo))
   # is_str(x) etc.
   print(Common.is_str(0))
   print(Common.is_str('0'))
@@ -49,6 +54,9 @@ elif testNo == 3 :
   print("LANG=" + lang)
   Common.sleep(2)
   print("sudo cat /var/log/syslog")
+elif testNo == 4 :
+  key = Common.readline("環境変数の名前を入力してください。>")
+  print(Common.get_env(key))
 else :
   print("不正な番号です。")
 

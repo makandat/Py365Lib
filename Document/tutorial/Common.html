@@ -48,8 +48,26 @@ pre {
 
 
 <article>
+<!-- もくじ -->
+<h3>もくじ</h3>
+<ul>
+ <li><a href="#1">1 Common モジュールとは</a></li>
+ <li><a href="#2">2 基本的な使い方</a></li>
+ <li><a href="#3">3 Common モジュールの機能</a></li>
+ <li><a href="#4">4 コマンドライン引数の使用</a></li>
+ <li><a href="#5">5 ログを取る</a></li>
+ <li><a href="#6">6 プロセス(コマンド)の起動</a></li>
+ <li><a href="#7">7 コンソール画面表示のカラーや表示属性対応</a></li>
+ <li><a href="#8">8 型の判別など</a></li>
+ <li><a href="#9">9 タイマーとスリープ</a></li>
+ <li><a href="#10">10 バイト列と文字列の相互変換</a></li>
+ <li><a href="#11">11 JSON 文字列とオブジェクトの相互変換</a></li>
+ <li><a href="#12">12 環境変数、OS 判別、キーボード入力</a> </li>
+</ul>
+<br />
+
 <!-- Common モジュールとは -->
-<h2>Common モジュールとは</h2>
+<h2><a id="1">1</a> Common モジュールとは</h2>
 <p>
 Common モジュールは主にコンソールアプリケーションでよく使うコードパターンを関数として集めたものです。
 </p>
@@ -63,7 +81,7 @@ Common モジュールは主にコンソールアプリケーションでよく�
 
 
 <!-- 基本的な使い方 -->
-<h2>基本的な使い方</h2>
+<h2><a id="2">2</a> 基本的な使い方</h2>
 <p>
 Common モジュールは、Py356Lib パッケージに含まれているので、<a href="index.html#1">Py356Lib パッケージをインストール</a>してあれば、次のようにして利用できます。
 </p>
@@ -79,7 +97,7 @@ Common モジュールは、Py356Lib パッケージに含まれているので�
 
 
 <!-- Common モジュールの機能 -->
-<h2>Common モジュールの機能</h2>
+<h2><a id="3">3</a> Common モジュールの機能</h2>
 <p>
 Common モジュールは、次のような機能を簡単に利用できるような関数を用意しています。
 </p>
@@ -101,7 +119,7 @@ Common モジュールは、次のような機能を簡単に利用できるよ�
 
 
 <!-- コマンドライン引数の使用 -->
-<h2>コマンドライン引数の使用</h2>
+<h2><a id="4">4</a> コマンドライン引数の使用</h2>
 <p>count_args() 関数はコマンドライン引数の数を返すので、その関数値が 0 ならコマンドライン引数がないことを意味します。そのとき、プログラムの実行を中止する場合、stop() 関数が利用できます。</p>
 <p>コマンドライン引数は args() 関数により取得できます。この関数はコマンドライン引数のリストを返します。つまり、この関数の戻り値のリストの先頭が、最初のコマンドライン引数になります。</p>
 <br />
@@ -149,12 +167,12 @@ exit(err)
 
 
 <!-- ログを取る -->
-<h2>ログを取る</h2>
+<h2><a id="5"></a> ログを取る</h2>
 <p>Common モジュールでは簡単にログが取れるような関数を用意しています。</p>
 <p>Common モジュールのログ機能には二つあって。一つは Python のログ機能を利用するもの、もう一つは Linux のシステムログ (syslog) を利用するものです。</p>
 <p>Python のログ機能を利用するものは、Windows 環境でも使えますが、syslog は Linux のみで使えます。</p>
-<p>syslog の場合、使い方は非常に簡単です。syslog_out() 関数にパラメータとしてメッセージを渡して呼び出すだけです。ログファイルは Ubuntu の場合、/var/log/syslog に記録されます。</p>
-<p>Python のログは OS に関係なく使えます。ただし、Python のログを使うには、init_logger() 関数で初期化をしておく必要があります。ログのメッセージは log() または error() 関数で記録します。普通、error() はエラーメッセージをログに記録するのに使います。</p>
+<p>syslog の場合、使い方は非常に簡単です。syslog_out(message) 関数にパラメータとしてメッセージを渡して呼び出すだけです。ログファイルは Ubuntu の場合、/var/log/syslog に記録されます。</p>
+<p>Python のログは OS に関係なく使えます。ただし、Python のログを使うには、init_logger(logfile) 関数で初期化をしておく必要があります。ログのメッセージは log(message) または error(message) 関数で記録します。普通、error(message) はエラーメッセージをログに記録するのに使います。</p>
 <p>次のコードは、Python のログ機能を利用する例です。</p>
 <br />
 <h4>test/Py365Lib/A02.py</h4>
@@ -176,6 +194,7 @@ Common.log("test Test TEST")
 
 # ログにエラーメッセージを出力する。
 Common.error("テスト：エラーメッセージ")
+Common.syslog_out("テスト：エラーメッセージ")
 
 print("ログ出力終わり。内容は下記の通り。")
 
@@ -187,7 +206,7 @@ print(log_content)
 
 
 <!-- プロセス(コマンド)の起動 -->
-<h2>プロセス(コマンド)の起動</h2>
+<h2><a id="6">6</a> プロセス(コマンド)の起動</h2>
 <p>Linux には多くの便利なコマンドがあるので、それらをうまく使うとプログラムを書かずに様々なことが可能です。</p>
 <p>Common モジュールでは、exec() と shell() メソッドを使ってコマンドを起動できます。
 exec() はコマンドの実行結果が OK か NG だったかを知るだけでよい場合に使います。
@@ -216,7 +235,7 @@ print(s)
 <br />
 
 <!-- コンソール画面表示のカラーや表示属性対応 -->
-<h2>コンソール画面表示のカラーや表示属性対応</h2>
+<h2><a id="7">7</a> コンソール画面表示のカラーや表示属性対応</h2>
 <p>esc_print() 関数を使うと簡単に表示属性を変更できます。この関数の第一引数は、色と表示属性の指定で、第二引数が表示文字列です。</p>
 <p>第一引数は Common モジュールで定義されている色と属性コード(整数型)あるいは色と属性の名前(文字列型)です。これは次の物だけが使用できます。</p>
 <ul>
@@ -253,6 +272,124 @@ print("Reset")
 </code></pre>
 <br />
 
+
+<!-- 型の判別など -->
+<h2><a id="8">8</a> 型の判別など</h2>
+<p>よく使う型の判別を行う関数を用意しています。Python 初心者向きの機能です。</p>
+<pre><code>
+  # isset(v)
+  ooo = None
+  print(Common.isset(ooo))
+  ooo = 1
+  print(Common.isset(ooo))
+  ooo = None
+  print(Common.isnull(ooo))
+  ooo = 1
+  print(Common.isnull(ooo))
+  # is_str(x) etc.
+  print(Common.is_str(0))
+  print(Common.is_str('0'))
+  print(Common.is_int('0'))
+  print(Common.is_int(0))
+  print(Common.is_float('1.5'))
+  print(Common.is_float(1.5))
+  print(Common.is_bool(0))
+  print(Common.is_bool(False))
+</code></pre>
+<br />
+
+
+<!-- タイマーとスリープ -->
+<h2><a id="9">9</a> タイマーとスリープ</h2>
+<p>set_timeout(seconds, callback) はタイマーを起動します。seconds はタイムアウトまでの時間で単位は秒です。callback() はタイムアウトの時コールされる関数です。</p>
+<p>sleep(seconds) は seconds 秒だけスリープする関数です。</p>
+<pre><code>
+  def callback() :
+    print("callback")
+
+  Common.set_timeout(0.5, callback)
+  Common.sleep(2)
+</code></pre>
+<br />
+
+
+<!-- バイト列と文字列の相互変換 -->
+<h2><a id="10">10 バイト列と文字列の相互変換</a></h2>
+<p>Python では文字列をバイト列にしたり、その逆の操作がよく必要になります。元々、古いバージョンの Python では文字列 = バイト列だった歴史があり、その名残でそのようなことが頻繁に起こります。</p>
+<p>Common モジュールでは、バイト列と文字列の相互変換を行うための関数を用意しています。</p>
+<ul>
+ <li>to_bytes(s): 文字列 s をバイト列に変換して返す。</li>
+ <li>from_bytes(b): バイト列 b を文字列に変換して返す。</li>
+</ul>
+<h4>test/Py365Lib/A06.py</h4>
+<p>次のサンプルは、from_bytes(byte_data), to_bytes(str_data) 関数の使用例です。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# バイト列を文字列にする。
+data = b'ABCDEF'
+str = Common.from_bytes(data)
+print(str)
+print(Common.is_str(str))
+
+# 文字列をバイト列にする。
+str = "01234"
+data = Common.to_bytes(str)
+print(data)
+</code></pre>
+<br />
+
+
+<!-- JSON 文字列とオブジェクトの相互変換 -->
+<h2><a id="11">11 JSON 文字列とオブジェクトの相互変換</a></h2>
+<p>複雑な形式のデータ(オブジェクト)を扱う場合、JSON 形式がよく利用されますが、Common モジュールでは JSON データを簡単に扱えるようにする関数が用意されています。</p>
+<ul>
+ <li>from_json(jsonText): JSON 形式文字列をオブジェクトに変換する。関数値はオブジェクト。</li>
+ <li>to_json(obj): オブジェクトを JSON 形式文字列として返す。</li>
+</ul>
+<h4>test/Py365Lib/A07.py</h4>
+<p>次のサンプルは、from_json(json), to_json(obj) 関数の使用例です。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+from pprint import pprint
+
+# JSON 文字列をオブジェクトにする。
+data = '''[
+ {"type":"label", "name":"Label1", "text":"Label1", "left":20, "top":3},
+ {"type":"button", "name":"btnOK", "text":" OK ", "left":20, "top":4}
+]'''
+obj = Common.from_json(data)
+pprint(obj)
+
+# オブジェクトを JSON 文字列にする。
+json = Common.to_json(obj)
+print(json)
+</code></pre>
+<br />
+
+
+<!-- 環境変数、OS 判別、キーボード入力 -->
+<h2><a id="12">12 環境変数、OS 判別、キーボード入力</a></h2>
+<p>Common モジュールでは、その他の関数として、次のような物が利用できます。</p>
+<ul>
+ <li>get_env(key): キー key で指定される環境変数を返す。</li>
+ <li>is_windows(): OS が Windows なら True を返す。(Windows 環境は、syslog 機能と相互排反する。Common.py から import syslog をコメントアウトすること。)</li>
+ <li>readline(message=None): メッセージ message を表示して、キーボードから文字列を読む。message を省略したときは、何も表示しない。</li>
+</ul>
+<h4>test/Py365Lib/A05.py</h4>
+<p>次のサンプルは、readline(str) と get_env(key) 関数の使用例です。</p>
+<pre><code>#!/usr/bin/env python3
+import sys
+from Py365Lib import *
+
+key = Common.readline("環境変数の名前を入力してください。>")
+try :
+  value = Common.get_env(key)
+  print("{0} : {1}".format(key, value))
+except :
+  Common.esc_print("red", "例外を検出。")
+</code></pre>
+<br />
 
 
 </article>
