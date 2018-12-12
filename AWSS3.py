@@ -1,21 +1,21 @@
 # -*- code=utf-8 -*-
-# Version 1.00  2018-12-09
+# Version 1.00  2018-12-12
 import boto3
 
 class AWSS3 :
-    # コンストラクタ
+    # コンストラクタ / Constructor
     def __init__(self) :
         self.__s3 = boto3.resource("s3")
         self.buckets = list(self.__s3.buckets.all())
         self.objlist = {}
         return
     
-    # バケット内のフォルダキー一覧
-    def query_folders(self, bucketName, level, callback) :
+    # バケット内のフォルダキー一覧 / List folder keys in the bucket.
+    def query_folders(self, bucketName:'Name of bucket', level:'depth from bucket. 0 means top.', callback: 'The parameter is the key') :
         bucket = self.__s3.Bucket(bucketName)
-        if bucketName in self.objlist.keys() :      
+        if not bucketName in self.objlist.keys() :      
             self.objlist[bucketName] = bucket.objects.all()
-        for obj in objlisti[bucketName] :
+        for obj in self.objlist[bucketName] :
             if level < 0 and obj.key.endswith('/'):
                 callback(obj.key)
             elif obj.key.endswith('/') and obj.key.count('/') == (level + 1):
@@ -25,11 +25,11 @@ class AWSS3 :
         return
 
     # バケット内のファイルキー一覧
-    def query_files(self, bucketName, key, callback) :
+    def query_files(self, bucketName:'Name of bucket', key:'Key of the object', callback:'The parameter is the key') :
         bucket = self.__s3.Bucket(bucketName)
         if not bucketName in self.objlist.keys() :
             self.objlist[bucketName] = bucket.objects.all()
-        for obj in objlist[bucketName] :
+        for obj in self.objlist[bucketName] :
             if not obj.key.endswith('/') and obj.key.startswith(key) :
                 callback(obj.key)
             else :
@@ -37,7 +37,7 @@ class AWSS3 :
         return
 
     # キーが存在するか
-    def exists(self, bucketName, key) :
+    def exists(self, bucketName:'Name of bucket', key:'Key of S3') -> 'True if exists.' :
         rc = False
         bucket = self.__s3.Bucket(bucketName)
         if not bucketName in self.objlist.keys() :
@@ -49,7 +49,7 @@ class AWSS3 :
         return rc
 
     # ファイルを送信する。(クラウドに格納する)
-    def put_file(self, bucketName, key, fileName) :
+    def put_file(self, bucketName:'Name of bucket', key:'Key of S3', fileName:'Path of the local file. Do not use "~".') :
         bucket = self.__s3.Bucket(bucketName)
         bucket.upload_file(fileName, key)
         if bucketName in self.objlist :
@@ -57,13 +57,13 @@ class AWSS3 :
         return
 
     # ファイルを受信する。(クラウドから取得する)
-    def get_file(self, bucketName, key, fileName) :
+    def get_file(self, bucketName:'Name of bucket', key:'Key of S3', fileName:'Path of the local file. Do not use "~".') :
         bucket = self.__s3.Bucket(bucketName)
         bucket.download_file(key, fileName, None, None, None)
         return
 
     # フォルダキーを作成する。
-    def make_folder(self, bucketName, key) :
+    def make_folder(self, bucketName:'Name of bucket', key:'Key of S3') :
         bucket = self.__s3.Bucket(bucketName)
         if not key.endswith('/') :
             key = key + "/"
@@ -73,7 +73,7 @@ class AWSS3 :
         return
 
     # フォルダキー('/'で終わる)またはファイルを削除する。
-    def remove_object(self, bucketName, key) :
+    def remove_object(self, bucketName:'Name of bucket', key:'Key of S3') :
         bucket = self.__s3.Bucket(bucketName)
         bucket.delete_objects(Delete={'Objects':[{'Key':key}]})
         if bucketName in self.objlist :

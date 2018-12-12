@@ -30,24 +30,158 @@ pre {
   border: dotted thin gray;
   margin-left:3%;
   margin-right:3%;
+  font-size: 11pt;
 }
 </style>
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 
 
 <body>
+<!-- ヘッダー -->
 <header>
 <h1 style="text-align:center;">Py365Lib/MySQL チュートリアル　<span style="font-size:14pt">(ver 2.0)</span></h1>
-<div style="text-align:center;"><a href="/">HOME</a></div>
+<div style="text-align:center;"><a href="/">HOME</a>&nbsp;/&nbsp;<a href="index.html">BACK</a>&nbsp;/&nbsp;<a href="../index.html">UP</a></div>
 </header>
 
 
+<!-- 本文 -->
 <article>
+<h3>もくじ</h3>
+<ol>
+ <li><a href="#1">AWSS3 モジュールとは</a></li>
+ <li><a href="#2">基本的な使い方</a></li>
+ <li><a href="#3">AWSS3 モジュールの機能</a></li>
+ <li><a href="#4">ファイルのアップロード</a></li>
+ <li><a href="#5">ファイルのダウンロード</a></li>
+ <li><a href="#6">バケット内のフォルダキー一覧を得る</a></li>
+ <li><a href="#7">バケット内のファイルキー一覧を得る</a></li>
+ <li><a href="#8">オブジェクトの存在確認</a></li>
+ <li><a href="#9">フォルダキーを作成する</a></li>
+ <li><a href="#10">ファイルまたはフォルダを削除する</a></li>
+</ol>
+<br />
 
+
+<!-- AWSS3 モジュールとは -->
+<h2><a id="1"></a>AWSS3 モジュールとは</h2>
+<p>AWSS3 モジュールは、AWS (Amazon Web Service) の S3 (Simple Storage Service) を簡単に利用するためのモジュールです。</p>
+<p>AWS は多様な機能を持っていますが、S3 は一般的なストレージサービスでクラウド上にファイルを保存し利用するためのサービスです。</p>
+<p>このモジュールの利用目的はいろいろ考えられますが、Raspberry Pi やモバイル環境など、大容量のハードディスクが利用できない環境での利用を考えています。これらの環境でも、インターネットが利用できるなら、AWSS3 モジュールを利用して大容量のストレージを利用できます。</p>
+<br />
+
+
+
+
+<!-- 基本的な使い方 -->
+<h2><a id="2"></a>基本的な使い方</h2>
+<p>AWS は有料サービスなので、Amazon との契約が必要です。これは Amazon のアカウントがあれば簡単です。利用料は非常に安くて、１ドルあればかなりの量のファイルを保管できます。</p>
+
+<p>さらに、接続のためには AWS CLI (AWS Command Line interface) をインストールし、アクセスキー (AWS IAM Access Key) を取得する必要があります。</p>
+<p>さらに Python3 で AWS にアクセスするためには、boto3 を pip3 コマンドを使ってインストールしておく必要があります。</p>
+<p>AWSS3 モジュールは他のモジュールと同様に Py365Lib パッケージに含まれるので、次のようにインポートすれば利用できます。AWSS3 モジュールはクラス AWSS3 を含んでいて<p>
+<pre><code>from Py365Lib import *
+# AWSS3 クラスをインスタンス化する。
+s3 = AWSS3.AWSS3()
+</code></pre>
+<p>なお、このページでは S3 の構造や概念についてユーザがすでに知っているものとして説明します。</p>
+<br />
+
+
+<!-- AWSS3 モジュールの機能 -->
+<h2><a id="3"></a>AWSS3 モジュールの機能</h2>
+<p>AWS の機能は膨大ですが、AWSS3 モジュールはそのうちの S3 のみに対応しています。そして、主にクラウドに保存したファイルの利用を主目的にしています。したがって、S3 の持つすべての機能を利用できるわけではありません。</p>
+<p>AWSS3 モジュールは、S3 の次のような機能をサポートしています。</p>
+<ul>
+ <li>buckets　バケット名のリスト。</li>
+ <li>query_folders(bucketName, level, callback)　バケット内のフォルダキー一覧を得る。</li>
+ <li>query_files(bucketName, key, callback)　バケット内のファイルキー一覧を得る。</li>
+ <li>exists(bucketName, key)　キーが存在するか</li>
+ <li>put_file(bucketName, key, fileName)　ファイルを送信する。(クラウドに格納する)</li>
+ <li>get_file(bucketName, key, fileName)　ファイルを受信する。(クラウドから取得する)</li>
+ <li>make_folder(bucketName, key)　フォルダキーを作成する。</li>
+ <li>remove_object(bucketName, key)　フォルダキー('/'で終わる)またはファイルを削除する。</li>
+</ul>
+
+<!-- ファイルのアップロード -->
+<h2><a id="4">ファイルのアップロード</a></h2>
+<p>put_file メソッドを使うと、ファイルをクラウドにアップロードできます。第一引数がバケット名、第二引数がクラウドの保存先、第三引数がローカルファイルのパス名です。</p>
+<p>次のコードはカレントディレクトリにあるローカルファイル test1.py をクラウドの my_bucket/temp/test1.py にアップロードします。</p>
+<pre><code>s3.put_file("my_bucket", "temp/test1.py", "test1.py")</code></pre>
+<br />
+
+
+
+<!-- ファイルのダウンロード -->
+<h2><a id="5">ファイルのダウンロード</a></h2>
+<p>get_file メソッドを使うと、ファイルをクラウドにダウンロードできます。第一引数がバケット名、第二引数がクラウドのキー、第三引数がローカルファイルのパス名です。</p>
+<p>次のコードはローカルファイル /home/user/temp/200000.txt にクラウドの my_bucket/temp/200000.txt からダウンロードします。</p>
+<pre><code>s3.get_file("my_bucket", "temp/200000.txt", "/home/user/temp/200000.txt")</code></pre>
+<br />
+
+
+
+<!-- バケット内のフォルダキー一覧を得る -->
+<h2><a id="6">バケット内のフォルダキー一覧を得る</a></h2>
+<p>query_folders(bucketName, level, callback) はバケット内のフォルダキー一覧を取得します。bucketName はバケット名、level は 0,1,2,3 ... の値を取り、バケット直下のフォルダが 0、その次のフォルダが 1 などとなります。callback はフォルダが見つかったときコールされる関数で引数に見つかったキーを取ります。</p>
+<p>次のコードは、3番目のバケットのレベル１のフォルダ一覧を表示します。</p>
+<pre><code>
+def callback(key) :
+  print(key)
+  return
+
+s3.query_folders(s3.buckets[2].name, 1, callback)
+</code></pre>
+<br />
+
+
+<!-- バケット内のファイルキー一覧を得る -->
+<h2><a id="7">バケット内のファイルキー一覧を得る</a></h2>
+<p>query_files(bucketName, key, callback) はバケット内のフォルダキー key に含まれるファイル一覧を取得します。callback はキーを引数に取る関数で、ファイルが見つかるごとにコールされます。</p>
+<p>次のコードは、3番目のバケットのフォルダ images/akagi/ に含まれるファイル一覧を表示します。</p>
+<pre><code>def callback(key) :
+  print(key)
+  return
+
+s3.query_files(s3.buckets[2].name, "images/akagi/", callback)
+</code></pre>
+<br />
+
+
+<!-- オブジェクトの存在確認 -->
+<h2><a id="8">オブジェクトの存在確認</a></h2>
+<p>exists(bucketName, key) は バケット名 bucketName で指定されるバケットに key で指定されるオブジェクトがあるかどうかを判別します。</p>
+<p>次のコードは、バケット my_backet にキー temp/disk.cgi があるかどうかを判別します。存在すれば True、存在しない場合は False を返します。</p>
+<pre><code>print(s3.exists("my_bucket", "temp/disk.cgi"))
+</code></pre>
+<br />
+
+
+<!-- フォルダキーを作成する -->
+<h2><a id="9">フォルダキーを作成する</a></h2>
+<p>make_folder(bucketName, key) はバケット名 bucketName で指定されるバケットにキーで指定されるフォルダを作成します。key の最後が "/" でない場合は、 "/" が追加されます。</p>
+<p>次のコードはバケット名 my_bucket で指定されるバケットのキー new_folder/ というフォルダを作成します。</p>
+<pre><code>s3.make_folder("my_bucket", "new_folder/")
+</code></pre>
+<br />
+
+
+<!-- ファイルまたはフォルダを削除する -->
+<h2><a id="9">ファイルまたはフォルダを削除する</a></h2>
+<p>remove_object(bucketName, key) はバケット名 bucketName で指定されるバケットの key で指定されるフォルダ(キーの最後が"/"で終わる)またはファイル(キーの最後が"/"以外)を削除します。</p>
+<p>次のコードはバケット名 my_bucket で指定されるバケットのキー "folder/file1.txt" というファイルと "folder/" というフォルダを削除します。</p>
+<pre><code>s3.remove_object("my_bucket", "folder/file1.txt")
+s3.remove_object("my_bucket", "folder/")
+</code></pre>
+<br />
 
 </article>
 
+<!-- フッター -->
 <footer>
 <p style="text-align:center;"><a href="#top">TOP</a></p>
 <p>&nbsp;</p>

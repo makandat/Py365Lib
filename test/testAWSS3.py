@@ -28,15 +28,19 @@ elif testNo == 2 :
 elif testNo == 3 :
     s3.query_files(s3.buckets[2].name, "images/akagi/", cb_keys)
 elif testNo == 4 :
-    print(s3.exists("small10be", "temp/disk.cgi"))
-    print(s3.exists("small10be", "temp/1000.txt"))
+    print("small10be/temp/disk.cgi {0}".format(s3.exists("small10be", "temp/disk.cgi")))
+    print("small10be/temp/1000.txt {0}".format(s3.exists("small10be", "temp/1000.txt")))
 elif testNo == 5:
     s3.put_file("small10be", "temp/testAWSS3.py", "testAWSS3.py")
+    print('Upload: small10be/temp/testAWSS3.py <= testAWSS3.py')
 elif testNo == 6:
     s3.get_file("small10be", "temp/200000.txt", "/home/user/temp/200000.txt")
+    print('Download: small10be/temp/200000.txt => /home/user/temp/200000.txt')
 elif testNo == 7:
     s3.make_folder("small10be", "folder/")
+    print("make folder: small10be/folder/")
 elif testNo == 8:
     s3.remove_object("small10be", "folder/")
+    print("remove object: small10be/folder/")
 else :
     print("不正なテスト番号です。")

@@ -1,4 +1,4 @@
-/* style570.css */
+/* default.css */
 
 /* ホットスポット関連 */
 a:link, a:visited {
@@ -19,7 +19,7 @@ header {
   border-radius:6px 6px;
   margin-top:20px;
   margin-left: 5%;
-  margin-right: 5%;"
+  margin-right: 5%;
 }
 
 article {
@@ -32,7 +32,7 @@ footer {
   margin-top:32px;
   margin-bottom:48px;
   margin-left: 5%;
-  margin-right: 5%;"
+  margin-right: 5%;
 }
 
 
@@ -120,14 +120,14 @@ pre.sample {
  padding-bottom:6px;
  padding-left:10px;
  padding-right:10px;
- font-size:11pt;
+ font-size:12pt;
 }
 
 pre.src {
 	  border: dotted thin darkred;
 	  padding: 5px;
 	  border-radius: 6px 6px;
-	  font-size: 10pt;
+	  font-size: 11pt;
 	  background-color: white;
   }
 

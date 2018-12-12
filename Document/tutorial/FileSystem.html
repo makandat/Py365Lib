@@ -55,27 +55,60 @@ pre {
  <li><a href="#1">FileSystem モジュールとは</a></li>
  <li><a href="#2">基本的な使い方</a></li>
  <li><a href="#3">FileSystem モジュールの機能</a></li>
- <li><a href="#4"></a></li>
- <li><a href="#5"></a></li>
- <li><a href="#6"></a></li>
- <li><a href="#7"></a></li>
+ <li><a href="#4">ファイル入出力</a></li>
+ <li><a href="#5">ファイルとディレクトリの操作</a></li>
+ <li><a href="#6">パス名の操作</a></li>
 </ol>
 <br />
 
 
 <!-- 1 FileSystem モジュールとは -->
 <h2><a id="1">1 FileSystem モジュールとは</a></h2>
-<p></p>
+<p>FileSystem モジュールとはファイルシステムと入出力に関する操作をまとめたモジュールです。
+これらの操作は Python の標準的な関数やモジュールなどを使えば簡単にできますが、1ステップではできなかったり、
+特定のモジュールのインポートが必要であったりと、初心者が苦労するところです。</p>
+<p>FileSystem モジュールではインポート操作も含め、できる限り１ステップでファイル操作ができるような関数を用意しています。</p>
+<p>しかし、これらのモジュール関数は機能不足だったり効率が悪いものがあるかもしれません。よって、Python に慣れたプログラマは FileSystem モジュールを使う必要は全くありません。</p>
 <br />
 
 <!-- 2 基本的な使い方 -->
 <h2><a id="2">2 基本的な使い方</a></h2>
-<p></p>
+<p>FileSystem モジュールはクラスは含まれておらず、関数のみからなっています。よって、次のように Py365Lib パッケージをインポートするだけでモジュール関数を利用できます。</p>
+<p>このように as を使うと長いモジュールの名前 (FileSystem) の代わりに fs を使用できます。</p>
+<pre><code>from Py365Lib import FileSystem as fs</code></pre>
 <br />
 
 <!-- 3 FileSystem モジュールの機能 -->
-<h2><a id="3">3 MySQL モジュール (MySQL クラス) の機能</a></h2>
-<p></p>
+<h2><a id="3">3 FileSystem モジュールの機能</a></h2>
+<p>FileSystem モジュールに含まれる関数はおおまかに次の３つに分類されます。</p>
+<ul>
+ <li><b>ファイル入出力</b>
+   <ul>
+     <li>readAllText(file)</li>
+     <li>writeAllText(file, str, append=False)</li>
+     <li></li>
+     <li></li>
+     <li></li>
+   </ul>
+ </li>
+ <li><b>ファイルとディレクトリの操作</b>
+   <ul>
+     <li></li>
+     <li></li>
+     <li></li>
+     <li></li>
+     <li></li>
+   </ul>
+ </li>
+ <li><b>パス名の操作</b>
+    <ul>
+     <li></li>
+     <li></li>
+     <li></li>
+     <li></li>
+     <li></li>
+   </ul>
+ </li>
 </ul>
 <br />
 

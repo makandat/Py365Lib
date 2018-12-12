@@ -1,12 +1,16 @@
 # -*- code=utf-8 -*-
-# Version 1.00  2018-11-21
-from typing import List
+# Version 1.01  2018-12-12
+from typing import List, Tuple
 import re
+
+# 文字列のリスト
+StrList = List[str]
+StrTuple = Tuple[str]
 
 # テキストクラス
 class Text :
     # コンストラクタ
-    def __init__(self, s="") :
+    def __init__(self, s:str="") :
         self.__text = s
 
     # 文字列の長さ
@@ -87,11 +91,11 @@ def chomp(s: str) -> str:
   return s
 
 # 文字 c で文字列 s を分割してリストとして返す。
-def split(c:bytes, s:str) -> List[str]:
+def split(c:bytes, s:str) -> StrList:
   return s.split(c)
 
 # リスト array の要素を文字 c で連結する。
-def join(c:str, array:List[str]) -> str:
+def join(c:str, array:StrList) -> str:
   return c.join(array)
 
 # 文字列 s の中に部分文字列 p が含まれているか判別する。
@@ -107,7 +111,7 @@ def replace(old:str, new:str, s:str) -> str:
   return s.replace(old, new)
 
 # 書式を含む文字列 form を *args (可変個数のパラメータ) で置き換える。
-def format(form, *args) :
+def format(form:str, *args: StrTuple) :
  return form.format(*args)
 
 # 文字列 s を整数に変換する。

@@ -30,6 +30,7 @@ pre {
   border: dotted thin gray;
   margin-left:3%;
   margin-right:3%;
+  font-size:11pt;
 }
 </style>
 <!-- highlight.js -->
@@ -124,7 +125,7 @@ client.execute("INSERT INTO Asset(`date`,`asset`,`profit_loss`) VALUES('2011-09-
 <pre><code>#!/usr/bin/python3
 from Py365Lib import MySQL as mysql
 client = mysql.MySQL()
-n = client.getValue("SELECT count(*) FROM YJFX_Asset")
+n = client.getValue("SELECT count(*) FROM Asset")
 print(n)
 </code></pre>
 <br />
