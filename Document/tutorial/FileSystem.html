@@ -55,9 +55,15 @@ pre {
  <li><a href="#1">FileSystem モジュールとは</a></li>
  <li><a href="#2">基本的な使い方</a></li>
  <li><a href="#3">FileSystem モジュールの機能</a></li>
- <li><a href="#4">ファイル入出力</a></li>
- <li><a href="#5">ファイルとディレクトリの操作</a></li>
+ <li><a href="#4">ファイル(ディレクトリ)の属性を表示する</a></li>
+ <li><a href="#5">指定したディレクトリの内容一覧表示</a></li>
  <li><a href="#6">パス名の操作</a></li>
+ <li><a href="#7">readAllLines メソッドの使用例</a></li>
+ <li><a href="#8">JSON ファイルの扱い</a></li>
+ <li><a href="#9">文字列の一括読み込みと書き込み</a></li>
+ <li><a href="#10">バイナリーファイルと INI ファイル</a></li>
+ <li><a href="#11">CSV ファイルの読み込み</a></li>
+ <li><a href="#12">INI ファイルの読み込み</a></li>
 </ol>
 <br />
 
@@ -84,41 +90,296 @@ pre {
 <ul>
  <li><b>ファイル入出力</b>
    <ul>
-     <li>readAllText(file)</li>
-     <li>writeAllText(file, str, append=False)</li>
-     <li></li>
-     <li></li>
-     <li></li>
+     <li>readAllText(file):　テキストファイルを読んで文字列として返す。</li>
+     <li>writeAllText(file, str, append=False):　テキストファイルをファイルに書く。</li>
+     <li>readAllLines(file, callback):　ファイルを１行づつ読んで、その行を引数として関数をコールする。</li>
+     <li>readBinary(file):　バイナリーファイルを読んでバイト列として返す。</li>
+     <li>writeBinary(file, data):　バイト列をファイルに書く。</li>
+     <li>readIni(file):　INI ファイルを読む。セクションはコメントとして扱う。</li>
+     <li>readCsv(path, header=True, delim=",", lterm="\n"):　CSV ファイルを読んで文字列リストのリストとして返す。</li>
+     <li>readJson(path):　JSON ファイルを読んでオブジェクトとして返す。</li>
+     <li>writeJson(path, data, pretty=False):　オブジェクトをJSON形式に変換してファイルに書く。pretty=True の場合はJSONテキストを整形する。</li>
    </ul>
  </li>
  <li><b>ファイルとディレクトリの操作</b>
    <ul>
-     <li></li>
-     <li></li>
-     <li></li>
-     <li></li>
-     <li></li>
+     <li>copy(src, dest):　ファイル src をファイル dest にコピーする。</li>
+     <li>move(src, dest):　ファイル src をファイル dest に移動する。</li>
+     <li>unlink(file):　ファイルやリンクを削除する。</li>
+     <li>exists(file):　ファイルまたはディレクトリが存在するか調べる。</li>
+     <li>isFile(file):　引数で指定したパスがファイルか調べる。</li>
+     <li>isDirectory(dir):　引数で指定したパスがディレクトリか調べる。</li>
+     <li>isLink(link):　引数で指定したパスがリンクか調べる。</li>
+     <li>getAttr(path):　引数で指定したオブジェクトの属性を返す。</li>
+     <li>getOwner(path):　引数で指定したオブジェクトのオーナー名を返す。</li>
+     <li>getGroup(path):　引数で指定したオブジェクトのグループ名を返す。</li>
+     <li>chdir(dir):　引数で指定したディレクトリをカレントディレクトリとする。</li>
+     <li>mkdir(dir):　引数で指定したディレクトリを作成する。</li>
+     <li>rmdir(dir):　引数で指定したディレクトリを削除する。中身が空でない場合は、中身も削除される。</li>
+     <li>grep(str, file):　ファイル内の文字列(正規表現、ワイルドカード不可)を検索する。(先頭を 0 とする行番号のリストを返す)</li>
+     <li>listFiles(dir, wildcard="*"):　指定したワイルドカードでディレクトリ内を検索してファイル一覧(フルパス)を得る。</li>
+     <li>listDirectories(dir):　パラメータで指定したディレクトリ直下のサブディレクトリ一覧(フルパス)を得る。</li>
    </ul>
  </li>
  <li><b>パス名の操作</b>
     <ul>
-     <li></li>
-     <li></li>
-     <li></li>
-     <li></li>
-     <li></li>
+     <li>getAbsolutePath(path):　パラメータで指定した相対パスから絶対パスを得る。</li>
+     <li>getParentDirectory(path):　パラメータで指定したパスの親のディレクトリを得る。</li>
+     <li>getCurrentDirectory():　現在の位置(ディレクトリ)を得る。</li>
+     <li>getFileName(path):　パラメータで指定したパスのファイル名部分を得る。</li>
+     <li>getDirectoryName(path):　パラメータで指定したパスのディレクトリ名部分を得る。</li>
+     <li>getExtension(path):　パラメータで指定したファイルの拡張子部分(ドットを含む)を得る。の</li>
+     <li>changeExt(path, ext):　ファイル名 path の拡張子を ext に変更する。ext はドットを含むものとする。</li>
+     <li>getTempFile():　一時ファイル名を得る。</li>
    </ul>
  </li>
 </ul>
 <br />
 
 
-<!-- 4  -->
-<h2><a id="4"></a></h2>
-<p></p>
-<pre><code>
+<!-- 4 ファイル(ディレクトリ)の属性を表示する -->
+<h2><a id="4">ファイル(ディレクトリ)の属性を表示する</a></h2>
+<p>次のコードはコマンドライン引数で与えられたファイルまたはディレクトリの属性を取得して表示します。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "ファイルを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+fileName = Common.args()[0]
+Common.esc_print(Common.ESC_FG_CYAN, fileName)
+
+# ファイルが存在するか確認
+if not FileSystem.exists(fileName) :
+  Common.stop(8, "ファイルが存在しません。")
+    
+# ファイルの属性を得る。
+b = FileSystem.isFile(fileName)
+print("ファイルかどうか： {0}".format(b))
+b = FileSystem.isDirectory(fileName)
+print("ディレクトリかどうか： {0}".format(b))
+b = FileSystem.isLink(fileName)
+print("リンクかどうか： {0}".format(b))
+mode = FileSystem.getAttr(fileName)
+print("ファイルモード： {0:09o}".format(mode))
+owner = FileSystem.getOwner(fileName)
+print("所有者： {0}".format(owner))
+group = FileSystem.getGroup(fileName)
+print("グループ： {0}".format(group))
+
+# 終了コードを設定
+exit(err)
 </code></pre>
 <br />
+<h4>実行例</h4>
+<pre>
+../testFileSystem.py
+ファイルかどうか： True
+ディレクトリかどうか： False
+リンクかどうか： False
+ファイルモード： 000100755
+所有者： user
+グループ： user
+</pre>
+<br />
+
+
+<!-- 5 指定したディレクトリの内容一覧表示 -->
+<h2><a id="5">指定したディレクトリの内容一覧表示</a></h2>
+<p>次のコードは、FileSystem のモジュール関数 listFiles, listDirectories を使用して、ディレクトリ内のファイルとサブディレクトリ一覧を表示するものです。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "ディレクトリを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+dirName = Common.args()[0]
+Common.esc_print(Common.ESC_FG_CYAN, dirName)
+
+# ファイルが存在するか確認
+if not FileSystem.exists(dirName) :
+  Common.stop(8, "ディレクトリが存在しません。")
+    
+# ディレクトリ内のファイル一覧を取得する。
+Common.esc_print(Common.ESC_FG_GREEN, "ファイル一覧")
+files = FileSystem.listFiles(dirName)
+for fn in files :
+    print(fn)
+
+# ディレクトリ内のサブディレクトリ一覧を取得する。
+Common.esc_print(Common.ESC_FG_YELLOW, "ディレクトリ一覧")
+dirs = FileSystem.listDirectories(dirName)
+for d in dirs :
+    print(d)
+    
+# 終了コードを設定
+exit(err)</code></pre>
+<br />
+
+
+<!-- 6 パス名の操作 -->
+<h2><a id="6">パス名の操作</a></h2>
+<p>次のコードは、FileSystem モジュールの関数を使用して、いろいろなパス名の操作をするものです。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+path = "/home/user/bin/rmcr.pl"
+
+# ディレクトリ名を得る。
+print(FileSystem.getDirectoryName(path))
+# ファイル名を得る。
+print(FileSystem.getFileName(path))
+# 拡張子を得る。（先頭はドット）
+print(FileSystem.getExtension(path))
+
+# 現在の位置を得る。
+print(FileSystem.getCurrentDirectory())
+# 親のディレクトリを得る。
+print(FileSystem.getParentDirectory("/home/user/bin"))
+# 相対パスから絶対パスにを得る。
+print(FileSystem.getAbsolutePath("../.."))
+
+# 一時ファイル名を得る。
+print(FileSystem.getTempFile())</code></pre>
+<br />
+
+
+<!-- 7 readAllLines メソッドの使用例 -->
+<h2><a id="7">readAllLines メソッドの使用例</a></h2>
+<p>次のコードはファイルを１行づつ読みこんで、それらを結合しひとつの文字列とする例です。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+buff = ""
+
+# アルファベットの小文字をすべて大文字にする。
+def toUpper(line) :
+  global buff
+  buff += Text.toupper(line)
+  buff += '\x0a'  # LF
+  return
+
+# コマンドライン引数のチェック
+if Common.count_args() == 0 :
+  Common.stop(9, "ファイルを指定してください。")
+
+# エラーコード (0 はエラーなし)
+err = 0
+
+#  パラメータ取得例
+fileName = Common.args()[0]
+
+try :
+  # ファイルの内容を表示する。
+  FileSystem.readAllLines(fileName, toUpper)
+  print(buff)
+except Exception as e :
+  # 例外発生時の処理
+  Common.esc_print(Common.ESC_FG_RED, e.args)
+  err = 1
+
+if err == 0 :
+  print("正常終了。")
+else :
+  print("エラーを検出しました。エラーコード: {0:d}".format(err))
+
+# 終了コードを err とする。 (0 はエラーなし)
+exit(err)</code></pre>
+<br />
+
+
+<!-- 8 JSON ファイルの扱い -->
+<h2><a id="8">JSON ファイルの扱い</a></h2>
+<p>次のコードは オブジェクトを JSON ファイルとして保存し、それを再び読み込んでオブジェクトとして表示するものです。</p>
+<pre><code>#!/usr/bin/python3
+from Py365Lib import Common, FileSystem as fs
+from pprint import pprint
+
+FILE = "/home/user/temp/test.json"
+
+# JSON ファイルを書く。
+data = [
+ {"type":"label", "name":"label1", "text":"LABEL", "left":15, "top":4},
+ {"type":"button", "name":"ok_button", "text":" OK ", "click":100 }
+]
+
+fs.writeJson(FILE, data)
+print("Wrote " + FILE)
+
+# JSON ファイルを読む。
+if fs.exists(FILE) :
+  data = fs.readJson(FILE)
+  pprint(data)
+else :
+  print(FILE + " not found.")
+</code></pre>
+<br />
+
+
+<!-- 9 文字列の一括読み込みと書き込み  -->
+<h2><a id="9"></a>文字列の一括読み込みと書き込み</h2>
+<p>次のコードは、FileSystem のモジュール関数 readAllText, writeAllText を使用し、文字列の一括読み込みと書き込みを行う例です。</p>
+<pre><code>    # readAllText(file)
+    FILE1 = "./test1.txt"
+    Common.exec(["./fsTest.sh", "1"])
+    s = fs.readAllText(FILE1)
+    print(s)
+    # writeAllText()
+    FILE2 = "./test2.txt"
+    FILE3 = "./test3.txt"
+    fs.writeAllText(FILE2, "-- writeAllText --\nABC 000\n")
+    fs.writeAllText(FILE3, "-- writeAllText(append) --\n", append=False)
+    fs.writeAllText(FILE3, "ABC 012\nLOL\n", append=True)
+    Common.exec(["./fsTest.sh", "2"])
+</code></pre>
+<br />
+
+
+<!-- 10 バイナリーファイルと INI ファイル  -->
+<h2><a id="10"></a>バイナリーファイルと INI ファイル</h2>
+<p>次のコードはFileSystem のモジュール関数 readBinary を使用してバイナリーファイルを読み込んで表示する例、writeBinary 関数を使用して、バイナリーデータをファイルに書く例です。</p>
+<pre><code>    # readBinary
+    Common.exec(["./fsTest.sh", "4"])
+    data = fs.readBinary("./binary1.bin")
+    print(data)
+    # writeBinary
+    fs.writeBinary("./binary2.bin", b'\x08\x09\x0a')
+    Common.exec(["./fsTest.sh", "5"])
+</code></pre>
+<br />
+
+
+<!-- 11 CSV ファイルの読み込み  -->
+<h2><a id="11"></a>CSV ファイルの読み込み</h2>
+<p>次のコードは FileSystem のモジュール関数 readCsv 使って CSV ファイルを読み込む例です。</p>
+<pre><code>    mslist = fs.readCsv('test8.csv')
+    for m in mslist :
+        pprint(m)</code></pre>
+<br />
+
+
+<!-- 12 INI ファイルの読み込み  -->
+<h2><a id="12"></a>INI ファイルの読み込み</h2>
+<p>次のコードは FileSystem のモジュール関数 readIni 使って INI ファイルを読み込む例です。</p>
+<pre><code>    # readIni
+    m = fs.readIni("./AppConf.ini")
+    print(m)
+</code></pre>
+<br />
+
+
+
+
 
 
 </article>

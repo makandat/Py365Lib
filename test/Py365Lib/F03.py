@@ -3,20 +3,20 @@ from Py365Lib import *
 
 path = "/home/user/bin/rmcr.pl"
 
-# ƒfƒBƒŒƒNƒgƒŠ–¼‚ğ“¾‚éB
+# ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã‚’å¾—ã‚‹ã€‚
 print(FileSystem.getDirectoryName(path))
-# ƒtƒ@ƒCƒ‹–¼‚ğ“¾‚éB
+# ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å¾—ã‚‹ã€‚
 print(FileSystem.getFileName(path))
-# Šg’£q‚ğ“¾‚éBiæ“ª‚Íƒhƒbƒgj
+# æ‹¡å¼µå­ã‚’å¾—ã‚‹ã€‚ï¼ˆå…ˆé ­ã¯ãƒ‰ãƒƒãƒˆï¼‰
 print(FileSystem.getExtension(path))
 
-# Œ»İ‚ÌˆÊ’u‚ğ“¾‚éB
+# ç¾åœ¨ã®ä½ç½®ã‚’å¾—ã‚‹ã€‚
 print(FileSystem.getCurrentDirectory())
-# e‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğ“¾‚éB
+# è¦ªã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å¾—ã‚‹ã€‚
 print(FileSystem.getParentDirectory("/home/user/bin"))
-# ‘Š‘ÎƒpƒX‚©‚çâ‘ÎƒpƒX‚É‚ğ“¾‚éB
+# ç›¸å¯¾ãƒ‘ã‚¹ã‹ã‚‰çµ¶å¯¾ãƒ‘ã‚¹ã«ã‚’å¾—ã‚‹ã€‚
 print(FileSystem.getAbsolutePath("../.."))
 
-# ˆêƒtƒ@ƒCƒ‹–¼‚ğ“¾‚éB
+# ä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å¾—ã‚‹ã€‚
 print(FileSystem.getTempFile())
 

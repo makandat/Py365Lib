@@ -82,7 +82,17 @@ pre {
 <p>AWS は有料サービスなので、Amazon との契約が必要です。これは Amazon のアカウントがあれば簡単です。利用料は非常に安くて、１ドルあればかなりの量のファイルを保管できます。</p>
 
 <p>さらに、接続のためには AWS CLI (AWS Command Line interface) をインストールし、アクセスキー (AWS IAM Access Key) を取得する必要があります。</p>
-<p>さらに Python3 で AWS にアクセスするためには、boto3 を pip3 コマンドを使ってインストールしておく必要があります。</p>
+<p>さらに Python3 で AWS にアクセスするためには、awscli と boto3 を pip3 コマンドを使ってインストールしておく必要があります。</p>
+<blockquote>
+sudo pip3 install awscli<br />
+aws configure<br />
+AWS Access Key ID [None]: AKIA***********W45A<br />
+AWS Secret Access Key [None]: hb3y**********PK/7ir6*********qD8w<br />
+Default region name [None]: us-west-2<br />
+Default output format [None]: json<br />
+sudo pip3 install boto3
+</blockquote>
+
 <p>AWSS3 モジュールは他のモジュールと同様に Py365Lib パッケージに含まれるので、次のようにインポートすれば利用できます。AWSS3 モジュールはクラス AWSS3 を含んでいて<p>
 <pre><code>from Py365Lib import *
 # AWSS3 クラスをインスタンス化する。

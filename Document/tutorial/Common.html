@@ -103,9 +103,26 @@ Common モジュールは、次のような機能を簡単に利用できるよ�
 </p>
 <ul>
  <li>コマンドライン引数の使用 (解析機能はない)</li>
- <li>ロギング (Python 標準ログ機能と syslog)</li>
- <li>プログラムの中断</li>
- <li>プロセス(コマンド)の起動</li>
+ <li>ロギング (Python 標準ログ機能と syslog)
+   <ul>
+    <li>init_logger(filename:str=None):　ロガーを初期化する。filename はログファイルのパス名だが省略した場合は、Common.LOGFILE ("Py365Lib.log") となる。</li>
+    <li>log(msg:str):　ログ(msg)を一般情報として出力する。</li>
+    <li>error(msg:str):　ログ(msg)をエラー情報として出力する。</li>
+    <li>syslog_out(msg:str):　syslog にログを出力する。(Linux 環境のみ)</li>
+   <ul>
+ </li>
+ <li>プログラムの中断
+  <ul>
+   <li>stop(code:int = 0, message:str ="", color:int=ESC_FG_RED):　プログラムの実行を中止する。message はその時、表示されるエラーメッセージ。color はエラーメッセージの色指定。</li>
+  </ul>
+ </li>
+ <li>プロセス(コマンド)の起動
+  <ul>
+   <li></li>
+   <li></li>
+   <li></li>
+  </ul>
+ </li>
  <li>変数の型判別と有効性判別</li>
  <li>タイマーとスリープ</li>
  <li>OS (Windows かどうか) の判別</li>

@@ -1,5 +1,5 @@
 # FileSystem.py
-# Version 1.10  2018-12-12
+# Version 1.11  2018-12-13
 import os
 import shutil
 import glob
@@ -10,6 +10,8 @@ import grp
 import csv
 import json
 from typing import Callable, List, Dict, Any
+
+StrList = List[str]
 
 # テキストファイルを読んでその内容を返す。
 def readAllText(file: str) -> str :
@@ -22,17 +24,17 @@ def readAllText(file: str) -> str :
 def writeAllText(file: str, text: str, append:bool=False) -> None:
   if append == True :
     with open(file, "a") as f :
-      f.write(str)
+      f.write(text)
   else :
     with open(file, "w") as f :
-      f.write(str)
+      f.write(text)
   return
 
-# ファイルを１行づつ読んで method で処理する。
-def readAllLines(file: str, method: Callable) -> None:
+# ファイルを１行づつ読んで callback で処理する。
+def readAllLines(file: str, callback: Callable) -> None:
   with open(file) as f :
     for line in f:
-      method(line.rstrip())
+      callback(line.rstrip())
   return
 
 # バイナリーファイルを読む。
@@ -77,7 +79,7 @@ def unlink(file:str) -> None:
   return
 
 # ファイルやディレクトリが存在するか調べる。
-def exists(file) -> bool:
+def exists(file:str) -> bool:
   return os.path.exists(file)
 
 # ファイルが存在するか調べる。
@@ -93,7 +95,7 @@ def isLink(path:str) -> bool:
   return os.path.islink(path)
 
 # ファイルやディレクトリの属性を得る。
-def getAttr(path:str) -> bool:
+def getAttr(path:str) -> int:
   return os.stat(path).st_mode
 
 # ファイルやディレクトリのオーナーを得る。
@@ -196,7 +198,7 @@ def getTempFile() -> str:
   return tempfile.NamedTemporaryFile().name
 
 # CSV ファイルを読む。
-def readCsv(path:str, header:bool=True, delim:str=",", lterm:str="\n") -> List:
+def readCsv(path:str, header:bool=True, delim:str=",", lterm:str="\n") -> List[StrList]:
   rows = []
   with open(path, "r") as fcsv :
     f = csv.reader(fcsv, delimiter=delim , doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
