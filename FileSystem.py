@@ -14,8 +14,8 @@ from typing import Callable, List, Dict, Any
 StrList = List[str]
 
 # テキストファイルを読んでその内容を返す。
-def readAllText(file: str, mode="r", buffering=-1, encoding="utf8") -> str :
-  f = open(file)
+def readAllText(file: str) -> str :
+  f = open(file, mode="r", buffering=-1, encoding="utf8")
   str = f.read()
   f.close()
   return str
