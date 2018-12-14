@@ -16,9 +16,9 @@ StrList = List[str]
 # テキストファイルを読んでその内容を返す。
 def readAllText(file: str) -> str :
   f = open(file, mode="r", buffering=-1, encoding="utf8")
-  str = f.read()
+  s = f.read()
   f.close()
-  return str
+  return s
 
 # テキストをファイルに書く。
 def writeAllText(file: str, text: str, append:bool=False) -> None:
