@@ -1,5 +1,5 @@
 # FileSystem.py
-# Version 1.11  2018-12-13
+# Version 1.12  2018-12-14
 import os
 import shutil
 import glob
@@ -14,7 +14,7 @@ from typing import Callable, List, Dict, Any
 StrList = List[str]
 
 # テキストファイルを読んでその内容を返す。
-def readAllText(file: str) -> str :
+def readAllText(file: str, mode="r", buffering=-1, encoding="utf8") -> str :
   f = open(file)
   str = f.read()
   f.close()
