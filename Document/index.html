@@ -114,7 +114,7 @@ header, article, fooder {
 <h3>インストール</h3>
 <ol>
  <li>適切なフォルダの下に Py365Lib というフォルダを作成する。（例）~/lib/python/Py365Lib</li>
- <li>Py365Lib の下に次のファイルをコピーする。
+ <li>Py365Lib の下に次のファイルをコピーする。(GUI 環境のない場合は TkApp.py はコピーしなくてよい。同様に CGI を利用できない場合は、WebPage.py はコピーしなくてよい)
   <ul>
    <li>Common.py</li>
    <li>FileSystem.py</li>
@@ -127,7 +127,7 @@ header, article, fooder {
    <li>HTApp.py</li>
    <li>TkApp.py</li>
   </ul>
-  <li>Py365Lib の下に __init__.py を作成する。内容は次の通りとする。
+  <li>Py365Lib の下に __init__.py を作成する。内容は次の通りとする。ただし、TkApp.py, WebPage.py をコピーしなかった場合は、それぞれの項目を除く)
     <pre>
   __all__ = ['Common', 'FileSystem', 'Text', 'DateTime', "MySQL", "AWSS3", "WebPage", "CursesApp", "HTApp", "TkApp" ]
     </pre></li>

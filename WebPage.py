@@ -1,7 +1,5 @@
 # coding:utf-8
-# Version 0.70  2018-10-06
-# Version 0.71  2018-10-10 redirect
-# Version 0.72  2018-10-10 readConf
+# Version 1.00  2018-12-12 bug fix
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -64,21 +62,19 @@ class WebPage :
     for s in self.headers :
       print(s)
     print()
-    return
 
   # クッキーを登録する。
   def cookie(self, key, value) :
-    self.cookies[key] =value
-    return
+      self.cookies[key] =value
   
   # AppConf.ini を読む。
   def readConf(self) :
     self.conf = {}
-    if not os.path.exists(CursesApp.APPCONF) :
+    if not os.path.exists(WebPage.APPCONF) :
       return
-    with open(CursesApp.APPCONF) as f :
+    with open(WebPage.APPCONF) as f :
       for line in f :
-        if line.startwith('#') or line.startwith('[') or len(line) == 0:
+        if line[0] =='#' or line[0] == '[' or len(line) == 0:
           continue
         kv = line.split('=')
         if len(kv) == 2 :
@@ -92,7 +88,6 @@ class WebPage :
     filename = os.path.basename(self.params[key].filename)
     with open(f"{dir}/{filename}", "wb") as f :
       f.write(self.params[key].file.read())
-    return
 
   # リダイレクト
   def redirect(self, url, wait=1) :
