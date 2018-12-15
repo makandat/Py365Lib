@@ -1,5 +1,5 @@
 # -*- code=utf-8 -*-
-# Version 1.01  2018-12-12
+# Version 1.02  2018-12-15
 from typing import List, Tuple
 import re
 
@@ -144,7 +144,7 @@ def re_search(rstr:str, s:str) -> re.match :
   return m
 
 # 正規表現 rstr が文字列 s に含まれていれば、その部分文字列で分割してリストとして返す。
-def re_split(rstr:str, s:str) ->List[str] :
+def re_split(rstr:str, s:str) -> StrList :
   m = re.split(rstr, s)
   return m
 
@@ -153,4 +153,7 @@ def re_replace(rstr:str, c:str, s:str) -> str :
   ro = re.compile(rstr)
   return ro.sub(c, s)
 
-
+# 数(整数または浮動小数点数) d に3桁ごとにカンマを挿入した文字列を返す。
+def money(d:float) -> str :
+  m = '{0:,}'.format(d)
+  return m

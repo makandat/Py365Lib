@@ -55,10 +55,12 @@ pre {
  <li><a href="#1">Text モジュールとは</a></li>
  <li><a href="#2">基本的な使い方</a></li>
  <li><a href="#3">Text モジュールの機能</a></li>
- <li><a href="#4"></a></li>
- <li><a href="#5"></a></li>
- <li><a href="#6"></a></li>
- <li><a href="#7"></a></li>
+ <li><a href="#4">Text クラス</a></li>
+ <li><a href="#5">判別関数</a></li>
+ <li><a href="#6">変換関数</a></li>
+ <li><a href="#7">検索関数</a></li>
+ <li><a href="#8">文字列操作関数</a></li>
+ <li><a href="#9">正規表現関数</a></li>
 </ol>
 <br />
 
@@ -70,20 +72,211 @@ pre {
 
 <!-- 2 基本的な使い方 -->
 <h2><a id="2">2 基本的な使い方</a></h2>
-<p></p>
+<p>
+Text モジュールは、Py356Lib パッケージに含まれているので、<a href="index.html#1">Py356Lib パッケージをインストール</a>してあれば、次のようにして利用できます。
+</p>
+<pre><code>from Py365Lib import Text</code></pre>
+<br />
+
+<p>Py356Lib パッケージをインストールしていない場合は、Text.py をアプリケーションと同じフォルダに配置しておけば次のようにして利用できます。</p>
+<pre><code>import Text</code></pre>
 <br />
 
 <!-- 3 Text モジュールの機能 -->
-<h2><a id="3">3 MySQL モジュール (MySQL クラス) の機能</a></h2>
-<p></p>
+<h2><a id="3">3 Text モジュール の機能</a></h2>
+<p>Text モジュールはテキスト処理に関する次のような機能を有します。</p>
+<ul>
+ <li>Text クラス: 主に部分文字列処理を行う。
+  <ul>
+   <li>コンストラクタ Text(s="") :　文字列 s をカプセル化する。</li>
+   <li>length プロパティ:　文字列の長さ</li>
+   <li>append(s) メソッド:　現在の文字列に s を追加する。</li>
+   <li>substring(start, length):　現在の文字列の位置 start から長さ length の部分文字列を返す。</li>
+   <li>substr(start, end):　現在の文字列の位置 start から end までの部分文字列を返す。(end を含む)</li>
+   <li>left(length):　現在の文字列の左側の長さ length の部分文字列を返す。</li>
+   <li>right(length):　現在の文字列の右側の長さ length の部分文字列を返す。</li>
+   <li>toString():　現在の文字列(カプセル化されている文字列本体)を返す。</li>
+   <li>times(c, n):　文字列 c を n 回繰り返した文字列をこのオブジェクトの値とする。</li>
+   <li>clear():　このオブジェクトの文字列をクリアする。</li>
+  </ul>
+ <li>
+ <li>判別を行う関数
+  <ul>
+   <li>isdigit(a):　a が数字か判別する。</li>
+   <li>isalpha(a):　a がアルファベットか判別する。</li>
+   <li>isdelim(a):　a が区切り文字か判別する。</li>
+   <li>isprint(a):　a が表示可能か判別する。</li>
+  </ul>
+ <li>変換を行う関数
+  <ul>
+   <li>tolower(s):　s に含まれる大文字を小文字に変換する。</li>
+   <li>toupper(s):　s に含まれる小文字を大文字に変換する。</li>
+   <li>parseInt(s):　文字列 s を整数に変換する。</li>
+   <li>parseDouble(s):　文字列 s を浮動小数点数に変換する。</li>
+   <li>char(n):　256 未満の整数を ASCII 文字に変換する。</li>
+   <li>asc(a):　ASCII 文字を整数に変換する。</li>
+   <li>format(f, *args):　書式文字列に従って、可変個数の引数 *args を書式化した文字列を返す。</li>
+   <li>money(d):　数(整数または浮動小数点数) d に3桁ごとにカンマを挿入した文字列を返す。</li>
+  </ul>
+ </li>
+ <li>検索を行う関数
+  <ul>
+   <li>contain(p, s):　文字列 s に部分文字列 p が含まれていれば True を返す。</li>
+   <li>indexOf(p, s):　文字列 s に部分文字列 p が含まれていれば、その位置を返す。</li>
+  </ul>
+ </li>
+ <li>文字列の操作を行う関数
+  <ul>
+   <li>trim(s):　s の前後の空白を取り除く。</li>
+   <li>chomp(s):　s の後ろのCRやLFを取り除く</li>
+   <li>split(c, s):　文字列 s を 文字 c で分割して文字列リストとして返す。</li>
+   <li>join(c, array):　文字列のリスト array を文字 c で結合する。</li>
+   <li>replace(old, new, s):　文字列 s に 部分文字列 old が含まれていれば new に変換した文字列を返す。</li>
+  </ul>
+ </li>
+ <li>正規表現関数
+  <ul>
+   <li>re_contain(rstr:str, s:str):　正規表現文字列 rstr が文字列 s に見つかれば True を返す。</li>
+   <li>re_search(rstr, s)　正規表現文字列 rstr が文字列 s に見つかれば match オブジェクトを返す。</li>
+   <li>re_split(rstr, s):　正規表現 rstr が文字列 s に含まれていれば、その部分文字列で分割してリストとして返す</li>
+   <li>re_replace(rstr, c, s):　正規表現 rstr が文字列 s に含まれていれば、その部分文字列を c で置き換える。</li>
+  </ul>
+ </li>
 </ul>
 <br />
 
 
-<!-- 4  -->
-<h2><a id="4"></a></h2>
+<!-- 4 Text クラス -->
+<h2><a id="4">Text クラス</a></h2>
 <p></p>
-<pre><code>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import Common, Text as txt
+
+# Text オブジェクトを構築
+to = txt.Text("0123456789")
+
+# 結合
+to.append("ABCDEF")
+print(to.toString())
+
+# 部分文字列
+print(to.substring(1, 4))  # 位置 1 から 4 文字分
+print(to.substr(1, 4))     # 位置 1 から位置 4 まで
+print(to.left(4))   # 左側 4 文字分
+print(to.right(4))  # 右側 4 文字分
+
+# 同じ文字の繰り返し
+to.times('*', 10)
+print(to.toString())
+
+# クリア
+to.clear()
+print(to.toString())
+</code></pre>
+<br />
+
+
+<!-- 5 判別関数 -->
+<h2><a id="5">判別関数</a></h2>
+<p>次のコードは is...() 関数が期待通りの動作をするか asset 文で確認しています。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+
+assert(Text.isdigit('0') == True)
+assert(Text.isdigit('A') == False)
+
+assert(Text.isalpha('0') == False)
+assert(Text.isalpha('A') == True)
+
+assert(Text.isdelim('0') == False)
+assert(Text.isdelim('/') == True)
+
+assert(Text.isprint('\x1b') == False)  # ESC
+assert(Text.isprint('A') == True)
+
+print("OK")
+</code></pre>
+<br />
+
+
+<!-- 6 変換関数 -->
+<h2><a id="6">変換関数</a></h2>
+<p></p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+from pprint import pprint
+
+# 文字列から数値への変換とフォーマット化
+n = Text.parseInt("1024")
+f = Text.parseDouble("-3.61e+2")
+s1 = Text.format("n = {0:8d}, f = {1:10.2f}", n, f)
+print(s1)
+</code></pre>
+<br />
+
+
+<!-- 7 検索関数 -->
+<h2><a id="7">検索関数</a></h2>
+<p></p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+from pprint import pprint
+
+# contain, indexOf
+s3 = "ABCDEFGHIJKL"
+print(Text.contain("CD", s3))
+print(Text.contain("cd", s3))
+print(Text.indexOf("CD", s3))
+print(Text.indexOf("1", s3))
+</code></pre>
+<br />
+
+
+<!-- 8 文字列操作関数 -->
+<h2><a id="8">文字列操作関数</a></h2>
+<p></p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+from pprint import pprint
+
+# split, join
+s2 = Text.join(",", ["5098", "1989", "320", "298"])
+print(s2)
+a2 = Text.split(",", s2)
+pprint(a2)
+
+# replace
+s4 = Text.replace("GHIJ", "0123", s3)
+print(s4)
+</code></pre>
+<br />
+
+
+<!-- 9 正規表現関数 -->
+<h2><a id="9">正規表現関数</a></h2>
+<p></p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import *
+from pprint import pprint
+
+str1 = "-rw-r--r-- 1 user user  406 11月 22 11:02 A02.log"
+
+# 第一引数が含まれるか
+b = Text.re_contain(r"^.*\.log$", str1)
+print(b)
+b = Text.re_contain(r"^.*\.py$", str1)
+print(b)
+# 最初の一致オブジェクトを取得
+m = Text.re_search(r"^.*user.*", str1)
+pprint(m)
+m = Text.re_search(r"^.*USER.*", str1)
+pprint(m)
+# 文字列を分割
+a1 = Text.re_split(r"\s+", str1)
+pprint(a1)
+# 文字列を置換
+str2 = Text.re_replace(r"\s+", "~", str1)
+print(str2)
 </code></pre>
 <br />
 

@@ -65,27 +65,106 @@ pre {
 
 <!-- 1 DateTime モジュールとは -->
 <h2><a id="1">1 DateTime モジュールとは</a></h2>
-<p></p>
+<p>DateTime モジュールは日付時刻をカプセル化した DateTime クラスと少数のモジュール関数からなるモジュールです。</p>
 <br />
 
 <!-- 2 基本的な使い方 -->
 <h2><a id="2">2 基本的な使い方</a></h2>
-<p></p>
+<p>
+DateTime モジュールは、Py356Lib パッケージに含まれているので、<a href="index.html#1">Py356Lib パッケージをインストール</a>してあれば、次のようにして利用できます。
+</p>
+<pre><code>from Py365Lib import DateTime</code></pre>
 <br />
 
+
 <!-- 3 DateTime モジュールの機能 -->
-<h2><a id="3">3 MySQL モジュール (MySQL クラス) の機能</a></h2>
-<p></p>
+<h2><a id="3">3 DateTime モジュール (DateTime クラス) の機能</a></h2>
+<p>
+DateTime モジュールは、次のような機能を簡単に利用できるような DateTime クラスとモジュール関数を用意しています。
+</p>
+<br />
+<h3>DateTime クラス</h3>
+<ul>
+ <li>DateTime(s=""):　コンストラクタ。日付時刻文字列を元に datetime をカプセル化する。パラメータを省略したときは、現在の日時になる。</li>
+ <li>timestamp:　プロパティ。カプセル化された日時のタイムスタンプ。</li>
+ <li>toString(f):　カプセル化されている datetime の文字列表現を返す。f は書式文字列で省略した場合は、"%Y-%m-%d %H:%M:%S" が使用される。</li>
+ <li>toDateString(f):　カプセル化されている datetime の日付部分の文字列表現を返す。f は書式文字列で省略した場合は、"%Y-%m-%d" が使用される。</li>
+ <li>toTimeString(f):　カプセル化されている datetime の時刻部分の文字列表現を返す。f は書式文字列で省略した場合は、"%H:%M:%S" が使用される。</li>
+ <li>year:　プロパティ。カプセル化された日時の年部分</li>
+ <li>month:　プロパティ。カプセル化された日時の月部分</li>
+ <li>day:　プロパティ。カプセル化された日時の日部分</li>
+ <li>hour:　プロパティ。カプセル化された日時の時部分</li>
+ <li>minute:　プロパティ。カプセル化された日時の分部分</li>
+ <li>second:　プロパティ。カプセル化された日時の秒部分</li>
+ <li>dayOfweek:　プロパティ。カプセル化された日時の曜日 (0..6)</li>
+ <li>addDays(days):　メソッド。カプセル化された日時に days 日を加算する。</li>
+ <li>addSeconds(seconds):　メソッド。カプセル化された日時に seconds 秒を加算する。</li>
+</ul>
+<br />
+
+<h3>モジュール関数</h3>
+<ul>
+ <li>now():　現在の日時 (JST) を datetime オブジェクトとして返す。</li>
+ <li>utc():　現在の日時 (UTC) を datetime オブジェクトとして返す。</li>
 </ul>
 <br />
 
 
-<!-- 4  -->
-<h2><a id="4"></a></h2>
-<p></p>
-<pre><code>
+<!-- 4 現在の日時の文字列表現と日付の要素 -->
+<h2><a id="4">現在の日時の文字列表現と日付の要素</a></h2>
+<p>次のコードは、DateTime クラスをインスタンス化して、現在の日時を表示する。また、モジュール関数 now() を使って現在の日時を表示するものです。</p>
+<p>さらに、日時の要素を個別に取得して表示します。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import DateTime as dt, Common, Text
+from pprint import pprint
+
+# 現在の日時を得る。DateTime クラスをインスタンス化するとその中身が現在の日時に設定される。
+dt1 = dt.DateTime()
+print(dt1.toString())
+
+# 現在の日時を得る。
+print("今の日時：{0:%x %X}".format(dt.now()))
+
+# 日付の要素
+print("{0}/{1}/{2}".format(dt1.year, dt1.month, dt1.day))
+print("{0}:{1}:{2}".format(dt1.hour, dt1.minute, dt1.second))
 </code></pre>
 <br />
+
+
+<!-- 5 日付時刻の演算 -->
+<h2><a id="5">日付時刻の演算</a></h2>
+<p>次のコードは、日時の演算を行う例です。</p>
+<pre><code>#!/usr/bin/env python3
+from Py365Lib import DateTime as dt, Common, Text
+from pprint import pprint
+
+# 現在の日時を得る。DateTime クラスをインスタンス化するとその中身が現在の日時に設定される。
+dt1 = dt.DateTime()
+print(dt1.toString())
+
+# 明日
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addDays(1)
+print(dt1.toDateString())
+
+# 昨日
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addDays(-1)
+print(dt1.toDateString())
+
+# １時間後
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addSeconds(3600)
+print(dt1.toTimeString())
+
+# １時間前
+dt1 = dt.DateTime("2018-01-01 00:00:00")
+dt1.addSeconds(-3600)
+print(dt1.toTimeString())
+</code></pre>
+<br />
+
 
 
 </article>
