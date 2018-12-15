@@ -55,10 +55,8 @@ pre {
  <li><a href="#1">DateTime モジュールとは</a></li>
  <li><a href="#2">基本的な使い方</a></li>
  <li><a href="#3">DateTime モジュールの機能</a></li>
- <li><a href="#4"></a></li>
- <li><a href="#5"></a></li>
- <li><a href="#6"></a></li>
- <li><a href="#7"></a></li>
+ <li><a href="#4">現在の日時の文字列表現と日付の要素</a></li>
+ <li><a href="#5">日付時刻の演算</a></li>
 </ol>
 <br />
 
@@ -85,20 +83,20 @@ DateTime モジュールは、次のような機能を簡単に利用できる�
 <br />
 <h3>DateTime クラス</h3>
 <ul>
- <li>DateTime(s=""):　コンストラクタ。日付時刻文字列を元に datetime をカプセル化する。パラメータを省略したときは、現在の日時になる。</li>
- <li>timestamp:　プロパティ。カプセル化された日時のタイムスタンプ。</li>
- <li>toString(f):　カプセル化されている datetime の文字列表現を返す。f は書式文字列で省略した場合は、"%Y-%m-%d %H:%M:%S" が使用される。</li>
- <li>toDateString(f):　カプセル化されている datetime の日付部分の文字列表現を返す。f は書式文字列で省略した場合は、"%Y-%m-%d" が使用される。</li>
- <li>toTimeString(f):　カプセル化されている datetime の時刻部分の文字列表現を返す。f は書式文字列で省略した場合は、"%H:%M:%S" が使用される。</li>
- <li>year:　プロパティ。カプセル化された日時の年部分</li>
- <li>month:　プロパティ。カプセル化された日時の月部分</li>
- <li>day:　プロパティ。カプセル化された日時の日部分</li>
- <li>hour:　プロパティ。カプセル化された日時の時部分</li>
- <li>minute:　プロパティ。カプセル化された日時の分部分</li>
- <li>second:　プロパティ。カプセル化された日時の秒部分</li>
- <li>dayOfweek:　プロパティ。カプセル化された日時の曜日 (0..6)</li>
- <li>addDays(days):　メソッド。カプセル化された日時に days 日を加算する。</li>
- <li>addSeconds(seconds):　メソッド。カプセル化された日時に seconds 秒を加算する。</li>
+ <li><span>DateTime(s="")</span>:　コンストラクタ。日付時刻文字列を元に datetime をカプセル化する。パラメータを省略したときは、現在の日時になる。</li>
+ <li><span>timestamp</span>:　プロパティ。カプセル化された日時のタイムスタンプ。</li>
+ <li><span>toString(f)</span>:　カプセル化されている datetime の文字列表現を返す。f は書式文字列で省略した場合は、"%Y-%m-%d %H:%M:%S" が使用される。</li>
+ <li><span>toDateString(f)</span>:　カプセル化されている datetime の日付部分の文字列表現を返す。f は書式文字列で省略した場合は、"%Y-%m-%d" が使用される。</li>
+ <li><span>toTimeString(f)</span>:　カプセル化されている datetime の時刻部分の文字列表現を返す。f は書式文字列で省略した場合は、"%H:%M:%S" が使用される。</li>
+ <li><span>year</span>:　プロパティ。カプセル化された日時の年部分</li>
+ <li><span>month</span>:　プロパティ。カプセル化された日時の月部分</li>
+ <li><span>day</span>:　プロパティ。カプセル化された日時の日部分</li>
+ <li><span>hour</span>:　プロパティ。カプセル化された日時の時部分</li>
+ <li><span>minute</span>:　プロパティ。カプセル化された日時の分部分</li>
+ <li><span>second</span>:　プロパティ。カプセル化された日時の秒部分</li>
+ <li><span>dayOfweek</span>:　プロパティ。カプセル化された日時の曜日 (0..6)</li>
+ <li><span>addDays(days)</span>:　メソッド。カプセル化された日時に days 日を加算する。</li>
+ <li><span>addSeconds(seconds)</span>:　メソッド。カプセル化された日時に seconds 秒を加算する。</li>
 </ul>
 <br />
 

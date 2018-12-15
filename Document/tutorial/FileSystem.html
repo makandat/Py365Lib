@@ -90,47 +90,47 @@ pre {
 <ul>
  <li><b>ファイル入出力</b>
    <ul>
-     <li>readAllText(file):　テキストファイルを読んで文字列として返す。</li>
-     <li>writeAllText(file, str, append=False):　テキストファイルをファイルに書く。</li>
-     <li>readAllLines(file, callback):　ファイルを１行づつ読んで、その行を引数として関数をコールする。</li>
-     <li>readBinary(file):　バイナリーファイルを読んでバイト列として返す。</li>
-     <li>writeBinary(file, data):　バイト列をファイルに書く。</li>
-     <li>readIni(file):　INI ファイルを読む。セクションはコメントとして扱う。</li>
-     <li>readCsv(path, header=True, delim=",", lterm="\n"):　CSV ファイルを読んで文字列リストのリストとして返す。</li>
-     <li>readJson(path):　JSON ファイルを読んでオブジェクトとして返す。</li>
-     <li>writeJson(path, data, pretty=False):　オブジェクトをJSON形式に変換してファイルに書く。pretty=True の場合はJSONテキストを整形する。</li>
+     <li><span>readAllText(file)</span>:　テキストファイルを読んで文字列として返す。</li>
+     <li><span>writeAllText(file, str, append=False)</span>:　テキストファイルをファイルに書く。</li>
+     <li><span>readAllLines(file, callback)</span>:　ファイルを１行づつ読んで、その行を引数として関数をコールする。</li>
+     <li><span>readBinary(file)</span>:　バイナリーファイルを読んでバイト列として返す。</li>
+     <li><span>writeBinary(file, data)</span>:　バイト列をファイルに書く。</li>
+     <li><span>readIni(file)</span>:　INI ファイルを読む。セクションはコメントとして扱う。</li>
+     <li><span>readCsv(path, header=True, delim=",", lterm="\n")</span>:　CSV ファイルを読んで文字列リストのリストとして返す。</li>
+     <li><span>readJson(path)</span>:　JSON ファイルを読んでオブジェクトとして返す。</li>
+     <li><span>writeJson(path, data, pretty=False)</span>:　オブジェクトをJSON形式に変換してファイルに書く。pretty=True の場合はJSONテキストを整形する。</li>
    </ul>
  </li>
  <li><b>ファイルとディレクトリの操作</b>
    <ul>
-     <li>copy(src, dest):　ファイル src をファイル dest にコピーする。</li>
-     <li>move(src, dest):　ファイル src をファイル dest に移動する。</li>
-     <li>unlink(file):　ファイルやリンクを削除する。</li>
-     <li>exists(file):　ファイルまたはディレクトリが存在するか調べる。</li>
-     <li>isFile(file):　引数で指定したパスがファイルか調べる。</li>
-     <li>isDirectory(dir):　引数で指定したパスがディレクトリか調べる。</li>
-     <li>isLink(link):　引数で指定したパスがリンクか調べる。</li>
-     <li>getAttr(path):　引数で指定したオブジェクトの属性を返す。</li>
-     <li>getOwner(path):　引数で指定したオブジェクトのオーナー名を返す。</li>
-     <li>getGroup(path):　引数で指定したオブジェクトのグループ名を返す。</li>
-     <li>chdir(dir):　引数で指定したディレクトリをカレントディレクトリとする。</li>
-     <li>mkdir(dir):　引数で指定したディレクトリを作成する。</li>
-     <li>rmdir(dir):　引数で指定したディレクトリを削除する。中身が空でない場合は、中身も削除される。</li>
-     <li>grep(str, file):　ファイル内の文字列(正規表現、ワイルドカード不可)を検索する。(先頭を 0 とする行番号のリストを返す)</li>
-     <li>listFiles(dir, wildcard="*"):　指定したワイルドカードでディレクトリ内を検索してファイル一覧(フルパス)を得る。</li>
-     <li>listDirectories(dir):　パラメータで指定したディレクトリ直下のサブディレクトリ一覧(フルパス)を得る。</li>
+     <li><span>copy(src, dest)</span>:　ファイル src をファイル dest にコピーする。</li>
+     <li><span>move(src, dest)</span>:　ファイル src をファイル dest に移動する。</li>
+     <li><span>unlink(file)</span>:　ファイルやリンクを削除する。</li>
+     <li><span>exists(file)</span>:　ファイルまたはディレクトリが存在するか調べる。</li>
+     <li><span>isFile(file)</span>:　引数で指定したパスがファイルか調べる。</li>
+     <li><span>isDirectory(dir)</span>:　引数で指定したパスがディレクトリか調べる。</li>
+     <li><span>isLink(link)</span>:　引数で指定したパスがリンクか調べる。</li>
+     <li><span>getAttr(path)</span>:　引数で指定したオブジェクトの属性を返す。</li>
+     <li><span>getOwner(path)</span>:　引数で指定したオブジェクトのオーナー名を返す。</li>
+     <li><span>getGroup(path)</span>:　引数で指定したオブジェクトのグループ名を返す。</li>
+     <li><span>chdir(dir)</span>:　引数で指定したディレクトリをカレントディレクトリとする。</li>
+     <li><span>mkdir(dir)</span>:　引数で指定したディレクトリを作成する。</li>
+     <li><span>rmdir(dir)</span>:　引数で指定したディレクトリを削除する。中身が空でない場合は、中身も削除される。</li>
+     <li><span>grep(str, file)</span>:　ファイル内の文字列(正規表現、ワイルドカード不可)を検索する。(先頭を 0 とする行番号のリストを返す)</li>
+     <li><span>listFiles(dir, wildcard="*")</span>:　指定したワイルドカードでディレクトリ内を検索してファイル一覧(フルパス)を得る。</li>
+     <li><span>listDirectories(dir)</span>:　パラメータで指定したディレクトリ直下のサブディレクトリ一覧(フルパス)を得る。</li>
    </ul>
  </li>
  <li><b>パス名の操作</b>
     <ul>
-     <li>getAbsolutePath(path):　パラメータで指定した相対パスから絶対パスを得る。</li>
-     <li>getParentDirectory(path):　パラメータで指定したパスの親のディレクトリを得る。</li>
-     <li>getCurrentDirectory():　現在の位置(ディレクトリ)を得る。</li>
-     <li>getFileName(path):　パラメータで指定したパスのファイル名部分を得る。</li>
-     <li>getDirectoryName(path):　パラメータで指定したパスのディレクトリ名部分を得る。</li>
-     <li>getExtension(path):　パラメータで指定したファイルの拡張子部分(ドットを含む)を得る。の</li>
-     <li>changeExt(path, ext):　ファイル名 path の拡張子を ext に変更する。ext はドットを含むものとする。</li>
-     <li>getTempFile():　一時ファイル名を得る。</li>
+     <li><span>getAbsolutePath(path)</span>:　パラメータで指定した相対パスから絶対パスを得る。</li>
+     <li><span>getParentDirectory(path)</span>:　パラメータで指定したパスの親のディレクトリを得る。</li>
+     <li><span>getCurrentDirectory()</span>:　現在の位置(ディレクトリ)を得る。</li>
+     <li><span>getFileName(path)</span>:　パラメータで指定したパスのファイル名部分を得る。</li>
+     <li><span>getDirectoryName(path)</span>:　パラメータで指定したパスのディレクトリ名部分を得る。</li>
+     <li><span>getExtension(path)</span>:　パラメータで指定したファイルの拡張子部分(ドットを含む)を得る。の</li>
+     <li><span>changeExt(path, ext)</span>:　ファイル名 path の拡張子を ext に変更する。ext はドットを含むものとする。</li>
+     <li><span>getTempFile()</span>:　一時ファイル名を得る。</li>
    </ul>
  </li>
 </ul>

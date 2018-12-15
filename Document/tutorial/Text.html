@@ -88,58 +88,58 @@ Text モジュールは、Py356Lib パッケージに含まれているので、
 <ul>
  <li>Text クラス: 主に部分文字列処理を行う。
   <ul>
-   <li>コンストラクタ Text(s="") :　文字列 s をカプセル化する。</li>
-   <li>length プロパティ:　文字列の長さ</li>
-   <li>append(s) メソッド:　現在の文字列に s を追加する。</li>
-   <li>substring(start, length):　現在の文字列の位置 start から長さ length の部分文字列を返す。</li>
-   <li>substr(start, end):　現在の文字列の位置 start から end までの部分文字列を返す。(end を含む)</li>
-   <li>left(length):　現在の文字列の左側の長さ length の部分文字列を返す。</li>
-   <li>right(length):　現在の文字列の右側の長さ length の部分文字列を返す。</li>
-   <li>toString():　現在の文字列(カプセル化されている文字列本体)を返す。</li>
-   <li>times(c, n):　文字列 c を n 回繰り返した文字列をこのオブジェクトの値とする。</li>
-   <li>clear():　このオブジェクトの文字列をクリアする。</li>
+   <li><span>コンストラクタ Text(s="") :　文字列 s をカプセル化する。</li>
+   <li><span>length</span> プロパティ:　文字列の長さ</li>
+   <li><span>append(s)</span> メソッド:　現在の文字列に s を追加する。</li>
+   <li><span>substring(start, length)</span>:　現在の文字列の位置 start から長さ length の部分文字列を返す。</li>
+   <li><span>substr(start, end)</span> メソッド:　現在の文字列の位置 start から end までの部分文字列を返す。(end を含む)</li>
+   <li><span>left(length)</span> メソッド:　現在の文字列の左側の長さ length の部分文字列を返す。</li>
+   <li><span>right(length)</span> メソッド:　現在の文字列の右側の長さ length の部分文字列を返す。</li>
+   <li><span>toString()</span> メソッド:　現在の文字列(カプセル化されている文字列本体)を返す。</li>
+   <li><span>times(c, n)</span> メソッド:　文字列 c を n 回繰り返した文字列をこのオブジェクトの値とする。</li>
+   <li><span>clear()</span> メソッド:　このオブジェクトの文字列をクリアする。</li>
   </ul>
  <li>
  <li>判別を行う関数
   <ul>
-   <li>isdigit(a):　a が数字か判別する。</li>
-   <li>isalpha(a):　a がアルファベットか判別する。</li>
-   <li>isdelim(a):　a が区切り文字か判別する。</li>
-   <li>isprint(a):　a が表示可能か判別する。</li>
+   <li><span>isdigit(a)</span> 関数:　a が数字か判別する。</li>
+   <li><span>isalpha(a)</span> 関数:　a がアルファベットか判別する。</li>
+   <li><span>isdelim(a)</span> 関数:　a が区切り文字か判別する。</li>
+   <li><span>isprint(a)</span> 関数:　a が表示可能か判別する。</li>
   </ul>
  <li>変換を行う関数
   <ul>
-   <li>tolower(s):　s に含まれる大文字を小文字に変換する。</li>
-   <li>toupper(s):　s に含まれる小文字を大文字に変換する。</li>
-   <li>parseInt(s):　文字列 s を整数に変換する。</li>
-   <li>parseDouble(s):　文字列 s を浮動小数点数に変換する。</li>
-   <li>char(n):　256 未満の整数を ASCII 文字に変換する。</li>
-   <li>asc(a):　ASCII 文字を整数に変換する。</li>
-   <li>format(f, *args):　書式文字列に従って、可変個数の引数 *args を書式化した文字列を返す。</li>
-   <li>money(d):　数(整数または浮動小数点数) d に3桁ごとにカンマを挿入した文字列を返す。</li>
+   <li><span>tolower(s)</span> 関数:　s に含まれる大文字を小文字に変換する。</li>
+   <li><span>toupper(s)</span> 関数:　s に含まれる小文字を大文字に変換する。</li>
+   <li><span>parseInt(s)</span> 関数:　文字列 s を整数に変換する。</li>
+   <li><span>parseDouble(s)</span> 関数:　文字列 s を浮動小数点数に変換する。</li>
+   <li><span>char(n)</span> 関数:　256 未満の整数を ASCII 文字に変換する。</li>
+   <li><span>asc(a)</span> 関数:　ASCII 文字を整数に変換する。</li>
+   <li><span>format(f, *args)</span> 関数:　書式文字列に従って、可変個数の引数 *args を書式化した文字列を返す。</li>
+   <li><span>money(d)</span>:　数(整数または浮動小数点数) d に3桁ごとにカンマを挿入した文字列を返す。</li>
   </ul>
  </li>
  <li>検索を行う関数
   <ul>
-   <li>contain(p, s):　文字列 s に部分文字列 p が含まれていれば True を返す。</li>
-   <li>indexOf(p, s):　文字列 s に部分文字列 p が含まれていれば、その位置を返す。</li>
+   <li><span>contain(p, s)</span> 関数:　文字列 s に部分文字列 p が含まれていれば True を返す。</li>
+   <li><span>indexOf(p, s)</span> 関数:　文字列 s に部分文字列 p が含まれていれば、その位置を返す。</li>
   </ul>
  </li>
  <li>文字列の操作を行う関数
   <ul>
-   <li>trim(s):　s の前後の空白を取り除く。</li>
-   <li>chomp(s):　s の後ろのCRやLFを取り除く</li>
-   <li>split(c, s):　文字列 s を 文字 c で分割して文字列リストとして返す。</li>
-   <li>join(c, array):　文字列のリスト array を文字 c で結合する。</li>
-   <li>replace(old, new, s):　文字列 s に 部分文字列 old が含まれていれば new に変換した文字列を返す。</li>
+   <li><span>trim(s)</span> 関数:　s の前後の空白を取り除く。</li>
+   <li><span>chomp(s)</span> 関数:　s の後ろのCRやLFを取り除く</li>
+   <li><span>split(c, s)</span> 関数:　文字列 s を 文字 c で分割して文字列リストとして返す。</li>
+   <li><span>join(c, array)</span> 関数:　文字列のリスト array を文字 c で結合する。</li>
+   <li><span>replace(old, new, s)</span> 関数:　文字列 s に 部分文字列 old が含まれていれば new に変換した文字列を返す。</li>
   </ul>
  </li>
  <li>正規表現関数
   <ul>
-   <li>re_contain(rstr:str, s:str):　正規表現文字列 rstr が文字列 s に見つかれば True を返す。</li>
-   <li>re_search(rstr, s)　正規表現文字列 rstr が文字列 s に見つかれば match オブジェクトを返す。</li>
-   <li>re_split(rstr, s):　正規表現 rstr が文字列 s に含まれていれば、その部分文字列で分割してリストとして返す</li>
-   <li>re_replace(rstr, c, s):　正規表現 rstr が文字列 s に含まれていれば、その部分文字列を c で置き換える。</li>
+   <li><span>re_contain(rstr:str, s:str)</span> 関数:　正規表現文字列 rstr が文字列 s に見つかれば True を返す。</li>
+   <li><span>re_search(rstr, s)</span> 関数:　正規表現文字列 rstr が文字列 s に見つかれば match オブジェクトを返す。</li>
+   <li><span>re_split(rstr, s)</span> 関数:　正規表現 rstr が文字列 s に含まれていれば、その部分文字列で分割してリストとして返す</li>
+   <li><span>re_replace(rstr, c, s)</span> 関数:　正規表現 rstr が文字列 s に含まれていれば、その部分文字列を c で置き換える。</li>
   </ul>
  </li>
 </ul>

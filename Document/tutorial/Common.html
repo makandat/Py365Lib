@@ -102,36 +102,112 @@ Common モジュールは、Py356Lib パッケージに含まれているので�
 Common モジュールは、次のような機能を簡単に利用できるような関数を用意しています。
 </p>
 <ul>
- <li>コマンドライン引数の使用 (解析機能はない)</li>
+ <li>コマンドライン引数の使用 (解析機能はない)
+  <ul>
+  <li><span>count_args()</span>:　コマンドライン引数の数を返す。</li>
+  <li><span>args()</span>:　コマンドライン引数のリストを返す。</li>
+  </ul>
+ </li>
  <li>ロギング (Python 標準ログ機能と syslog)
    <ul>
-    <li>init_logger(filename:str=None):　ロガーを初期化する。filename はログファイルのパス名だが省略した場合は、Common.LOGFILE ("Py365Lib.log") となる。</li>
-    <li>log(msg:str):　ログ(msg)を一般情報として出力する。</li>
-    <li>error(msg:str):　ログ(msg)をエラー情報として出力する。</li>
-    <li>syslog_out(msg:str):　syslog にログを出力する。(Linux 環境のみ)</li>
-   <ul>
+    <li><span>init_logger(filename:str=None)</span>:　ロガーを初期化する。filename はログファイルのパス名だが省略した場合は、Common.LOGFILE ("Py365Lib.log") となる。</li>
+    <li><span>log(msg:str)</span>:　ログ(msg)を一般情報として出力する。</li>
+    <li><span>error(msg:str)</span>:　ログ(msg)をエラー情報として出力する。</li>
+    <li><span>syslog_out(msg)</span>:　syslog にログを出力する。(Linux 環境のみ)</li>
+   </ul>
  </li>
  <li>プログラムの中断
   <ul>
-   <li>stop(code:int = 0, message:str ="", color:int=ESC_FG_RED):　プログラムの実行を中止する。message はその時、表示されるエラーメッセージ。color はエラーメッセージの色指定。</li>
+   <li><span>stop(code=0, message="", color=ESC_FG_RED)</span>:　プログラムの実行を中止する。message はその時、表示されるエラーメッセージ。color はエラーメッセージの色指定。</li>
   </ul>
  </li>
  <li>プロセス(コマンド)の起動
   <ul>
-   <li></li>
-   <li></li>
-   <li></li>
+   <li><span>exec(cmd)</span>:　コマンドを実行し、コマンドの終了コードを返す。パラメータは文字列のリストであることに注意。</li>
+   <li><span>shell(cmd)</span>:　コマンドを実行し、コマンド出力を返す。パラメータは文字列のリストであることに注意。</li>
   </ul>
  </li>
- <li>変数の型判別と有効性判別</li>
- <li>タイマーとスリープ</li>
- <li>OS (Windows かどうか) の判別</li>
- <li>バイト列と文字列の相互変換</li>
- <li>JSON 文字列とオブジェクトの相互変換</li>
- <li>コンソール画面表示のカラーや表示属性対応</li>
- <li>キーボードからの入力</li>
- <li>環境変数の取得</li>
+ <li>変数の型判別と有効性判別
+  <ul>
+   <li><span>isset(v)</span>:　v が None でなければ、True を返す。</li>
+   <li><span>isnull(v)</span>:　v が None なら、True を返す。</li>
+   <li><span>is_str(x)</span>:　x が文字列なら True を返す。</li>
+   <li><span>is_int(x)</span>:　x が整数なら True を返す。</li>
+   <li><span>is_float(x)</span>:　x が浮動小数点数なら True を返す。</li>
+   <li><span>is_bool(x)</span>:　x がブール型なら True を返す。</li>
+  </ul>
+ </li>
+ <li>タイマーとスリープ
+  <ul>
+   <li><span>set_timeout(sec, handler)</span>:　sec で指定された秒数だけ経過すると関数 handler を呼ぶ。sec は少数も可。</li>
+   <li><span>sleep(sec)</span>:　sec で指定された秒数だけスリープする。sec は少数も可。</li>
+  </ul>
+ </li>
+ <li>OS (Windows かどうか) の判別
+   <ul>
+    <li><span>is_windows()</span>:　OS が Windows なら True を返す。</li>
+   </ul>
+ </li>
+ <li>バイト列と文字列の相互変換
+  <ul>
+   <li><span>to_bytes(s)</span>:　文字列 s をバイト列に変換して返す。</li>
+   <li><span>from_bytes(b)</span>:　バイト列を文字列に変換して返す。</li>
+  </ul>
+ </li>
+ <li>JSON 文字列とオブジェクトの相互変換
+   <ul>
+    <li><span>from_json(json)</span>:　JSON 文字列 json をオブジェクトに変換して返す。</li>
+    <li><span>to_json(obj)</span>:　オブジェクト obj を JSON 文字列に変換して返す。</li>
+   </ul>
+ </li>
+ <li>コンソール画面表示のカラーや表示属性対応
+  <ul>
+   <li><span>esc_print(code, text, reset=True)</span>:　code は Common モジュールで定義された色と属性コードまたは色の名前、text は表示文字列で、code で指定された色や属性で表示する。reset が True の場合は表示後、標準色属性にもどす。False はそのままの状態を保つ。</li>
+  </ul>
+ </li>
+ <li>キーボードからの入力
+  <ul>
+   <li><span>readline(message)</span>:　メッセージ message を表示してキーボードから１行入力する。message を省略すると何も表示しない。</li>
+  </ul>
+ </li>
+ <li>環境変数の取得
+  <ul>
+   <li><span>get_env(key)</span>:　key で指定された環境変数の値を返す。</li>
+  </ul>
+ </li>
+ <li>コード定義
+  <ul>
+  <li><span>端末エスケープシーケンス指定コード</span>:　文字列の表示属性や色を定義している。ESC_NORMAL は標準状態を示すコードである。</li>
+  </ul>
+ </li>
 </ul>
+<br />
+<h4>端末エスケープシーケンス指定コード</h4>
+<pre>ESC_NORMAL = "\x1b[0m"
+ESC_BOLD = "\x1b[1m"
+ESC_DIM = "\x1b[2m"
+ESC_ITALIC = "\x1b[3m"
+ESC_UNDERLINE = "\x1b[4m"
+ESC_BLINK = "\x1b[5m"
+ESC_HBLINK = "\x1b[6m"
+ESC_REVERSE = "\x1b[6m"
+ESC_FG_BLACK = "\x1b[30m"
+ESC_BG_BLACK = "\x1b[40m"
+ESC_FG_RED = "\x1b[31m"
+ESC_BG_RED = "\x1b[41m"
+ESC_FG_GREEN = "\x1b[32m"
+ESC_BG_GREEN = "\x1b[42m"
+ESC_FG_YELLOW = "\x1b[33m"
+ESC_BG_YELLOW = "\x1b[43m"
+ESC_FG_BLUE = "\x1b[34m"
+ESC_BG_BLUE = "\x1b[44m"
+ESC_FG_MAGENTA = "\x1b[35m"
+ESC_BG_MAGENTA = "\x1b[45m"
+ESC_FG_CYAN = "\x1b[36m"
+ESC_BG_CYAN = "\x1b[46m"
+ESC_FG_WHITE = "\x1b[37m"
+ESC_BG_WHITE = "\x1b[47m"</pre>
+
 <br />
 
 
