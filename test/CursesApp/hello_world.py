@@ -4,12 +4,6 @@ from Py365Lib import CursesApp as cap
 import curses
 
 class Application(cap.CursesApp) :
-  cls = False
-
-  # コンストラクタ
-  def __init__(self) :
-    super().__init__()
-    return
 
   # オーバーライド：初期表示
   def init_app(self) :
