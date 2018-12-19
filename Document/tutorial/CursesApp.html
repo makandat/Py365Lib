@@ -25,22 +25,799 @@ header, article, fooder {
   margin-right:5%;
 }
 </style>
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 
 
 <body>
+<!-- ヘッダー部 -->
 <header>
 <h1 style="text-align:center;">Py365Lib/CursesApp チュートリアル　<span style="font-size:14pt">(ver 2.0)</span></h1>
-<div style="text-align:center;"><a href="/">HOME</a></div>
+<div style="text-align:center;"><a href="/">HOME</a>&nbsp;/&nbsp;<a href="index.html">INDEX</a></div>
 </header>
 
-
+<!-- 本文 -->
 <article>
+
+<!-- もくじ -->
+<h3>もくじ</h3>
+<ul style="list-style-type:none;">
+ <li><a href="#1">1. CursesApp モジュールの概要</a></li>
+ <li><a href="#2">2. CursesApp クラスの基本的な使い方</a></li>
+ <li><a href="#2.1">2.1コンストラクタの機能</a></li>
+ <li><a href="#2.2">2.2 end_app() の機能</a></li>
+ <li><a href="#2.3">2.3オーバーライドが必要なメソッド</a></li>
+ <li><a href="#3">3. CursesApp クラスの機能</a></li>
+ <li><a href="#3.1">3.1 文字列の表示</a></li>
+ <li><a href="#3.2">3.2 タイトルバーとステータスバー</a></li>
+ <li><a href="#3.3">3.3 メッセージボックスとトースト</a></li>
+ <li><a href="#3.4">3.4 入力ボックス</a></li>
+ <li><a href="#3.5">3.5 フォーム</a></li>
+ <li><a href="#3.6">3.6 ラベル</a></li>
+ <li><a href="#3.7">3.7 テキストボックス</a></li>
+ <li><a href="#3.8">3.8 ボタン</a></li>
+ <li><a href="#3.9">3.9 チェックボックス</a></li>
+ <li><a href="#3.10">3.10 ラジオボタン</a></li>
+ <li><a href="#3.11">3.11 セレクタ</a></li>
+ <li><a href="#3.12">3.12 複数フォームの使用</a></li>
+ <li><a href="#3.13">3.13 ヘルプウィンドウ</a></li>
+ <li><a href="#4">4 ユーティリティ</a></li>
+ <li><a href="#4.1">4.1 カラーペア一覧表示</a></li>
+ <li><a href="#4.2">4.2 表示属性一覧表示</a></li>
+ <li><a href="#4.3">4.3 ウィジェット・リソース作成</a></li>
+</ul>
+<br />
+
+<!-- 1 CursesApp の概要 -->
+<h2><a id="1"></a>1. CursesApp モジュールの概要</h2>
+<p>
+CursesApp モジュールには、CursesApp クラスのみを含みます。この CursesApp クラスは、Python の curses モジュールをカプセル化して使いやすくしたものです。
+</p>
+<p>
+ただし、その過程であまり使わない機能などを省略したりしているため、curses の機能を活かしきるには、CursesApp クラスを使わず、curses モジュールを直接使うべきです。
+</p>
+<p>(制限) 全角文字の表示はできますが、入力はできません。</p>
+<br />
+
+
+<!-- 2 CursesApp の基本的な使い方 -->
+<h2><a id="2"></a>2. CursesApp クラスの基本的な使い方</h2>
+<p>
+ここでは、簡単な例を元にCursesApp クラスの基本的な使い方を説明します。次のコードは画面中央に "Hello, world!" と表示するアプリケーションです。
+</p>
+<p>
+まず、CursesApp クラスを基底クラスとして Application クラスを派生させます。コンストラクタは、特に変更しないのでデフォルトのままとしています。コンストラクタは次のような動作を行います。</p>
+<p>次の図 1 は、CursesApp アプリケーションの動作概略です。コンストラクタの最後で init_app() がコールされ、さらに init_app() の最後で redraw() がコールされます。</p>
+<p>キー入力があると、handler(key) が呼び出され、描画の必要があると redraw() がさらに呼び出されます。</p>
+<figure>
+ <img src="CursesApp_Relation.png" />
+ <figcaption>Fig.1 Relation of initializing and key input.</figcaption>
+</figure>
+
+<br />
+
+<!--  2.1 コンストラクタの機能 -->
+<h3><a id="2.1"></a>2.1 コンストラクタの機能</h3>
+<ol>
+ <li>構成ファイル (AppConf.ini) が存在する場合、それを読んで構成データ (self.conf) を初期化する。</li>
+ <li>ロケールの設定</li>
+ <li>curses のモジュール関数 curses.initscr(), curses.start_color() を呼び出して初期化する。</li>
+ <li>キーのエコーを行わない。(curses.noecho())</li>
+ <li>キー入力のバッファリングをしない。(curses.cbreak())</li>
+ <li>制御キーを扱えるようにする。(stdscr.keypad(True))</li>
+ <li>カラーペアを初期化 (メソッド init_colors() をコール)</li>
+ <li>初期表示 (メソッド init_app() をコール)</li>
+ <li>キー入力待ちループ (メソッド main() をコール)</li>
+ <li>アプリを終了するときは、メソッド end_app() をコール</li>
+</ol>
+<br />
+
+<!--  2.2 end_app() の機能 -->
+<h3><a id="2.2"></a>2.2 end_app() の機能</h3>
+<p>このメソッドはアプリが終了するとき、finally 節の中でコールされるメソッドで次のような機能を持ちます。</p>
+<ol>
+ <li>キー入力をバッファリングする。(curses.nocbreak())</li>
+ <li>制御キーを扱わない。(stdscr.keypad(False); curses.echo())</li>
+ <li>端末を通常モードに復旧する。(curses.endwin())</li>
+</ol>
+<br />
+
+<!--  2.3 オーバーライドが必要なメソッド -->
+<h3><a id="2.3"></a>2.3 オーバーライドが必要なメソッド</h3>
+<p>次のメソッドは多くの場合、オーバーライドが必要になります。</p>
+<ul>
+ <li><span>init_app()</span>:　このメソッドはコンストラクタの実行が終わる直前に呼び出される。ここでアプリケーションの初期表示を行う。</li>
+ <li><span>redraw()</span>: hello_world.py では画面は初期表示のままなのでオーバーライドしていないが、たいていの場合オーバーライドが必要になる。このメソッドは、画面を更新したり、ウィンドウを消したりするのに使用する。</span>:</li>
+ <li><span>handler(key)</span>:　このメソッドはキー入力ハンドラで、キー入力を判別して適切な処理にディスパッチする。戻り値として False を返すと、アプリケーションが終了する。</li>
+</ul>
+<br />
+
+<h4>hello_world.py</h4>
+<pre class="sample"><code>#!/usr/bin/python3
+
+from Py365Lib import CursesApp as cap
+import curses
+
+class Application(cap.CursesApp) :
+
+  # オーバーライド：初期表示
+  def init_app(self) :
+    x = int(self.Columns / 2) - 6
+    y = int(self.Rows / 2) - 1
+    self.print("Hello, world!", x, y, Application.COL_GREEN)
+    self.print("'q': Quit.", x, y + 1)
+    return;
+
+  # オーバーライド : キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    if key == 'q' :
+      rc = False
+    return rc
+        
+# インスタンス化して実行開始
+Application()
+</code></pre>
+<br />
+<figure>
+ <img src="CursesApp_HelloWorld.png" />
+ <figcaption>Fig.2 CursesApp Hello, World!</figcaption>
+</figure>
+<br />
+
+
+<!-- 3 CursesApp クラスの機能 -->
+<h2><a id="3"></a>3. CursesApp クラスの機能</h2>
+<p>CursesApp 画面はタイトルバー、クライアント領域、ステータスバーからなります。タイトルバーは画面の１行目、ステータスバーは画面の最終行で、それ以外がクライアント領域です。</p>
+<figure>
+ <img src="CursesApp.png" />
+ <figcaption>Fig.3 CursesApp screen</figcaption>
+</figure>
+<p>クライアント領域には文字列を表示したり、フォームを配置したりします。フォームにはウィジェットを配置してユーザがウィジェットを操作してデータを入力したり、アプリケーションの結果を受け取ったりすることができます。</p>
+<p>フォームは複数定義できますが、クライアント領域にはそれらの一つだけ表示できます。フォームの項目が多い場合は、複数フォームを使いそれらを切り替えて操作を行えます。</p>
+<figure>
+ <img src="CursesApp_Forms.png" />
+ <figcaption>Fig.4 CursesApp client area and forms</figcaption>
+</figure>
+<br />
+
+<!--  3.1 文字列の表示 -->
+<h3><a id="3.1"></a>3.1 文字列の表示</h3>
+<p>CursesApp クラスで文字、文字列を表示するメソッドは、次の４種類です。</p>
+<ul>
+ <li><span><b>print(str, x = -1, y = -1, color = -1, attr = 0)</b></span><br />
+位置 (x, y) に文字列 str を表示する。x, y を省略したときは、現在の位置に表示する。color はカラーペア番号, attr は属性コードである。color を省略したときは現在の色、属性を省略したときは、属性なし(標準属性)になる。
+  </li>
+ <li><span><b>printLines(text, x, y, color=1, attr=0)</b></span><br />
+位置 (x, y) に改行を含む文字列 text を表示する。x, y は print と異なり省略できない。color はカラーペア番号, attr は属性コードである。color を省略したときは白、属性を省略したときは、属性なし(標準属性)になる。
+ </li>
+ <li><span><b>putchar(ch, x = -1, y = -1)</b></span><br />
+位置 (x, y) に現在の色と属性で文字を表示する。x, y を省略したときは現在の位置になる。
+ </li>
+ <li><span><b>putch(ch)</b></span><br />
+現在の位置に現在の色と属性で文字を表示する。
+ </li>
+ <li><span><b>clear(client=True)</b></span><br />画面をクリアする。デフォルトでは画面全体でなくクライアント領域のみをクリアする。client=False とすると画面全体をクリアする。</li>
+</ul>
+<br />
+<p>文字を表示する座標に関するメソッドは次の通りです。</p>
+<ul>
+  <li><span><b>getCursorPosition()</b></span><br />
+現在のカーソル位置をタプル (x, y) で返す。
+  </li>
+  <li><span><b>setCursorPosition(x, y)</b></span><br />
+現在のカーソル位置を (x, y) に変更する。
+  </li>
+</ul>
+<br />
+
+<p>文字を表示する属性に関するメソッドやプロパティは次の通りです。</p>
+<ul>
+ <li><span><b>hideCursor()</b></span><br />カーソルを隠す。</li>
+ <li><span><b>showCursor()</b></span><br />現在の位置にカーソルを表示する。</li>
+ <li><span><b>Columns プロパティ</b></span><br />画面の幅(桁数)</li>
+ <li><span><b>Rows プロパティ</b></span><br />画面の高さ(行数)</li>
+ <li><span><b>setAttr(attrs)</b></span><br />指定した attrs で描画属性を設定する。</li>
+ <li><span><b>setAttrOn(attr)</b></span><br />指定した attr 属性を有効にする。</li>
+ <li><span><b>setAttrOff(attr)</b></span><br />指定した attr 属性を無効にする。</li>
+</ul>
+<br />
+
+<p>色に関するメソッドは次のとおりです。init_colors() メソッドをオーバーライドすると、カラーペア番号への色の割り当てを変更できます。</p>
+<ul>
+ <li><span><b>init_colors()</b></span><br />CursesApp クラスの既定のカラーペアを初期化する。</li>
+ <li><span><b>setColor(n, foreground, background)</b></span><br />カラーペア番号 n に前景色 (foreground) と背景色 (background) を割り当てる。</li>
+ <li><span><b>MaxColorNumber プロパティ</b></span><br />カラーペア番号の最大値。この値以上の番号に色を割り当てても無効になる。</li>
+</ul>
+<p>文字の表示色と属性は<a href="../utilities/index.html">ユーティリティ (color_table.py, text_attr.py)</a>で確認できます。</p>
+<br />
+
+<h4>(Example) print, printLines, putch, putchar メソッドの使用例</h4>
+<p>次のコードは４種の文字列表示メソッドの使用例です。</p>
+<pre class="sample"><code>#!/usr/bin/python3
+from Py365Lib import CursesApp as cap
+import curses
+
+## アプリケーションクラス
+class Application(cap.CursesApp) :
+  thekey = '-'
+
+  # 画面初期表示
+  def init_app(self) :
+    self.print("'0': putchar(), '1': putch(), '2': print(), '3': printLines(), 'q': Quit", 10, 8)
+    self.hideCursor()
+    self.redraw()
+    return
+
+  # 再描画
+  def redraw(self) :
+    if Application.thekey =='0' :
+      # '0' キーが押されたとき、画面をクリアして文字をたてに表示
+      self.clear()
+      self.setCursorPosition(20, 1)
+      i = 0
+      for a in range(ord('0'), ord(':')) :
+        self.putchar(chr(a), 20, i + 1)
+        i += 1
+    elif Application.thekey == '1' :
+      # '1' キーが押されたとき、キーを１回押すごとに 'X' を横に表示
+      self.putch('X')
+    elif Application.thekey == '2' :
+      # '2' キーが押されたとき、画面をクリアして文字列 'self.print()' を Magenta のボールドで表示
+      self.clear()
+      self.print("self.print()", 10, 5, Application.COL_MAGENTA, Application.BOLD)
+    elif Application.thekey == '3' :
+      # '3' キーが押されたとき、画面をクリアして改行を含む文字列を黄色で表示
+      self.clear()
+      self.printLines('''printLines
+    printLines
+            printLines
+''',
+      10, 5, Application.COL_YELLOW)
+    else :
+      pass
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    if key == 'q' :
+      rc = False
+    elif key == '0' or key == '1' or key == '2' or key == '3' :
+      Application.thekey = key
+      self.redraw()
+    else :
+      pass
+    return rc
+
+# アプリケーションをインスタンス化して開始
+Application()
+</code></pre>
+<br />
+
+
+<h4>(Example) 新しいカラーペアを作成する</h4>
+<p>CursesApp クラスの色定義(カラーペア)はデフォルトでは 1 から 32 までですが、独自のカラーペアが必要なときは、init_colors() メソッドをオーバーライドして追加できます。</p>
+<pre class="sample"><code>#!/usr/bin/python3
+from Py365Lib import CursesApp as cap
+import curses
+
+## アプリケーションクラス
+class Application(cap.CursesApp) :
+
+  # 画面初期表示
+  def init_app(self) :
+    self.titlebar("色の作成", Application.TB_ALIGN_CENTER, Application.REV_WHITE)
+    self.statusbar("q: Quit", Application.REV_WHITE)
+    self.redraw()
+    self.hideCursor()
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.print("Color Pair = 33", 25, 3, 33)
+    self.print("Color Pair = 34", 25, 4, 34)
+    self.print("Color Pair = 35", 25, 5, 35)
+    self.print("Color Pair = 36", 25, 6, 36)
+    self.print("Color Pair = 37", 25, 7, 37)
+    self.print("Color Pair = 38", 25, 8, 38)
+    return
+
+  # カラーペア初期化
+  def init_colors(self) :
+    super().init_colors()
+    self.setColor(33, curses.COLOR_BLUE, curses.COLOR_GREEN)
+    self.setColor(34, curses.COLOR_RED, curses.COLOR_GREEN)
+    self.setColor(35, curses.COLOR_YELLOW, curses.COLOR_GREEN)
+    self.setColor(36, curses.COLOR_RED, curses.COLOR_BLUE)
+    self.setColor(37, curses.COLOR_GREEN , curses.COLOR_BLUE)
+    self.setColor(38, curses.COLOR_YELLOW , curses.COLOR_BLUE)
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    if key == 'q' :
+      rc = False
+    return rc
+
+# アプリケーションをインスタンス化して開始
+Application()
+</code></pre>
+<figure>
+ <img src="make_colors.png" />
+</figure>
+<br />
+
+
+
+<!--  3.2 タイトルバーとステータスバー -->
+<h3><a id="3.2"></a>3.2 タイトルバーとステータスバー</h3>
+<p>タイトルバーは画面に最初の行に、ステータスバーは画面の最後の行に表示する文字列です。これらは単なる文字列表示でオブジェクトではありません。</p>
+<p>しかし、タイトルバーとステータスバーは clear(client=True) メソッドやフォームで特別に扱われます。つまり、画面クリアのとき、デフォルトではこれらはクリアされません。また、フォームもこれらの上に配置できません。</p>
+<p>タイトルバーとステータスバーは以下のメソッドを使って表示します。初期表示だけでなく、<u>更新も同じメソッドで行います。</u></p>
+<ul>
+ <li><span><b>titlebar(text, align=0, color=-1)</b></span><br />
+画面の一番上に text を表示する。align は表示位置の指定でデフォルトでは画面の一番上の左端になる。CursesApp.TB_ALIGN_CENTER を指定すると中央になる。(右端はない)<br />
+color はカラーペア番号でデフォルトでは白のボールドになる。
+ </li>
+ <li><span><b>statusbar(text, color=-1)</b></span><br />画面の一番上に text を表示する。表示位置は常に左端になる。color はカラーペア番号で、デフォルトでは白になる。</li>
+ <li><span><b>alert()</b></span><br />画面をフラッシュする。</li>
+</ul>
+<br />
+<h4>(Example) Title bar and status bar</h4>
+<p>次のコードはタイトルバーとステータスバーの表示例です。</p>
+<figure>
+ <img src="TitleBar.png" />
+</figure>
+<br />
+<pre class="sample"><code>#!/usr/bin/python3
+from Py365Lib import CursesApp as cap
+import curses
+
+## アプリケーションクラス
+class Application(cap.CursesApp) :
+  # 画面初期化
+  def init_app(self) :
+    self.redraw()
+    self.hideCursor()
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.titlebar("Title bar", Application.TB_ALIGN_CENTER, Application.REV_CYAN)
+    self.statusbar("Status bar", Application.REV_CYAN)
+    x = int((self.Columns - 5) / 2)
+    y = int(self.Rows / 2)
+    self.print("Hello", x, y, 5)
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    if key == 'q' :
+      rc = False
+    return rc
+
+
+# アプリケーションをインスタンス化して開始
+Application()
+</code></pre>
+<br />
+
+
+
+<!--  3.3 メッセージボックスとトースト -->
+<h3><a id="3.3"></a>3.3 メッセージボックスとトースト</h3>
+<p>メッセージボックスはウィンドウの一種で、メッセージを表示したり、ユーザの判断を求めたりするとき使用します。
+トーストは短い時間、画面にメッセージを表示する機能です。</p>
+<p>メッセージボックスには次の３種あります。いずれも messageBox(message, type=0) メソッドで表示します。type を以下のように設定すると、この種類が変更されます。</p>
+<ul>
+ <li><b>CursesApp.MB_OKONLY</b> OK ボタンのみ</li>
+ <li><b>CursesApp.MB_YESNO</b> Yes/No ボタン</li>
+ <li><b>CursesApp.MB_OKCANCEL</b> OK/Cancel ボタン</li>
+</ul>
+<p>TABキーでボタンにカーソルを移動し、Enter キーを押すとメッセージボックスが終了します。ただ、画面上はそのままメッセージボックスが残るので、redraw() メソッドを実行してメッセージボックスを上書きする必要があります。</p>
+<p>メッセージボックスで OK (Yes) ボタンが押された場合は、messageBox() 関数は CursesApp.BTN_OK を返します。Cancel (No) ボタンが押された場合は、CursesApp.BTN_CANCEL を返します。</p>
+<p>トーストは、toast(message, seconds=2, color=2) メソッドで表示します。このメソッドは second 秒だけ message を表示して自動的にメッセージを消します。</p>
+<br />
+
+<!--  3.4 入力ボックス -->
+<h3><a id="3.4"></a>3.4 入力ボックス</h3>
+<p>入力ボックスは inputBox(message) メソッドで表示されるウィンドウです。message はウィンドウに表示されるメッセージです。
+ユーザがキー入力を行って Enter キーを入力すると、入力された文字列が関数値として返されます。</p>
+<p>次のサンプルは、メッセージボックス、入力ボックス、トースト、alert の使用例です。</p>
+<br />
+<h4>(Example) MessageBox etc</h4>
+<pre class="sample"><code>#!/usr/bin/python3
+from Py365Lib import CursesApp as cap, Common
+
+## アプリケーションクラス
+class Application(cap.CursesApp) :
+  answer = ""  # メッセージボックスが返す値
+
+  # 初期表示
+  def init_app(self) :
+    self.titlebar("MessageBox", Application.TB_ALIGN_CENTER, Application.REV_WHITE)
+    self.statusbar("Ready", Application.REV_WHITE)
+    self.__menu()
+    return
+
+  # メニューを表示する。
+  def __menu(self) :
+    self.print("'q': Quit", 10, 4)
+    self.print("'O': OK Only MessageBox", 10, 5)
+    self.print("'Y': Yes/No MessageBox", 10, 6)
+    self.print("'C': OK/Cancel MessageoBox", 10, 7)
+    self.print("'T': Toast", 10, 8)
+    self.print("'I': InputBox", 10, 9)
+    self.print("'A': Alert", 10, 10)
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.clear()
+    self.__menu()
+    self.hideCursor()
+    self.print("answer=" + self.resultText(Application.answer), 20, 2, Application.COL_YELLOW)
+    self.titlebar("MessageBox", Application.TB_ALIGN_CENTER, Application.REV_WHITE)
+    self.statusbar("Ready", Application.REV_WHITE)
+    return
+
+  # 結果表示
+  def resultText(self, ans) :
+    result = "No Answer"
+    if Common.isset(ans) :
+      if ans == Application.BTN_OK :
+        result = "CursesApp.BTN_OK"
+      elif ans == Application.BTN_CANCEL :
+        result = "CursesApp.BTN_CANCEL"
+      else :
+        result = ans
+    else :
+      pass
+    return result
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    if key == 'q' :
+      rc = False
+    elif key == 'O' :
+      #  OK only メッセージボックス
+      self.messageBox("OK Only Message Box", Application.MB_OKONLY)
+      Application.answer = ""
+    elif key == 'Y' :
+      # Yes/No メッセージボックス
+      Application.answer = ans = self.messageBox("Yes/No Message Box", Application.MB_YESNO)
+    elif key == 'C' :
+      # OK/Cancel メッセージボックス
+      Application.answer = self.messageBox("OK/Cancel Message Box", Application.MB_OKCANCEL)
+    elif key == 'T' :
+      # トースト
+      self.toast("Shall close soon.")
+      Application.answer = ""
+    elif key == 'I' :
+      # 入力ボックス
+      Application.answer = self.inputBox("Enter your name.")
+    elif key == 'A' :
+      # alert
+      self.alert()
+    else :
+      pass
+    self.redraw()
+    return rc
+
+## アプリケーションをインスタンス化して開始。
+Application()
+</code></pre>
+<br />
+
+<!--  3.5 フォーム -->
+<h3><a id="3.5"></a>3.5 フォーム</h3>
+<p>CursesApp クラスにはフォームというウィジェット管理機構があります。フォームはウィジェット(部品)のコンテナであり、複数のウィジェットを管理できます。</p>
+<p>フォーム上の部品はデータとして JSON ファイルから読み込むことができます。また、プログラム内でデータ (ディクショナリのリスト) として定義できます。</p>
+<p>フォームはアプリケーション内で複数持つことができますが、表示できるのは１つだけです。</p>
+<p>フォーム上の部品(ウィジェット)のイベントは handler(key) メソッドで処理します。ウィジェットの移動は TAB キー(場合によっては Enter キー)で行い、実行(ボタンを押すなどの動作)は Enter キーを使用します。</p>
+<p>ウィジェットのデータは formData でまとめて受け取ることができます。あるいは、getProperty() メソッド、ラベルやテキストボックスでは、getLabel() メソッドでも取得できます。</p>
+<br />
+<h4>フォームに関するメソッド</h4>
+<ul>
+ <li><span><b>createForm(name, data)</b></span><br />フォームを作成する。name はフォーム名、data はウィジェット定義データ (JSON)</li>
+ <li><span><b>readFormData(name, fileName)</b></span><br />指定したJSONファイルからnameという名前のフォームオブジェクトを構築する。name はフォーム名。filename は JSONファイルのパス名。</li>
+ <li><span><b>selectForm(name)</b></span><br />表示するフォームを選ぶ。name はフォーム名</li>
+ <li><span><b>drawWidgets(name)</b></span><br />name で指定したウィジェットを描画する。</li>
+ <li><span><b>selectWidget()</b></span><br />次のウィジェットのタブインデックスを得る。</li>
+ <li><span><b>setCursorToWidget(widget)</b></span><br />指定したウィジェットオブジェクト(widget)へカーソルを移動する。</li>
+ <li><span><b>enterText(widget)</b></span><br />テキストボックス・ウィジェットオブジェクトから文字列を入力する。</li>
+ <li><span><b>changeChecked(widget, form)</b></span><br />指定したフォーム名(form)のチェックボックスまたはラジオボタンのウィジェットオブジェクト(widget)のチェック状態を変更する。</li>
+ <li><span><b>selectUp(widget)</b></span><br />指定したセレクタウィジェットで上向き矢印キーを押したときの動作を行う。選択項目を1つ下にする。</li>
+ <li><span><b>selectDown(widget)</b></span><br />指定したセレクタウィジェットで下向き矢印キーを押したときの動作を行う。選択項目を1つ上にする。</li>
+ <li><span><b>buttonPressed(widget)</b></span><br />ボタンウィジェットで Enter キーを押したときの動作を行う。押されたボタンの click プロパティの値を返す。</li>
+ <li><span><b>left_justify(text, width)</b></span><br />全角文字を含む文字列を左寄せする。主にラベルなどで使う。このメソッドはスタティックである。</li>
+ <li><span><b>center_justify(text, width)</b></span><br />全角文字を含む文字列を中寄せする。主にラベルなどで使う。このメソッドはスタティックである。</li>
+ <li><span><b>getProperty(form, name, key)</b></span><br />指定したフォーム(form)の指定したウィジェット(name)の key で指定したプロパティを得る。</li>
+ <li><span><b>setProperty(form, name, key, value)</b></span><br />指定したフォーム(form)の指定したウィジェット(name)の key で指定したプロパティを value に変更する。</li>
+ <li><span><b>getLabel(name)</b></span><br />ウィジェット名 name で指定した text プロパティを得る。</li>
+ <li><span><b>setLabel(name, text)</b></span><br />ウィジェット名 name で指定した text プロパティを text に変更する。</li>
+ <li><span><b>self.formData</b></span><br />フォームに含まれるウィジェットの値が入ったディクショナリ。キーはウィジェット名、値はウィジェットにより text プロパティ、checked プロパティなど。</li>
+</ul>
+<br />
+
+
+
+<!--  3.6 ラベル -->
+<h3><a id="3.6"></a>3.6 ラベル</h3>
+<p>ラベルは、静的なテキストです。したがって、イベントは発生せず、フォーカスを受けることもありません。</p>
+<p>ラベルは次のようなプロパティを持ち、JSON データとして定義しておくとフレームワークがフォームに表示してくれます。</p>
+<ul>
+ <li><b>"type":"label"</b> ウィジェットがラベルであることを示す。</li>
+ <li><b>"name":"label1"</b> ラベルの名前が "label1" であることを示す。</li>
+ <li><b>"text":"Click button" ラベルの表示文字列が "Click button" であることを示す。</b></li>
+ <li><b>"width":20</b> ラベルの幅が２０文字であることを示す。(省略可能)</li>
+ <li><b>"left":30</b> ラベルの位置が画面左端から３１文字目であるこを示す。</li>
+ <li><b>"top":5</b> ラベルの位置が６行目であることを示す。</li>
+ <li><b>"color":6</b> 表示カラーペアが６であることを示す。(省略可能)</li>
+ <li><b>"attr":0</b> 文字表示属性がノーマルであることを示す。(省略可)</li>
+</ul>
+<p>ラベルにはイベントがないので、handler(key) メソッドにはラベルに関する処理はありません。</p>
+<p>下のサンプルでは、ESC キーを押したとき終了する処理と、Enter キーを押したときボタンのクリック処理を行う機能のみを含んでいます。ボタンが１つだけのため、フォーカスは常にそのボタンにあるため、ウィジェット切り替え (TAB キー) に関する処理はありません。</p>
+<br />
+<h4>(Example). Label and Button</h4>
+<figure>
+ <img src="Example1.png" />
+</figure>
+<br />
+<pre class="sample"><code>#!/usr/bin/python3
+from Py365Lib import CursesApp as cap
+
+## Application クラス ##
+class Application(cap.CursesApp) :
+  FORM1 = "form1"
+  FORM1_DATA = '''[
+{"type":"label", "name":"label1", "text":"Click button", "width":20, "left":30, "top":5,"color":6, "attr":0},
+{"type":"button", "name":"button1", "text":" Click ", "width":9, "left":40, "top":7, "color":8, "attr":0, "click":100}    
+  ]'''
+  count = 0
+  tabidx = 1  # ボタンの位置
+
+  # 初期表示
+  def init_app(self) :
+    self.createForm(Application.FORM1, Application.FORM1_DATA) # フォームを作成
+    self.titlebar("Simple Form", 1, Application.REV_WHITE)  # タイトルバーを表示
+    self.statusbar("Ready", Application.REV_WHITE)  # ステータスバーを表示
+    self.selectForm(Application.FORM1)  # フォームを選択(ウィジェットを表示)
+    form1 = self.forms[Application.FORM1]  # 現在のフォーム(form1)
+    self.setCursorToWidget(form1[Application.tabidx]) # カーソルをボタンへ移動
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.clear(True)
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    form1 = self.forms[Application.FORM1]
+    rc = True
+    if key == cap.CursesApp.ESC :
+      # ESC キーが押されたら、アプリ終了
+      rc = False
+    elif key == cap.CursesApp.LF :
+      # ボタンが押されたら、カウントアップ表示
+      widget = form1[Application.tabidx]
+      click = self.buttonPressed(widget) # 押されたボタンの値を得る。
+      if click == 100 :  # 100 はボタンの click プロパティの値
+        Application.count += 1
+        self.setLabel("label1", "Clicked {0} times.".format(Application.count))
+        if Application.count > 5 :  # ５回押されたらアプリ終了
+          rc = False 
+    else :
+      pass
+    return rc
+
+# アプリケーションをインスタンス化して開始
+Application()
+</code></pre>
+<br />
+
+<!--  3.7 テキストボックス -->
+<h3><a id="3.7"></a>3.7 テキストボックス</h3>
+<p>テキストボックスはキーボードから入力できるテキストです。テキストボックスにフォーカスが移動(カーソルが移動)すると、キー入力を受け付けるようになります。キー入力の終わりは Enter キーによります。Enter キーを押すと、入力した文字列が確定し、フォーカス(カーソル)が次のウィジェットに移動します。</p>
+<p>JSON データにおけるテキストボックスの定義は次のリストの通りです。</p>
+<ul>
+ <li><b>"type":"text"</b> ("textbox"でも可)</li>
+ <li><b>"name":"text1"</b> テキストボックスの名前が "text1" であることを示す。</li>
+ <li><b>"text":""</b> テキストボックスの表示文字列が "" であることを示す。</b></li>
+ <li><b>"width":20</b> テキストボックスの幅が２０文字であることを示す。</li>
+ <li><b>"left":30</b> テキストボックスの位置が画面左端から３１文字目であるこを示す。</li>
+ <li><b>"top":5</b> テキストボックスの位置が６行目であることを示す。</li>
+</ul>
+<br />
+<p>キー入力ハンドラ (handler(key)) には、テキストボックスに関するイベント処理を記述する必要があります。</p>
+<br />
+<h4><a id="form_text_button"></a>(Example) テキストボックスとボタンの例</h4>
+<p>次のコードは、テキストボックスに入力した数をメッセージボックスとステータスバーに表示します。表示は OK ボタンを押したとき行われます。Cancel ボタンまたは ESC キーを押すとアプリケーションが終了します。</p>
+<figure>
+ <img src="form_text_button.png" />
+</figure>
+<pre class="sample"><code>#!/usr/bin/python3
+from Py365Lib import CursesApp as cap
+from syslog import syslog
+
+class Application(cap.CursesApp) :
+  # 初期化
+  def init_app(self) :
+    formName = self.conf['form']
+    # ウィジェットデータを JSON ファイルからロードする。
+    self.readFormData(formName, formName + ".json")
+    self.titlebar(self.conf['title'], cap.CursesApp.TB_ALIGN_CENTER, 8)
+    self.statusbar(self.conf['status'], 8)
+    self.selectForm(formName)
+    form1 = cap.CursesApp.forms[formName]
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
+    cap.CursesApp.tabidx = 1
+    widget = form1[cap.CursesApp.tabidx]
+    # 最初のウィジェットがテキストボックスなのでキー入力モードにする。
+    s = self.enterText(widget)
+    cap.CursesApp.tabidx = 2
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])  # フォーカスをボタンへ
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.clear(True)
+    formName = self.selectedForm
+    self.selectForm(formName)
+    form1 = cap.CursesApp.forms[formName]
+    cap.CursesApp.tabidx = 1
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
+    return
+
+  # ハンドラ
+  def handler(self, key) :
+    formName = self.selectedForm
+    form1 = cap.CursesApp.forms[formName]
+    rc = True
+    if key == cap.CursesApp.ESC :
+      # ESC キーなら終了
+      self.selectedForm = None
+      rc = False
+    elif key == cap.CursesApp.TAB :
+      # TAB キー
+      cap.CursesApp.tabidx = self.selectWidget()  # 次のウィジェットのタブインデックスを得る。
+      widget = form1[cap.CursesApp.tabidx]
+      self.setCursorToWidget(widget)  # カーソルをウィジェットへ移動
+      if widget['type'] == 'text' :
+        # テキストボックスなら文字列入力
+        self.enterText(widget)
+        self.setCursorToWidget(form1[cap.CursesApp.tabidx])
+    elif key == cap.CursesApp.LF :
+      # Enter キーかつボタンなら押されたボタンの種別を得る。
+      widget = form1[cap.CursesApp.tabidx]
+      click = self.buttonPressed(widget)
+      if click == 100 :
+        # OK ボタンの時
+        s = self.getLabel("text1")
+        self.messageBox("OK button clicked.  price = " + s)
+        self.statusbar(s, cap.CursesApp.REV_WHITE)
+        self.redraw()
+        cap.CursesApp.tabidx = 3 # Cancel ボタン
+        self.setCursorToWidget(form1[cap.CursesApp.tabidx])  
+      elif click == 101 :
+        # Cancel ボタンの時
+        self.selectedForm = None
+        rc = False
+      else :
+        # ボタンでない場合
+        pass
+    else :
+      pass
+    return rc
+
+# アプリケーション
+Application()
+</code></pre>
+<br />
+<h4>form1.json</h4>
+<p>ウィジェットデータは form1.json というファイルから読み込みます。</p>
+<pre class="sample"><code>[
+{"type":"label", "name":"label1", "text":"Enter the price: ", "left":20, "top":5},
+{"type":"text", "name":"text1", "text":"", "left":40, "top":5},
+{"type":"button", "name":"btnOK", "text":" OK ", "left":30, "top":7, "color":23, "click":100},
+{"type":"button", "name":"btnCancel", "text":"Cancel", "left":40, "top":7, "color":16, "click":101}
+]
+</code></pre>
+<br />
+<h4>AppConf.ini</h4>
+<p>フォーム名、タイトルバーとステータスバーの初期表示は AppConf.ini という設定ファイルから読み込みます。</p>
+<pre class="sample"><code>title=Form with text and button
+status=OK
+form=form1
+</code></pre>
+<br />
+
+
+
+<!--  3.8 ボタン -->
+<h3><a id="3.8"></a>3.8 ボタン</h3>
+<p>ボタンにフォーカスがあるときに Enter キーを押すとクリックイベントが発生します。このとき、ボタンに割り当てられたコードが返されて、どのボタンが押されたかを知ることができます。ボタンが押されると、フォーカスは次のウィジェットへ移動します。</p>
+<p>ボタンへのフォーカス移動は TAB キーで行います。ボタンを押さないでフォーカスを移動させるには TAB キーを押しますが、ボタンを押しても (Enter キーを押す) フォーカスが移動します。</p>
+<p>どのボタンが押されたかは、ウィジェット定義データの click プロパティで設定するコードで知ることができます。よって、このコードはユニークでなければなりません。<p>
+<p>メソッド buttonPressed(widget) は click プロパティの値を返します。widget はフォーカスがあるボタンオブジェクトです。</p>
+<p>この動作は handler(key) メソッドに含める必要があります。このコードの例は<a href="#form_text_button">「(Example) テキストボックスとボタンの例」</a>の handler(key) メソッドの "elif key == cap.CursesApp.LF" の所にあります。</p>
+<p>ボタンも他と同様に ウィジェット定義データ (JSON) で定義します。以下にプロパティの意味を説明します。</p>
+<ul>
+ <li><b>"type":"button"</b></li>
+ <li><b>"name":"btnOK"</b> ボタンの名前が "btnOK" であることを示す。</li>
+ <li><b>"text":"Cancel"</b> ボタンの表示文字列が "Cancel" であることを示す。</b></li>
+ <li><b>"width":10</b> ボタンの幅が 10 文字であることを示す。</li>
+ <li><b>"left":30</b> ボタンの位置が画面左端から３１文字目であるこを示す。</li>
+ <li><b>"top":5</b> ボタンの位置が６行目であることを示す。</li>
+ <li><b>"color":16</b> カラーペア番号</li>
+ <li><b>"click":101</b> クリックコード。buttonPressed(widget) メソッドの値となる。</li>
+</ul>
+<br />
+<p>ボタンのコードサンプルは、<a href="#form_text_button">テキストボックスのサンプル</a>と共通です。</p>
+<br />
+
+<!--  3.9 チェックボックス -->
+<h3><a id="3.9"></a>3.9 チェックボックス</h3>
+<p>チェックボックスは On/Off 状態を表示するウィジェットです。On/Off 状態を切り替えるには空白キーを使用します。TAB キーを押すと次のウィジェットへフォーカスが移動します。</p>
+<br />
+
+<!--  3.10 ラジオボタン -->
+<h3><a id="3.10"></a>3.10 ラジオボタン</h3>
+<p>ラジオボタンはチェックボックスに似ていますが、２つ以上をグループ化して使用します。グループは１つのフォームに１つのグループに制限されています。</p>
+<p>On 状態を持つラジオボタンはグループの中で一つだけです。ラジオボタンを On にするにはチェックボックス同様、空白キーを使用します。あるラジオボタンを On にすると、それまで On だったラジオボタンは自動的に Off になります。</p>
+<br />
+
+<!--  3.11 セレクタ -->
+<h3><a id="3.11"></a>3.11 セレクタ</h3>
+<p>セレクタは複数の項目から１つの項目を選ぶときに使用するウィジェットです。セレクタは機能的にラジオボタングループと同じです。</p>
+<p>項目の移動には上下の矢印キーを使用します。選択は Enter キーを使用します。Enter キーを押すとフォーカスが次のウィジェットへ移動します。</p>
+<br />
+
+<!--  3.11 複数フォームの使用 -->
+<h3><a id="3.12"></a>3.12 複数フォームの使用</h3>
+<p>複数フォームは selectForm メソッドによって切り替えることができます。複雑なフォームの場合、１つのフォームだけではウィジェットを表示できないので、複数フォームに分けて表示します。</p>
+<br />
+
+<!--  3.13 ヘルプウィンドウ -->
+<h3><a id="3.13"></a>3.12 ヘルプウィンドウ</h3>
+<p>F1 キーを押したとき、表示されるウィンドウです。</p>
+<br />
+
+<br />
+
+
+<!-- 4 ユーティリティ -->
+<h2><a id="4"></a>4. ユーティリティ</h2>
+
+<!--  4.1 カラーペア一覧表示 -->
+<h3><a id="4.1"></a>4.1 カラーペア一覧表示</h3>
+<p>文字列表示 (print メソッド) などでカラーペア番号を指定できますが、番号をどれにしたらいいかを選ぶときに使用します。</p>
+<br />
+
+<!--  4.2 表示属性一覧表示 -->
+<h3><a id="4.2"></a>4.2 表示属性一覧表示</h3>
+<p>字列表示 (print メソッド) などで属性コードを指定できますが、そのコードをどれにしたらいいかを選ぶときに使用します。</p>
+<br />
+
+<!--  4.3 ウィジェット・リソース作成 -->
+<h3><a id="4.3"></a>4.3 ウィジェット・リソース作成</h3>
+<p>ウィジェットのデータを Excel などのようなスプレッドシートから作るためのツールです。</p>
+<br />
 
 
 </article>
 
+
+<!-- フッター部 -->
 <footer>
 <p style="text-align:center;"><a href="#top">TOP</a></p>
 <p>&nbsp;</p>

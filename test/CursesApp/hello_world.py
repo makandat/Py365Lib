@@ -9,7 +9,7 @@ class Application(cap.CursesApp) :
   def init_app(self) :
     x = int(self.Columns / 2) - 6
     y = int(self.Rows / 2) - 1
-    self.print("Hello, world!", x, y, 3)
+    self.print("Hello, world!", x, y, Application.COL_GREEN)
     self.print("'q': Quit.", x, y + 1)
     return;
 

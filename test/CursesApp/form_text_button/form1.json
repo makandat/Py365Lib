@@ -1,6 +1,6 @@
 [
 {"type":"label", "name":"label1", "text":"Enter the price: ", "left":20, "top":5},
-{"type":"text", "name":"text1", "left":40, "top":5},
+{"type":"text", "name":"text1", "text":"", "left":40, "top":5},
 {"type":"button", "name":"btnOK", "text":" OK ", "left":30, "top":7, "color":23, "click":100},
 {"type":"button", "name":"btnCancel", "text":"Cancel", "left":40, "top":7, "color":16, "click":101}
 ]

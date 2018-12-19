@@ -1,6 +1,6 @@
 #
 #  curses アプリケーションクラス
-#     Version 1.21 2018-12-08
+#     Version 1.22 2018-12-18
 #
 import curses
 import os, locale
@@ -57,6 +57,8 @@ class CursesApp :
   tabidx = 0
   # フォームデータ (OKのとき)
   formData = {}
+  # タイトル文字列
+  Title = "CursesApp"
 
   # コンストラクタ
   def __init__(self) :
@@ -178,6 +180,7 @@ class CursesApp :
       self.stdscr.addstr(0, 0, tj, curses.color_pair(color) + curses.A_BOLD)
     else :
       self.stdscr.addstr(0, 0, tj, curses.A_BOLD)
+    CursesApp.Title = text
 
   # ステータスバーを表示する。
   def statusbar(self, text, color=-1) :
@@ -337,16 +340,16 @@ class CursesApp :
   def createForm(self, name, data) :
     widgets = json.loads(data)
     # フォームを登録する。
-    self.forms[name] = widgets
+    CursesApp.forms[name] = widgets
     return
 
   # フォームを切り替える。(表示する)
   def selectForm(self, name) :
-    self.tabidx = 0
-    self.selectedForm = name
+    CursesApp.tabidx = 0
+    CursesApp.selectedForm = name
     self.clear(True)  # クライアント領域のみクリア
     self.drawWidgets(name)
-    self.tabidx = self.selectWidget()   
+    CursesApp.tabidx = self.selectWidget()   
     return
 
   # name で指定されたフォームのウィジェットを描画する。
@@ -354,7 +357,7 @@ class CursesApp :
     # フォームの描画先を決定
     form = self.stdscr
     # ウィジェットリストを取得
-    widgets = self.forms[name]
+    widgets = CursesApp.forms[name]
     # それぞれのウィジェットについて描画する。
     for w in widgets :
       if w["type"] == 'label' :
@@ -423,7 +426,7 @@ class CursesApp :
 
   # ウィジェットのプロパティを変更する。
   def setProperty(self, form, name, key, value) :
-     widgets = self.forms[form]
+     widgets = CursesApp.forms[form]
      for w in widgets :
         if w["name"] == name :
           w[key] = value
@@ -433,7 +436,7 @@ class CursesApp :
   # ウィジェットのプロパティを得る。
   def getProperty(self, form, name, key) :
      prop = None
-     widgets = self.forms[form]
+     widgets = CursesApp.forms[form]
      for w in widgets :
         if w["name"] == name :
           prop = w[key]
@@ -441,11 +444,11 @@ class CursesApp :
 
   # ラベルのテキストを得る。
   def getLabel(self, name) :
-     return self.getProperty(self.selectedForm, name, "text")
+     return self.getProperty(CursesApp.selectedForm, name, "text")
 
   # ラベルのテキストを変更する。
   def setLabel(self, name, text) :
-     self.setProperty(self.selectedForm, name, "text", text)
+     self.setProperty(CursesApp.selectedForm, name, "text", text)
      return
      
   # メッセージボックスを開く
@@ -522,9 +525,9 @@ class CursesApp :
   # 次の有効なウィジェットの位置(tabidx)を得る。
   def selectWidget(self) :
     # 対象のフォームを特定する。
-    if self.selectedForm == None :
+    if CursesApp.selectedForm == None :
       return -1
-    form = self.forms[self.selectedForm]
+    form = CursesApp.forms[CursesApp.selectedForm]
     # フォームにラベルのみしかないか判別
     for i in range(len(form)) :
       w = form[i]
@@ -533,7 +536,7 @@ class CursesApp :
     if i == len(form) - 1 :
       return -1
     # 次のウィジェットへ
-    idx = self.tabidx + 1
+    idx = CursesApp.tabidx + 1
     if idx >= len(form) :
       idx = 0
     # 現在のウィジェットを特定する。
@@ -571,7 +574,8 @@ class CursesApp :
       curses.noecho()
       self.stdscr.addstr(widget['top'], widget['left'], s, curses.A_REVERSE)
       CursesApp.formData[widget['name']] = s
-      self.tabidx += 1
+      widget['text'] = s
+      CursesApp.tabidx += 1
       return s
     else :
       return ''
@@ -608,9 +612,9 @@ class CursesApp :
 
   # チェックボックスまたはラジオボタンがチェック状態なら True を返す。
   def isChecked(self, name) :
-    wt = self.getProperty(self.selectedForm, name, "type")
+    wt = self.getProperty(CursesApp.selectedForm, name, "type")
     if wt == "check" or wt == "checkbox" or wt == "radio" or wt == "radiobutton" :
-      return self.getProperty(self.selectedForm, name, "checked")
+      return self.getProperty(CursesApp.selectedForm, name, "checked")
     else :
        return False
 
@@ -669,9 +673,9 @@ class CursesApp :
 
 
   # アラート
-  def alert(self, message) :
-    self.statusbar(message)
+  def alert(self) :
     curses.flash()
+    return
 
   @staticmethod
   def left_justify(text, width) :
