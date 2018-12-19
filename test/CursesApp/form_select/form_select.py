@@ -3,51 +3,58 @@
 from Py365Lib import CursesApp as cap
 from syslog import syslog
 
+## アプリケーションクラス
 class Application(cap.CursesApp) :
-  #
+  # 初期表示
   def init_app(self) :
     formName = self.conf['form']
     self.readFormData(formName, formName + ".json")
-    self.titlebar(self.conf['title'], 1, 8)
-    self.statusbar(self.conf['status'], 8)
+    self.titlebar(self.conf['title'], 1, cap.CursesApp.REV_WHITE)
+    self.statusbar(self.conf['status'], cap.CursesApp.REV_WHITE)
     self.selectForm(formName)
-    form1 = self.forms[formName]
-    self.tabidx = 1
-    widget = form1[self.tabidx]
+    form1 = cap.CursesApp.forms[formName]
+    cap.CursesApp.tabidx = 1
+    widget = form1[cap.CursesApp.tabidx]
     self.setCursorToWidget(widget)
     return
 
-  #
+  # 再描画
   def redraw(self) :
     self.clear(True)
     formName = self.selectedForm
     self.selectForm(formName)
-    form1 = self.forms[formName]
-    self.setCursorToWidget(form1[self.tabidx])
+    form1 = cap.CursesApp.forms[formName]
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
     return
 
-  #
+  # キー入力ハンドラ
   def handler(self, key) :
     formName = self.selectedForm
-    form1 = self.forms[formName]
+    form1 = cap.CursesApp.forms[formName]
     rc = True
     if key == cap.CursesApp.ESC :
-      #  ESC
+      #  ESC キー
       self.selectedForm = None
-      rc = False
+      rc = False  # アプリ終了
     elif key == cap.CursesApp.TAB :
-      self.tabidx = self.selectWidget()
-      widget = form1[self.tabidx]
+      # TAB キー
+      cap.CursesApp.tabidx = self.selectWidget()
+      widget = form1[cap.CursesApp.tabidx]
+      if widget['type'] == 'selector' :
+        widget['selected'] = 0
+        self.selectSelectorItem(widget, 0)
       self.setCursorToWidget(widget)
     elif str(key) == 'KEY_UP' :
-      widget = form1[self.tabidx]
+      # 上向き矢印キー
+      widget = form1[cap.CursesApp.tabidx]
       self.selectUp(widget)
     elif str(key) == 'KEY_DOWN' :
-      widget = form1[self.tabidx]
+      # 下向き矢印キー
+      widget = form1[cap.CursesApp.tabidx]
       self.selectDown(widget)
     elif key == cap.CursesApp.LF :
-      #  Enter
-      widget = form1[self.tabidx]
+      #  Enter キー
+      widget = form1[cap.CursesApp.tabidx]
       click = self.buttonPressed(widget)
       if click == 100 :
         # OK button

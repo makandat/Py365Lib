@@ -13,8 +13,8 @@ class Application(cap.CursesApp) :
     self.statusbar(self.conf['status'], 8)
     self.selectForm(self.formNames[0])
     form1 = self.forms[self.formNames[0]]
-    self.tabidx = 1
-    widget = form1[self.tabidx]
+    cap.CursesApp.tabidx = 1
+    widget = form1[cap.CursesApp.tabidx]
     self.setCursorToWidget(widget)
     return
 
@@ -24,7 +24,7 @@ class Application(cap.CursesApp) :
     formName = self.selectedForm
     self.selectForm(formName)
     form1 = self.forms[formName]
-    self.setCursorToWidget(form1[self.tabidx])
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
     return
 
   #
@@ -37,8 +37,8 @@ class Application(cap.CursesApp) :
       self.selectedForm = None
       rc = False
     elif key == Application.TAB :
-      self.tabidx = self.selectWidget()
-      widget = form1[self.tabidx]
+      cap.CursesApp.tabidx = self.selectWidget()
+      widget = form1[cap.CursesApp.tabidx]
       self.setCursorToWidget(widget)
       if widget['type'] == 'textbox' or widget['type'] == 'text':
         s = self.enterText(widget)
@@ -46,7 +46,7 @@ class Application(cap.CursesApp) :
         #Application.formData[widget['name']] = s
     elif key == ' ' :
       # SPACE
-      widget = form1[self.tabidx]
+      widget = form1[cap.CursesApp.tabidx]
       if widget['type'] == 'check' or widget['type'] == 'checkbox' :
         self.changeChecked(widget, form1)        
         widget['checked'] = not widget['checked']
@@ -54,7 +54,7 @@ class Application(cap.CursesApp) :
         pass
     elif key == Application.LF :
       #  Enter
-      widget = form1[self.tabidx]
+      widget = form1[cap.CursesApp.tabidx]
       click = self.buttonPressed(widget)
       if click == 100 :
         # OK button
@@ -63,36 +63,36 @@ class Application(cap.CursesApp) :
           self.redraw()
           # form2 が表示される。
           form2 = self.forms["form2"]
-          self.tabidx = 2  # textbox のインデックス
-          widget = form2[self.tabidx]
+          cap.CursesApp.tabidx = 2  # textbox のインデックス
+          widget = form2[cap.CursesApp.tabidx]
           self.setCursorToWidget(widget)
           if widget['type'] == 'textbox' or widget['type'] == 'text':
             s = self.enterText(widget)
             widget['text'] = s
-            widget = form2[self.tabidx]
+            widget = form2[cap.CursesApp.tabidx]
             self.setCursorToWidget(widget)
         elif self.selectedForm == "form2" :
           self.selectForm(self.formNames[2])
           self.redraw()
           # form3 が表示される。
           self.setLabel("label5", "Check1={0}, Check2={1}, Text1={2}".format(Application.formData['check1'], Application.formData['check2'], Application.formData['text1']))
-          self.tabidx = 2
+          cap.CursesApp.tabidx = 2
           form3 = self.forms["form3"]
-          widget = form3[self.tabidx]
+          widget = form3[cap.CursesApp.tabidx]
           self.setCursorToWidget(widget)
         elif self.selectedForm == "form3" :
           self.selectForm(self.formNames[1])
           self.redraw()
           # form2 が表示される
           form2 = self.forms["form2"]
-          self.tabidx = 2  # textbox のインデックス
-          widget = form2[self.tabidx]
+          cap.CursesApp.tabidx = 2  # textbox のインデックス
+          widget = form2[cap.CursesApp.tabidx]
           self.setCursorToWidget(widget)
           if widget['type'] == 'textbox' or widget['type'] == 'text':
             s = self.enterText(widget)
             widget['text'] = s
             Application.formData['text1'] = s
-            widget = form2[self.tabidx]
+            widget = form2[cap.CursesApp.tabidx]
             self.setCursorToWidget(widget)
         else :
           raise

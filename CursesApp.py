@@ -1,6 +1,6 @@
 #
 #  curses アプリケーションクラス
-#     Version 1.22 2018-12-18
+#     Version 1.23 2018-12-19
 #
 import curses
 import os, locale
@@ -625,35 +625,32 @@ class CursesApp :
       if widget["selected"] == 0 :
         return
       widget["selected"] -= 1
-      x = widget['left']
-      y = widget['top']
-      items = widget['items']
-      for i in range(len(items)) :
-        if i == widget['selected'] :
-          self.stdscr.addstr(y, x, items[i], curses.A_REVERSE)
-          CursesApp.formData[widget['name']] = str(i)
-        else :
-          self.stdscr.addstr(y, x, items[i])
-        y += 1
+      self.selectSelectorItem(widget, widget["selected"])
     return
 
   # セレクタ DOWN キー
   def selectDown(self, widget) :
     if widget['type'] == 'selector' :
-      x = widget['left']
-      y = widget['top']
-      items = widget['items']
       # selected プロパティが 項目数-1 なら何もしない。
+      items = widget['items']
       if widget["selected"] == (len(items) - 1) :
         return
       widget["selected"] += 1
-      for i in range(len(items)) :
-        if i == widget['selected'] :
-          self.stdscr.addstr(y, x, items[i], curses.A_REVERSE)
-          CursesApp.formData[widget['name']] = str(i)
-        else :
-          self.stdscr.addstr(y, x, items[i])
-        y += 1
+      self.selectSelectorItem(widget, widget["selected"])
+    return
+
+  # セレクタの項目を指定する。
+  def selectSelectorItem(self, widget, n) :
+    x = widget['left']
+    y = widget['top']
+    items = widget['items']
+    for i in range(len(items)) :
+      if i == widget['selected'] :
+        self.stdscr.addstr(y, x, items[i], curses.A_REVERSE)
+        CursesApp.formData[widget['name']] = str(i)
+      else :
+        self.stdscr.addstr(y, x, items[i])
+      y += 1
     return
 
   # ボタンが押されたとき

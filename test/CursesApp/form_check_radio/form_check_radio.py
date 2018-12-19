@@ -3,8 +3,9 @@
 from Py365Lib import CursesApp as cap
 from syslog import syslog
 
+## アプリケーションクラス
 class Application(cap.CursesApp) :
-  #
+  # 初期表示
   def init_app(self) :
     formName = self.conf['form']
     self.readFormData(formName, formName + ".json")
@@ -12,36 +13,37 @@ class Application(cap.CursesApp) :
     self.statusbar(self.conf['status'], 8)
     self.selectForm(formName)
     form1 = self.forms[formName]
-    self.tabidx = 0
-    widget = form1[self.tabidx]
+    cap.CursesApp.tabidx = 0
+    widget = form1[cap.CursesApp.tabidx]
     self.setCursorToWidget(widget)
     return
 
-  #
+  # 再描画
   def redraw(self) :
     self.clear(True)
     formName = self.selectedForm
     self.selectForm(formName)
     form1 = self.forms[formName]
-    self.setCursorToWidget(form1[self.tabidx])
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
     return
 
-  #
+  # キー入力ハンドラ
   def handler(self, key) :
     formName = self.selectedForm
     form1 = self.forms[formName]
     rc = True
     if key == cap.CursesApp.ESC :
-      #  ESC
+      #  ESC キー
       self.selectedForm = None
       rc = False
     elif key == cap.CursesApp.TAB :
-      self.tabidx = self.selectWidget()
-      widget = form1[self.tabidx]
+      # TAB キー
+      cap.CursesApp.tabidx = self.selectWidget()
+      widget = form1[cap.CursesApp.tabidx]
       self.setCursorToWidget(widget)
     elif key == ' ' :
-      # Space
-      widget = form1[self.tabidx]
+      # 空白キー
+      widget = form1[cap.CursesApp.tabidx]
       if widget['type'] == 'radio' or widget['type'] == 'radiobutton':
         self.changeChecked(widget, form1)
       elif widget['type'] == 'checkbox' or widget['type'] == 'check' :
@@ -50,8 +52,8 @@ class Application(cap.CursesApp) :
       else :
         pass
     elif key == cap.CursesApp.LF :
-      #  Enter
-      widget = form1[self.tabidx]
+      #  Enter キー
+      widget = form1[cap.CursesApp.tabidx]
       click = self.buttonPressed(widget)
       if click == 100 :
         # OK button

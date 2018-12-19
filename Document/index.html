@@ -611,6 +611,7 @@ form: フォーム
 </td><td></td><td>指定したフォームのウィジェットのチェック状態を変更する。</td><td>チェックボックス、ラジオボタンのみ有効</td></tr>
  <tr><td>selectUp(widget)</td><td>widget: ウィジェット</td><td>なし</td><td>指定したウィジェットで上向き矢印キーを押したときの動作</td><td>セレクタのみ有効</td></tr>
  <tr><td>selectDown(widget)</td><td>widget: ウィジェット</td><td>なし</td>指定したウィジェットで下向き矢印キーを押したときの動作<td></td><td>セレクタのみ有効</td></tr>
+ <tr><td>selectSelectorItem(widget, n)</td><td>widget: ウィジェット<br />n: 項目のインデックス</td><td>なし</td>指定したウィジェット(Selector)で項目を選択する。<td></td><td>セレクタのみ有効</td></tr>
  <tr><td>buttonPressed(widget)</td><td>widget: ウィジェット</td><td>なし</td><td>Enterキーを押したときの動作</td><td>ボタンのみ有効</td></tr>
  <tr><td>alert(message)</td><td>message: メッセージ</td><td>なし</td><td>ステータスバーにメッセージを表示して画面をフラッシュする。</td><td></td></tr>
  <tr><td>left_justify(text, width)</td><td>
@@ -643,6 +644,11 @@ text: 変更するtextプロパティの値
 name: フォームの名前<br />
 fileName: JSON ファイルのパス名
 </td><td>なし</td><td>指定したJSONファイルからnameという名前のフォームオブジェクトを構築する。</td><td></td></tr>
+<tr><td>CursesApp.forms</td><td></td><td></td><td>フォームのコレクション。方はディクショナリでキーはフォーム名。</td><td>クラス変数</td></tr>
+<tr><td>CursesApp.selectedForm</td><td></td><td></td><td>現在表示されているフォーム名</td><td>クラス変数</td></tr>
+<tr><td>CursesApp.tabidx</td><td></td><td></td><td>タブインデックス</td><td>クラス変数</td></tr>
+<tr><td>CursesApp.formData</td><td></td><td></td><td>JSON を元にしたフォームデータ。キーはフォーム名、値はウィジェットプロパティ・ディクショナリのリスト</td><td>クラス変数</td></tr>
+<tr><td>CursesApp.Title</td><td></td><td></td><td>タイトルバーの文字列</td><td>クラス変数</td></tr>
 </table>
 <br />
 <h4>定数定義</h4>

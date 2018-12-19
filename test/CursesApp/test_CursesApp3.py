@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 #   フォーム
-from CursesApp import CursesApp
+from Py365Lib import CursesApp as cap
 import curses
 from syslog import syslog
 
-class Application(CursesApp) :
+class Application(cap.CursesApp) :
   FORM1_DATA = '''[
  {"type":"label", "name":"label1", "text":"label1: フォームのテスト", "left":5, "top":2, "width":20, "color":3, "attr":0},
  {"type":"button", "name":"ok_button", "text":"  OK  ", "left":10, "top":4, "width":0, "color":9, "attr":0, "click":100},
@@ -62,14 +62,14 @@ class Application(CursesApp) :
     elif form_name == Application.FORM1 :
       form1 = self.forms[Application.FORM1]
       if key == '\t' :  # タブ(ウィジェットの移動)
-        self.tabidx = self.selectWidget()
-        widget = form1[self.tabidx]
+        cap.CursesApp.tabidx = self.selectWidget()
+        widget = form1[cap.CursesApp.tabidx]
         self.setCursorToWidget(widget)  # カーソルをウィジェットへ移動
         if widget['type'] == 'textbox' :
           s = self.enterText(widget)
           self.statusbar(s)
       elif key == '\n' :  # Enter：　OK としてフォームを閉じる
-        widget = form1[self.tabidx]
+        widget = form1[cap.CursesApp.tabidx]
         click = self.buttonPressed(widget)
         if click == 100 :  # OK
           self.redraw()
@@ -88,13 +88,13 @@ class Application(CursesApp) :
         self.selectedForm = None
         rv = False
       elif key == ' ' :  # チェックボックス、ラジオボタン
-        widget = form1[self.tabidx]
+        widget = form1[cap.CursesApp.tabidx]
         self.changeChecked(widget, form1)
       elif str(key) == 'KEY_UP' :  # セレクタ
-        widget = form1[self.tabidx]
+        widget = form1[cap.CursesApp.tabidx]
         self.selectUp(widget)
       elif str(key) == 'KEY_DOWN' :  # セレクタ
-        widget = form1[self.tabidx]
+        widget = form1[cap.CursesApp.tabidx]
         self.selectDown(widget)
       else :  # その他のキーは無視
         pass

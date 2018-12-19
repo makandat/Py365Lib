@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 
-from CursesApp import CursesApp
+from Py365Lib import CursesApp as cap
 import curses
 
-class Application(CursesApp) :
+class Application(cap.CursesApp) :
   cls = False
 
   # コンストラクタ
   def __init__(self) :
     super().__init__()
+    self.cls = False
+    return
 
   # オーバーライド：初期表示
   def init_app(self) :
@@ -22,6 +24,7 @@ class Application(CursesApp) :
     self.print("'a': 属性をセットする (TeraTerm 不可)", 8, 8, 5)
     self.print("'o': 属性を OFF する", 8, 9, 5)
     self.print("'n': 属性を ON する", 8, 10, 5)
+    return
 
   # オーバーライド : キー入力ハンドラ
   def handler(self, key) :

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #  タイトルバー、ステータスバー、ヘルプウィンドウ、メッセージボックス
-from CursesApp import CursesApp
+from Py365Lib import CursesApp as cap
 import curses
 
 HELP_TEXT = """
@@ -25,7 +25,7 @@ HELP_TEXT = """
 #
 #  アプリケーションクラス
 #  =====================
-class Application(CursesApp) :
+class Application(cap.CursesApp) :
 
   # コンストラクタ
   def __init__(self) :
@@ -33,7 +33,7 @@ class Application(CursesApp) :
 
   # オーバーライド：初期表示
   def init_app(self) :
-    self.titlebar("プログラム test_CursesApp2.py", CursesApp.TB_ALIGN_CENTER, 18)
+    self.titlebar("プログラム test_CursesApp2.py", cap.CursesApp.TB_ALIGN_CENTER, 18)
     self.statusbar("初期化完了", 8)
     self.redraw()
     self.hideCursor()
@@ -60,11 +60,11 @@ class Application(CursesApp) :
     elif key == 'h' :
       self.helpWindow(HELP_TEXT, "ヘルプウィンドウ (任意キーを押すとで閉じる)")
     elif key == 'o' :
-      result = self.messageBox("   OK ボタンのみのメッセージボックス", CursesApp.MB_OKONLY)
+      result = self.messageBox("   OK ボタンのみのメッセージボックス", cap.CursesApp.MB_OKONLY)
     elif key == 'y' :
-      result = self.messageBox("   Yes / No ボタンメッセージボックス", CursesApp.MB_YESNO)
+      result = self.messageBox("   Yes / No ボタンメッセージボックス", cap.CursesApp.MB_YESNO)
     elif key == 'c' :
-      result = self.messageBox("   OK / Cancel ボタンメッセージボックス", CursesApp.MB_OKCANCEL)
+      result = self.messageBox("   OK / Cancel ボタンメッセージボックス", cap.CursesApp.MB_OKCANCEL)
     elif key == 'i' :
       result = self.inputBox("値を入力します。")
     elif key == 't' :
