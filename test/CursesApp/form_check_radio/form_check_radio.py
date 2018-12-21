@@ -74,6 +74,9 @@ class Application(cap.CursesApp) :
         # formData を使うと次のように簡単に書ける。
         # self.setLabel("label1", str(self.formData['check1']) + "," + str(self.formData['radio1']) +  "," + str(self.formData['radio2']) + "," + str(self.formData['radio3']))
         self.redraw()
+        cap.CursesApp.tabidx = 6  # Cancel ボタン
+        widget = form1[cap.CursesApp.tabidx]
+        self.setCursorToWidget(widget)
       elif click == 101 :
         # Cancel button
         self.selectedForm = None

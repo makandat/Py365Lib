@@ -30,12 +30,19 @@ class Application(cap.CursesApp) :
       # '2' キーが押されたとき、画面をクリアして文字列 'self.print()' を Magenta のボールドで表示
       self.clear()
       self.print("self.print()", 10, 5, Application.COL_MAGENTA, Application.BOLD)
+      self.print("", 10, 5, Application.COL_MAGENTA, Application.BOLD)
+      self.print("self.print()-------------------------------------------------------------------------------------------------------", 10, 5, Application.COL_MAGENTA, Application.BOLD)
+      self.print("self.print()", 10, 1000, Application.COL_MAGENTA, Application.BOLD)
+      self.print("self.print()", 1000, 0, Application.COL_MAGENTA, Application.BOLD)
     elif Application.thekey == '3' :
       # '3' キーが押されたとき、画面をクリアして改行を含む文字列を黄色で表示
       self.clear()
       self.printLines('''printLines
     printLines
             printLines
+
+*****************************************************************************************************************************************************************************************************            
+
 ''',
       10, 5, Application.COL_YELLOW)
     else :

@@ -746,7 +746,7 @@ form=form1
 <!--  3.8 ボタン -->
 <h3><a id="3.8"></a>3.8 ボタン</h3>
 <p>ボタンにフォーカスがあるときに Enter キーを押すとクリックイベントが発生します。このとき、ボタンに割り当てられたコードが返されて、どのボタンが押されたかを知ることができます。ボタンが押されると、フォーカスは次のウィジェットへ移動します。</p>
-<p>ボタンへのフォーカス移動は TAB キーで行います。ボタンを押さないでフォーカスを移動させるには TAB キーを押しますが、ボタンを押しても (Enter キーを押す) フォーカスが移動します。</p>
+<p>ボタンへのフォーカス移動は TAB キーで行います。ボタンからフォーカスを移動させる場合にも TAB キーを押します。</p>
 <p>どのボタンが押されたかは、ウィジェット定義データの click プロパティで設定するコードで知ることができます。よって、このコードはユニークでなければなりません。<p>
 <p>メソッド buttonPressed(widget) は click プロパティの値を返します。widget はフォーカスがあるボタンオブジェクトです。</p>
 <p>この動作は handler(key) メソッドに含める必要があります。このコードの例は<a href="#form_text_button">「(Example) テキストボックスとボタンの例」</a>の handler(key) メソッドの "elif key == cap.CursesApp.LF" の所にあります。</p>
@@ -768,6 +768,134 @@ form=form1
 <!--  3.9 チェックボックス -->
 <h3><a id="3.9"></a>3.9 チェックボックス</h3>
 <p>チェックボックスは On/Off 状態を表示するウィジェットです。On/Off 状態を切り替えるには空白キーを使用します。TAB キーを押すと次のウィジェットへフォーカスが移動します。</p>
+<p>チェックボックスが On の(チェックされている)場合、selected プロパティが True になります。Off (チェックされていない) 場合は、 selected プロパティが False です。</p>
+<p>selected プロパティは getProperty() メソッドで取得できるほか、formData クラス変数でも取得できます。この変数はウィジェットの値を保持しているディクショナリです。ウィジェットの値とは、チェックボックスでは selected プロパティ、テキストボックスでは text プロパティなどです。</p>
+<p>formData['check1'] などとすると、チェックボックス check1 の selected プロパティの値が得られます。</p>
+<p>チェックボックスはイベントを持ちません。selected プロパティが変化しても何も起きません。</p><p>チェックボックスは次のプロパティを持ちます。これは JSON データとして定義して設定します。</p>
+<ul>
+ <li><b>"type":"check"</b> ("checkbox"でも可)</li>
+ <li><b>"name":"check1"</b> チェックボックスの名前が "text1" であることを示す。</li>
+ <li><b>"text":"Check1"</b> チェックボックスの表示文字列が "Check1" であることを示す。</b></li>
+ <li><b>"selected":false</b> チェックボックスのチェック状態を指定します。</li>
+ <li><b>"left":30</b> チェックボックスの位置が画面左端から３１文字目であるこを示す。</li>
+ <li><b>"top":5</b> チェックボックスの位置が６行目であることを示す。</li>
+</ul>
+<br />
+
+<h4><a id="check_radio"></a>(Example) チェックボックスとラジオボタンの例</h4>
+<figure>
+ <img src="form_check_radio.png" />
+</figure>
+<p>次のコードは、チェックボックスとラジオボタンの状態を OK ボタンを押したとき、ラベルに表示します。</p>
+<pre class="sample"><code>#!/usr/bin/python3
+
+from Py365Lib import CursesApp as cap
+from syslog import syslog
+
+## アプリケーションクラス
+class Application(cap.CursesApp) :
+  # 初期表示
+  def init_app(self) :
+    formName = self.conf['form']
+    self.readFormData(formName, formName + ".json")
+    self.titlebar(self.conf['title'], Application.TB_ALIGN_CENTER, 8)
+    self.statusbar(self.conf['status'], 8)
+    self.selectForm(formName)
+    form1 = self.forms[formName]
+    cap.CursesApp.tabidx = 0
+    widget = form1[cap.CursesApp.tabidx]
+    self.setCursorToWidget(widget)
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.clear(True)
+    formName = self.selectedForm
+    self.selectForm(formName)
+    form1 = self.forms[formName]
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    formName = self.selectedForm
+    form1 = self.forms[formName]
+    rc = True
+    if key == cap.CursesApp.ESC :
+      #  ESC キー
+      self.selectedForm = None
+      rc = False
+    elif key == cap.CursesApp.TAB :
+      # TAB キー
+      cap.CursesApp.tabidx = self.selectWidget()
+      widget = form1[cap.CursesApp.tabidx]
+      self.setCursorToWidget(widget)
+    elif key == ' ' :
+      # 空白キー
+      widget = form1[cap.CursesApp.tabidx]
+      if widget['type'] == 'radio' or widget['type'] == 'radiobutton':
+        self.changeChecked(widget, form1)
+      elif widget['type'] == 'checkbox' or widget['type'] == 'check' :
+        self.changeChecked(widget, form1)       
+        widget["checked"] = not widget["checked"]
+      else :
+        pass
+    elif key == cap.CursesApp.LF :
+      #  Enter キー
+      widget = form1[cap.CursesApp.tabidx]
+      click = self.buttonPressed(widget)
+      if click == 100 :
+        # OK button
+        #  各ウィジェットの値を得る。
+        radio = ""
+        if self.isChecked("radio1") :
+          radio = "Radio1"
+        elif self.isChecked("radio2") :
+          radio = "Radio2"
+        elif self.isChecked("radio3") :
+          radio = "Radio3"
+        else :
+          pass
+        self.getProperty(formName, "radio2", "checked")
+        self.getProperty(formName, "radio3", "checked")
+        status = "Check1 = {0}, Radio = {1}".format(self.getProperty(formName, "check1", "checked"), radio)
+        self.setLabel("label1", status)
+        # formData を使うと次のように簡単に書ける。
+        # self.setLabel("label1", str(self.formData['check1']) + "," + str(self.formData['radio1']) +  "," + str(self.formData['radio2']) + "," + str(self.formData['radio3']))
+        self.redraw()
+        cap.CursesApp.tabidx = 6  # Cancel ボタン
+        widget = form1[cap.CursesApp.tabidx]
+        self.setCursorToWidget(widget)
+      elif click == 101 :
+        # Cancel button
+        self.selectedForm = None
+        rc = False
+      else :
+        pass
+    else :
+      pass
+    return rc
+#
+Application()
+</code></pre>
+<br />
+<p>次のコードは、このプログラムのウィジェット定義データで form1.json の内容です。</p>
+<pre class="sample"><code>[
+ {"type":"checkbox", "name":"check1", "text":"Check1", "left":20, "top":6, "width":0, "checked":false},
+ {"type":"radio", "name":"radio1", "text":"Radio1", "group":0, "left":40, "top":6, "checked":true},
+ {"type":"radio", "name":"radio2", "text":"Radio2", "group":0, "left":40, "top":7, "checked":false},
+ {"type":"radio", "name":"radio3", "text":"Radio3", "group":0, "left":40, "top":8, "checked":false},
+ {"type":"label", "name":"label1", "text":"status", "left":20, "top":10, "color":3},
+ {"type":"button", "name":"btnOK", "text":" OK ", "left":30, "top":12, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel", "text":"Cancel", "left":42, "top":12, "color":16, "click":101}
+]
+</code></pre>
+<br />
+<p>次の内容は、AppConf.ini ファイルの内容で、タイトルバー、ステータスバーの表示内容とフォームのフォーム名を定義しています。このファイルは、コンストラクタが自動的に読み込んで self.conf という変数(ディクショナリ)に保存します。</p>
+<pre class="sample"><code>title = CheckBox and RadioButton
+status = TAB:Focus,SPC:Change Chekced,Enter:OK/Cancel
+form = form1</code></pre>
+
 <br />
 
 <!--  3.10 ラジオボタン -->
@@ -775,12 +903,130 @@ form=form1
 <p>ラジオボタンはチェックボックスに似ていますが、２つ以上をグループ化して使用します。グループは１つのフォームに１つのグループに制限されています。</p>
 <p>On 状態を持つラジオボタンはグループの中で一つだけです。ラジオボタンを On にするにはチェックボックス同様、空白キーを使用します。あるラジオボタンを On にすると、それまで On だったラジオボタンは自動的に Off になります。</p>
 <br />
+<p>チェックボックスは次のプロパティを持ちます。これは JSON データとして定義して設定します。</p>
+<ul>
+ <li><b>"type":"radio"</b> ("radiobutton"でも可)</li>
+ <li><b>"name":"radio1"</b> ラジオボタンの名前が "text1" であることを示す。</li>
+ <li><b>"text":"Radio1"</b> ラジオボタンの表示文字列が "Check1" であることを示す。</b></li>
+ <li><b>"selected":false</b> ラジオボタンのチェック状態を指定します。</li>
+ <li><b>"left":30</b> ラジオボタンの位置が画面左端から３１文字目であるこを示す。</li>
+ <li><b>"top":5</b> ラジオボタンの位置が６行目であることを示す。</li>
+</ul>
+<br />
+<p>サンプルについては、<a href="#check_radio">チェックボックスとラジオボタンの例</a> 参照。</p>
+<br />
+
+
 
 <!--  3.11 セレクタ -->
 <h3><a id="3.11"></a>3.11 セレクタ</h3>
 <p>セレクタは複数の項目から１つの項目を選ぶときに使用するウィジェットです。セレクタは機能的にラジオボタングループと同じです。</p>
 <p>項目の移動には上下の矢印キーを使用します。選択は Enter キーを使用します。Enter キーを押すとフォーカスが次のウィジェットへ移動します。</p>
 <br />
+<h4><a id="SelectorSample"></a>(Example) セレクタを使ったフォーム</h4>
+
+<figure>
+ <img src="form_select.png" />
+</figure>
+
+<pre class="sample"><code>#!/usr/bin/python3
+
+from Py365Lib import CursesApp as cap
+from syslog import syslog
+
+## アプリケーションクラス
+class Application(cap.CursesApp) :
+  # 初期表示
+  def init_app(self) :
+    formName = self.conf['form']
+    self.readFormData(formName, formName + ".json")
+    self.titlebar(self.conf['title'], 1, cap.CursesApp.REV_WHITE)
+    self.statusbar(self.conf['status'], cap.CursesApp.REV_WHITE)
+    self.selectForm(formName)
+    form1 = cap.CursesApp.forms[formName]
+    cap.CursesApp.tabidx = 1
+    widget = form1[cap.CursesApp.tabidx]
+    self.setCursorToWidget(widget)
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.clear(True)
+    formName = self.selectedForm
+    self.selectForm(formName)
+    form1 = cap.CursesApp.forms[formName]
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    formName = self.selectedForm
+    form1 = cap.CursesApp.forms[formName]
+    rc = True
+    if key == cap.CursesApp.ESC :
+      #  ESC キー
+      self.selectedForm = None
+      rc = False  # アプリ終了
+    elif key == cap.CursesApp.TAB :
+      # TAB キー
+      cap.CursesApp.tabidx = self.selectWidget()
+      widget = form1[cap.CursesApp.tabidx]
+      #if widget['type'] == 'selector' :
+      #  self.selectSelectorItem(widget, 0)
+      self.setCursorToWidget(widget)
+    elif str(key) == 'KEY_UP' :
+      # 上向き矢印キー
+      widget = form1[cap.CursesApp.tabidx]
+      self.selectUp(widget)
+    elif str(key) == 'KEY_DOWN' :
+      # 下向き矢印キー
+      widget = form1[cap.CursesApp.tabidx]
+      self.selectDown(widget)
+    elif key == cap.CursesApp.LF :
+      #  Enter キー
+      widget = form1[cap.CursesApp.tabidx]
+      click = self.buttonPressed(widget)
+      if click == 100 :
+        # OK button
+        # formData を使うと次のように簡単に書ける。
+        self.setLabel("label2", "Select index = {0}".format(Application.formData['selector1']))
+        self.redraw()
+        cap.CursesApp.tabidx = self.selectWidget()
+        widget = form1[cap.CursesApp.tabidx]
+        self.setCursorToWidget(widget)
+      elif click == 101 :
+        # Cancel button
+        self.selectedForm = None
+        rc = False
+      else :
+        pass
+    else :
+      pass
+    return rc
+
+
+#
+Application()
+</code></pre>
+<br />
+<p>次のコードは、このプログラムのウィジェット定義データで form1.json の内容です。</p>
+<pre class="sample"><code>[
+ {"type":"label", "name":"label1", "text":"Select carrier", "left":25, "top":2, "color":6},
+ {"type":"selector", "name":"selector1", "items":["ANA", "JAL", "SKY", "ADO", "SFJ"], "selected":0, "left":30, "top":3, "width":10},
+ {"type":"label", "name":"label2", "text":"status", "left":30, "top":13, "color":3},
+ {"type":"button", "name":"btnOK", "text":" OK ", "left":30, "top":15, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel", "text":"Cancel", "left":42, "top":15, "color":16, "click":101}
+]
+</code></pre>
+<p>次のコードは AppConf.ini の内容です。このファイルは CursesApp のコンストラクタにより自動的に読み込まれ、self.conf に保存されます。self.conf は AppConf.ini のキー：値のディクショナリです。</p>
+<pre class="sample"><code>
+title = Selector
+status = TAB:Focus, Up/Down key:Select item, Enter:OK/Cancel
+form = form1
+</code></pre>
+<br />
+
+
 
 <!--  3.11 複数フォームの使用 -->
 <h3><a id="3.12"></a>3.12 複数フォームの使用</h3>

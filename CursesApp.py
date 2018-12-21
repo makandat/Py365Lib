@@ -1,6 +1,6 @@
 #
 #  curses アプリケーションクラス
-#     Version 1.23 2018-12-19
+#     Version 1.24 2018-12-21
 #
 import curses
 import os, locale
@@ -191,28 +191,40 @@ class CursesApp :
       self.stdscr.addstr(self.Rows - 1, 0, tj)
 
   # 文字列を表示する。
-  def print(self, str, x = -1, y = -1, color = -1, attr = 0) :
+  def print(self, text, x = -1, y = -1, color = -1, attr = 0) :
     if x >= 0 and y >= 0 :
+      if x >= self.Columns :
+        return
+      if len(text) + x > self.Columns :
+        text = text[0:self.Columns - x + 1]
       if y >= self.Rows :
         return
       if color >= 0 :
-        self.stdscr.addstr(y, x, str, curses.color_pair(color) + attr)
+        syslog("({0}, {1}), T'{2}'".format(x, y, text))
+        self.stdscr.addstr(y, x, text, curses.color_pair(color) + attr)
       else :
-        self.stdscr.addstr(y, x, str)
+        self.stdscr.addstr(y, x, text)
     else :
+      (x, y) = self.getCursorPositoin()
+      if len(text) + x > self.Columns :
+        text = text[0:self.Columns - x]
       if color >= 0 :
-        self.stdscr.addstr(str, curses.color_pair(color) + attr)
+        self.stdscr.addstr(text, curses.color_pair(color) + attr)
       else :
-        self.stdscr.addstr(str)
+        self.stdscr.addstr(text)
     self.stdscr.refresh()
 
   # 改行を含む文字列を表示する。(text は文字列または文字列配列)
   def printLines(self, text, x, y, color=1, attr=0) :
+    if x >= self.Columns or y >= self.Rows:
+      return
     if type(text) is str :
       lines = text.split('\n')
     else :
       lines = text
     for l in lines :
+      if len(l) + x > self.Columns :
+        l = l[0:self.Columns - x]
       self.stdscr.addstr(y, x, l, curses.color_pair(color) + attr)
       y += 1
       if y >= (self.Rows - 1):
@@ -331,7 +343,12 @@ class CursesApp :
     i = start
     while (y <= self.Rows - 1) and (i < len(lines)) :
       line = lines[i]
-      helpw.addstr(y, 0, line)
+      if len(line) > self.Columns :
+        line = line[0:self.Columns]
+      if line == "" :
+        y += 1
+      else :
+        helpw.addstr(y, 0, line)
       y += 1
       i += 1
     return
