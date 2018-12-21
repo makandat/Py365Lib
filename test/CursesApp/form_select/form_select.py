@@ -40,9 +40,8 @@ class Application(cap.CursesApp) :
       # TAB キー
       cap.CursesApp.tabidx = self.selectWidget()
       widget = form1[cap.CursesApp.tabidx]
-      if widget['type'] == 'selector' :
-        widget['selected'] = 0
-        self.selectSelectorItem(widget, 0)
+      #if widget['type'] == 'selector' :
+      #  self.selectSelectorItem(widget, 0)
       self.setCursorToWidget(widget)
     elif str(key) == 'KEY_UP' :
       # 上向き矢印キー
@@ -61,6 +60,9 @@ class Application(cap.CursesApp) :
         # formData を使うと次のように簡単に書ける。
         self.setLabel("label2", "Select index = {0}".format(Application.formData['selector1']))
         self.redraw()
+        cap.CursesApp.tabidx = self.selectWidget()
+        widget = form1[cap.CursesApp.tabidx]
+        self.setCursorToWidget(widget)
       elif click == 101 :
         # Cancel button
         self.selectedForm = None
