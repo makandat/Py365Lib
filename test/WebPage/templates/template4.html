@@ -7,39 +7,34 @@
 <script>
   function btnclick() {
     var text1 = $('#text1').val();
-    var temp = $('input[name=temp]:checked').val();
+    var temp = $('input[name="temp"]:checked').val();
     $.get('/cgi-bin/Py365Lib/fahren.cgi',
      {"text1":text1, "temp":temp}, 
      function(data) { $('#message').text(data); });
   }
 </script>
 <style>
- input[type="text"] {
-   border-radius: 5px;
-   height: 28px;
- }
- input[type="button"] {
-   border-radius: 5px;
-   height: 32px;
-   background-color: lime;
- }
- a:link, a:visited {
-   color: royalblue;
-   text-decoration: none;
- }
+  a:link, a:visited {
+    text-decoration: none;
+    color: red;
+  }
+  input[type="button"] {
+    background-color: lime;
+    height: 32px;
+    border-radius: 5px;
+  }
 </style>
-
 </head>
 
 <body style="margin-left:5%;margin-right:5%">
-<h1 style="color:crimson;">WebPage テスト (4)</h1>
-<p style="margin-left:10%;"><a href="/cgi">CGI Index</a></p>
+<h1 style="text-align:center;color:deeppink;">WebPage テスト (4)</h1>
+<p style="text-align:center;"><a href="/cgi">HOME</a></p>
 <br />
-<form method="POST">
-<div>
-<label for="text1">温度　</label><input type="text" name="text1" id="text1" />
+<form method="POST" style="margin-left:25%;">
+<div style="margin-bottom:15px;">
+<label for="text1">温度　</label><input type="text" name="text1" id="text1" value="32.0" />
 </div>
-<div>
+<div style="margin-bottom:18px;">
  <label><input type="radio" name="temp" value="C" checked="checked" /> 華氏温度へ</label>
  <label><input type="radio" name="temp" value="F" /> 摂氏温度へ</label>
 </div>

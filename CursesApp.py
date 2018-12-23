@@ -1,6 +1,6 @@
 #
 #  curses アプリケーションクラス
-#     Version 1.24 2018-12-21
+#     Version 1.25 2018-12-22
 #
 import curses
 import os, locale
@@ -341,13 +341,11 @@ class CursesApp :
       y += 1
     lines = text.split('\n')
     i = start
-    while (y <= self.Rows - 1) and (i < len(lines)) :
+    while (y < self.Rows - 2) and (i < len(lines)) :
       line = lines[i]
       if len(line) > self.Columns :
         line = line[0:self.Columns]
-      if line == "" :
-        y += 1
-      else :
+      if line != "" :
         helpw.addstr(y, 0, line)
       y += 1
       i += 1

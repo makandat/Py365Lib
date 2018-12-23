@@ -13,30 +13,26 @@ $(function() {
 });
 </script>
 <style>
- input[type="text"] {
-   border-radius: 5px;
-   height: 28px;
- }
- input[type="button"] {
-   border-radius: 5px;
-   height: 32px;
-   background-color: lime;
- }
- a:link, a:visited {
-   color: royalblue;
-   text-decoration: none;
- }
+  a:link, a:visited {
+    text-decoration: none;
+    color:red;
+  }
+  input[type="button"] {
+    background-color:lime;
+    height:32px;
+    border-radius:5px;
+  }
 </style>
 </head>
 
 <body style="margin-left:5%;margin-right:5%">
-<h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト (5)</h1>
-<p style="margin-left:10%;"><a href="/cgi">CGI Index</a></p>
+<h1 style="text-align:center;color:deeppink;padding:10px;">WebPage テスト (5)</h1>
+<p style="text-align:center"><a href="/cgi">HOME</a></p>
 <br />
 <p style="margin-left:25%;margin-bottom:20px;">複素数の極形式を返す。</p>
-<form method="POST" style="margin-left:25%;">
+<form method="POST" style="margin-left:25%;>
 <div>
-<label for="complex">複素数(a+bj)　</label><input type="text" name="complex" id="complex" />
+<label for="complex">複素数(a+bj)　</label><input type="text" name="complex" id="complex" value="1+2j" />
 </div>
 <br />
 <div><input type="button" id="button1" value="変換する" /></div>

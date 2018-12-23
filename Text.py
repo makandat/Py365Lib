@@ -1,5 +1,5 @@
 # -*- code=utf-8 -*-
-# Version 1.02  2018-12-15
+# Version 1.03  2018-12-22
 from typing import List, Tuple
 import re
 
@@ -116,7 +116,7 @@ def format(form:str, *args: StrTuple) :
 
 # 文字列 s を整数に変換する。
 def parseInt(s:str) -> int:
- return int(s, 0)
+ return int(s)
 
 # 文字列 s を浮動小数点数に変換する。
 def parseDouble(s:str) -> float:

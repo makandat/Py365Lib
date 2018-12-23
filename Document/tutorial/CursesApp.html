@@ -68,7 +68,8 @@ header, article, fooder {
  <li><a href="#4">4 ユーティリティ</a></li>
  <li><a href="#4.1">4.1 カラーペア一覧表示</a></li>
  <li><a href="#4.2">4.2 表示属性一覧表示</a></li>
- <li><a href="#4.3">4.3 ウィジェット・リソース作成</a></li>
+ <li><a href="#4.3">4.3 キー入力コード表示</a></li>
+ <li><a href="#4.4">4.4 ウィジェット・リソース作成</a></li>
 </ul>
 <br />
 
@@ -1031,30 +1032,319 @@ form = form1
 <!--  3.11 複数フォームの使用 -->
 <h3><a id="3.12"></a>3.12 複数フォームの使用</h3>
 <p>複数フォームは selectForm メソッドによって切り替えることができます。複雑なフォームの場合、１つのフォームだけではウィジェットを表示できないので、複数フォームに分けて表示します。</p>
+<p>次に複数フォームのサンプルを示します。アプリケーションの構造はシングルフォームと同じですが、キー入力ハンドラはフォームごとに処理を分ける必要があるので、長くなります。</p>
+<p>最後に入力データを取得して表示しますが、ウィジェットの名前はフォームに関係なくユニークしておきます。そうすると、ウィジェット名だけで値を取得できるので処理が簡単になります。</p>
 <br />
+
+
+<h4>(Example) 複数フォームを持つアプリの例</h4>
+<figure>
+ <img src="form_multi_1.png" />
+ <img src="form_multi_2.png" />
+ <img src="form_multi_3.png" />
+</figure>
+<br />
+
+<pre class="sample"><code>#!/usr/bin/python3
+#  複数フォーム
+from Py365Lib import CursesApp as cap
+
+# アプリケーションクラス
+class Application(cap.CursesApp) :
+  # 初期表示
+  def init_app(self) :
+    # 構成ファイル (AppConf.ini) から読み取ったデータからフォーム名を得る。
+    self.formNames = self.conf['form'].split(",")
+    for formName in self.formNames :
+      # フォーム名から JSON ファイル名を決めて、ウィジェット定義データを取得する。
+      self.readFormData(formName, formName + ".json")
+    # タイトルバーとステータスバーを表示
+    self.titlebar(self.conf['title'], Application.TB_ALIGN_CENTER, Application.REV_WHITE)
+    self.statusbar(self.conf['status'], Application.REV_WHITE)
+    # 先頭のフォームを表示する。
+    self.selectForm(self.formNames[0])
+    form1 = self.forms[self.formNames[0]]
+    # カーソルを最初のラベル以外のウィジェットへ移動
+    cap.CursesApp.tabidx = 1
+    widget = form1[cap.CursesApp.tabidx]
+    self.setCursorToWidget(widget)
+    return
+
+  # 再描画
+  def redraw(self) :
+    # 画面(クライアント領域のみ)をクリア
+    self.clear(True)
+    # 現在のフォーム名からフォームを選択(表示する)
+    formName = self.selectedForm
+    self.selectForm(formName)
+    # カーソルを最初のラベル以外のウィジェットへ移動
+    form1 = self.forms[formName]
+    self.setCursorToWidget(form1[cap.CursesApp.tabidx])
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    # form1 に現在のフォームオブジェクトを代入
+    formName = self.selectedForm
+    form1 = self.forms[formName]
+    rc = True
+    if key == Application.ESC :
+      #  ESC キー
+      # アプリケーション終了
+      self.selectedForm = None
+      rc = False
+    elif key == Application.TAB :
+      # TAB キー
+      #  次のウィジェットへフォーカス移動
+      cap.CursesApp.tabidx = self.selectWidget()
+      widget = form1[cap.CursesApp.tabidx]
+      self.setCursorToWidget(widget)
+      if widget['type'] == 'textbox' or widget['type'] == 'text':
+        # そのウィジェットがテキストボックスならキーボード入力
+        s = self.enterText(widget)
+        widget['text'] = s
+    elif key == ' ' :
+      # SPACE キー
+      widget = form1[cap.CursesApp.tabidx]
+      if widget['type'] == 'check' or widget['type'] == 'checkbox' :
+        # フォーカスされているウィジェットがチェックボックスなら、チェック状態を反転
+        self.changeChecked(widget, form1)        
+        widget['checked'] = not widget['checked']
+      else :
+        pass
+    elif key == Application.LF :
+      #  Enter キー
+      #  ボタンのクリック値を得る。
+      widget = form1[cap.CursesApp.tabidx]
+      click = self.buttonPressed(widget)
+      if click == 100 :
+        # OK ボタン
+        if self.selectedForm == "form1" :
+          # 現在のフォームが form1
+          self.selectForm(self.formNames[1])
+          self.redraw()
+          # form2 が表示される。
+          form2 = self.forms["form2"]
+          cap.CursesApp.tabidx = 2  # textbox のインデックス
+          widget = form2[cap.CursesApp.tabidx]
+          self.setCursorToWidget(widget)
+          if widget['type'] == 'textbox' or widget['type'] == 'text':
+            s = self.enterText(widget)
+            widget['text'] = s
+            widget = form2[cap.CursesApp.tabidx]
+            self.setCursorToWidget(widget)
+        elif self.selectedForm == "form2" :
+          # 現在のフォームが form2
+          self.selectForm(self.formNames[2])
+          self.redraw()
+          # form3 が表示される。
+          self.setLabel("label5", "Check1={0}, Check2={1}, Text1={2}".format(Application.formData['check1'], Application.formData['check2'], Application.formData['text1']))
+          cap.CursesApp.tabidx = 2
+          form3 = self.forms["form3"]
+          widget = form3[cap.CursesApp.tabidx]
+          self.setCursorToWidget(widget)
+        elif self.selectedForm == "form3" :
+          # 現在のフォームが form3
+          self.selectForm(self.formNames[1])
+          self.redraw()
+          # form2 が表示される
+          form2 = self.forms["form2"]
+          cap.CursesApp.tabidx = 2  # textbox のインデックス
+          widget = form2[cap.CursesApp.tabidx]
+          self.setCursorToWidget(widget)
+          if widget['type'] == 'textbox' or widget['type'] == 'text':
+            s = self.enterText(widget)
+            widget['text'] = s
+            Application.formData['text1'] = s
+            widget = form2[cap.CursesApp.tabidx]
+            self.setCursorToWidget(widget)
+        else :
+          raise
+      elif click == 101 :
+        # Cancel ボタンの時
+        if self.selectedForm == "form1" :
+          # form1 ならアプリケーション終了
+          self.selectedForm = None
+          rc = False
+        elif  self.selectedForm == "form2" :
+          # form2 なら form1 へもどる。
+          self.selectForm(self.formNames[0])
+          self.redraw()
+        elif self.selectedForm == "form3" :
+          # form3 ならアプリケーション終了
+           rc = False
+        else :
+          raise
+      else :
+        pass
+    else :
+      pass
+    return rc
+
+
+# アプリケーションをインタンス化して開始
+Application()
+</code></pre>
+<br />
+
+<p>次のコードは form1.json の内容です。</p>
+<pre class="sample"><code>[
+ {"type":"label", "name":"label1", "text":"Page 1", "left":25, "top":2, "color":6},
+ {"type":"check", "name":"check1", "text":"Use Ltd.Express", "left":30, "top":4, "checked":true},
+ {"type":"check", "name":"check2", "text":"Use Green-Car", "left":30, "top":5, "checked":false},
+ {"type":"button", "name":"btnOK1", "text":" Next ", "left":30, "top":15, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel1", "text":"Close", "left":42, "top":15, "color":16, "click":101}
+]
+</code></pre>
+<br />
+<p>次のコードは form2.json の内容です。</p>
+<pre class="sample"><code>[
+ {"type":"label", "name":"label2", "text":"Page 2", "left":25, "top":2, "color":7},
+ {"type":"label", "name":"label3", "text":"Persons", "left":25, "top":5},
+ {"type":"text", "name":"text1", "text":"1", "left":35, "top":5},
+ {"type":"button", "name":"btnOK2", "text":"Next", "left":30, "top":15, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel2", "text":"Back", "left":42, "top":15, "color":16, "click":101}
+]
+</code></pre>
+<br />
+<p>次のコードは form3.json の内容です。</p>
+<pre class="sample"><code>[
+ {"type":"label", "name":"label4", "text":"Page 3", "left":25, "top":2, "color":5},
+ {"type":"label", "name":"label5", "text":"", "left":20, "top":4, "color":1},
+ {"type":"button", "name":"btnOK3", "text":"Back", "left":30, "top":15, "color":15, "click":100},
+ {"type":"button", "name":"btnCancel3", "text":"Close", "left":42, "top":15, "color":16, "click":101}
+]
+</code></pre>
+<br />
+
+<p>次のコードは AppConf.ini の内容です。</p>
+<pre class="sample"><code>title = Multi Pages
+status = TAB:Focus, Enter:OK/Cancel
+form = form1,form2,form3
+</code></pre>
+<br />
+
+
+
 
 <!--  3.13 ヘルプウィンドウ -->
 <h3><a id="3.13"></a>3.12 ヘルプウィンドウ</h3>
-<p>F1 キーを押したとき、表示されるウィンドウです。</p>
+<p>ヘルプウィンドウは、画面のクライアント領域にヘルプ文字列を表示するためのウィンドウです。ヘルプは、よく F1 キーを使って表示しますが、端末によっては F1 が端末自身のヘルプに割り当てられている可能性もあり、その場合は F1 は使えません。</p>
+<p>ヘルプウィンドウは、curses のウィンドウで中でキー入力ループを持っています。そのため、ヘルプウィンドウ自身のキー入力とアプリケーションのキー入力があるため、２回キーを押して閉じます。</p><p>日本語のヘルプは使える場合と使えない場合があります。Ubuntu 18.04 では日本語が使えますが、Raspbian では使えません。そのため、ヘルプは短い英文で書くほうが良いです。</p>
+<p>ヘルプウィンドウは次のメソッドで開くことができます。text は改行を含むことができる文字列です。title はヘルプのタイトルで画面の方に表示されます。省略した場合は "Help" と表示されます。</p>
+<blockquote>self.helpWindow(text, title="")</blockquote>
 <br />
 
+<h4>(Example) ヘルプウィンドウ</h4>
+<p>次のコードはヘルプウィンドウを開く例です。</p>
+<figure>
+ <img src="help_window.png" />
+</figure>
+
+<pre class="sample"><code>#!/usr/bin/python3
+from Py365Lib import CursesApp as cap
+
+# アプリケーションクラス
+class Application(cap.CursesApp) :
+  # ヘルプ表示中かどうか
+  helpWin = False
+  # ヘルプウィンドウの表示内容
+  HELP = """Help Window
+  　　ここにヘルプを表示できます。
+  HelpWindow
+
+     'h' ２回で閉じる。
+*************************************************************************************************************************************
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+17
+
+
+
+
+
+
+
+--------------------------------
+  """
+
+  # 初期表示
+  def init_app(self) :
+    self.titlebar("Help Window", cap.CursesApp.TB_ALIGN_CENTER, cap.CursesApp.REV_GREEN)
+    self.statusbar("'q': Quit, 'h': Help", cap.CursesApp.REV_GREEN)
+    self.redraw()
+    return
+
+  # 再描画
+  def redraw(self) :
+    self.clear(True)
+    self.print("'h' キーでヘルプを表示します。", 20, 10)
+    return
+
+  # キー入力ハンドラ
+  def handler(self, key) :
+    rc = True
+    if str(key) == 'h':
+      Application.helpWin = not Application.helpWin
+      if Application.helpWin :
+        self.helpWindow(Application.HELP, "Help")
+      else :
+        self.redraw()
+    elif key == 'q':
+      rc = False
+    else :
+      pass
+    return rc
+
+# アプリケーションをインスタンス化して開始
+Application()
+</code></pre>
 <br />
 
 
 <!-- 4 ユーティリティ -->
 <h2><a id="4"></a>4. ユーティリティ</h2>
-
+<p>ユーティリティの詳細は<a href="../utilities/index.html">「ユーティリティ」</a>を参照願います。</p>
+<br />
 <!--  4.1 カラーペア一覧表示 -->
-<h3><a id="4.1"></a>4.1 カラーペア一覧表示</h3>
+<h3><a id="4.1"></a>4.1 カラーペア一覧表示　(color_table.py)</h3>
 <p>文字列表示 (print メソッド) などでカラーペア番号を指定できますが、番号をどれにしたらいいかを選ぶときに使用します。</p>
+<figure>
+ <img src="../utilities/color_table.png" />
+</figure>
 <br />
 
 <!--  4.2 表示属性一覧表示 -->
-<h3><a id="4.2"></a>4.2 表示属性一覧表示</h3>
+<h3><a id="4.2"></a>4.2 表示属性一覧表示　(text_attr.py)</h3>
 <p>字列表示 (print メソッド) などで属性コードを指定できますが、そのコードをどれにしたらいいかを選ぶときに使用します。</p>
+<figure>
+ <img src="../utilities/text_attr.png" />
+</figure>
 <br />
 
-<!--  4.3 ウィジェット・リソース作成 -->
+<!--  4.3 キー入力コード表示 -->
+<h3><a id="4.3"></a>4.2 キー入力コード表示　(key_input.py)</h3>
+<p>このユーティリティはキー入力がどんなコードになるかを表示するものです。</p>
+<figure>
+ <img src="../utilities/key_input.png" />
+</figure>
+<br />
+
+<!--  4.4 ウィジェット・リソース作成 -->
 <h3><a id="4.3"></a>4.3 ウィジェット・リソース作成</h3>
 <p>ウィジェットのデータを Excel などのようなスプレッドシートから作るためのツールです。</p>
 <br />

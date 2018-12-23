@@ -4,39 +4,33 @@
 <meta charset="utf-8" />
 <title>WebPage テスト用 (7)</title>
 <style>
- input[type="text"] {
-   border-radius: 5px;
-   height: 28px;
- }
- input[type="submit"] {
-   border-radius: 5px;
-   height: 32px;
-   background-color: lime;
- }
- textarea, select {
-   border-radius: 5px;
- }
- a:link, a:visited {
-   color: royalblue;
-   text-decoration: none;
- }
+  a:link, a:visited {
+    text-decoration: none;
+    color: blue;
+  }
+
+  input[type="submit"] {
+    background-color:lime;
+    border-radius:5px;
+    height:32px;
+  }
 </style>
 </head>
 
 <body style="margin-left:5%;margin-right:5%">
-<h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト (7)</h1>
-<p style="margin-left:10%;"><a href="/cgi">CGI Index</a></p>
+<h1 style="text-align:center;color:deeppink;padding:10px;">WebPage テスト (7)</h1>
+<p style="text-align:center;"><a href="/cgi">HOME</a></p>
 <br />
 
-<form method="POST">
-<div>
- <label for="text1">text1 <textarea name="text1" id="text1" rows="4" cols="80">オレンジマーマレード
+<form method="POST" style="margin-left:20%;">
+<div style="margin-bottom:16px;">
+ <label for="text1">text1 <textarea name="text1" id="text1" rows="4" cols="20">オレンジマーマレード
 チョコレートクリーム
 ピーナッツバター
 イチゴジャム
  </textarea></label>
 </div>
-<div>
+<div style="margin-bottom:16px;">
  <label for="select1">select1 </label>
  <select name="select1" id="select1">
   <option value="1">さくら</option>
@@ -47,10 +41,11 @@
   <option value="6">こだま</option>
  </select>
 </div>
-<div>
+
+<div style="margin-bottom:12px;">
  <label for="check1"><input type="checkbox" name="check1" id="check1" value="C" /> check1</label>
 </div>
-<div>
+<div style="margin-bottom:20px">
  <label for="radio1"><input type="radio" name="radio1" id="radio11" value="A" checked="checked" /> A</label>
  <label for="radio1"><input type="radio" name="radio1" id="radio12" value="B" /> B</label>
 </div>

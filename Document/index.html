@@ -507,8 +507,11 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
  <tr><td>redirect(url, wait=1)</td><td>
    url: URL<br />wait: 待ち時間（秒）
 </td><td>なし</td><td>指定した URL へジャンプする。</td><td></td></tr>
+<tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
  </table>
 <br />
+
+
 
 <!--  CursesApp -->
 <h2><a id="CursesApp">CursesApp クラス</a></h2>
@@ -649,6 +652,8 @@ fileName: JSON ファイルのパス名
 <tr><td>CursesApp.tabidx</td><td></td><td></td><td>タブインデックス</td><td>クラス変数</td></tr>
 <tr><td>CursesApp.formData</td><td></td><td></td><td>JSON を元にしたフォームデータ。キーはフォーム名、値はウィジェットプロパティ・ディクショナリのリスト</td><td>クラス変数</td></tr>
 <tr><td>CursesApp.Title</td><td></td><td></td><td>タイトルバーの文字列</td><td>クラス変数</td></tr>
+<tr><td>CursesApp.Title</td><td></td><td></td><td>タイトルバーの文字列</td><td>クラス変数</td></tr>
+<tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
 </table>
 <br />
 <h4>定数定義</h4>
@@ -709,6 +714,7 @@ attr: 完全な属性文字列
  <tr><td>do_POST()</td><td>なし</td><td>なし</td><td>GET メソッドに対して限定的な動作を行う。</td><td>POST メソッドではパラメータを受け取れないので、POST メソッドは使用しない。</td></tr>
  <tr><td>responseHtml(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>テキスト(HTML, CSS, JAVASCRIPT, SVG)ファイルを応答として返す。</td><td>オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
  <tr><td>responseImage(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>画像ファイルを応答として返す。</td><td>オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
+<tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
 </table>
 <br />
 
@@ -761,6 +767,7 @@ title: ウィンドウタイトル<br />
 size: ウィンドウサイズ(タプル)<br />
 location: 表示位置(タプル)
 </td><td>なし</td><td>子ウィンドウを作成する。</td><td></td></tr>
+<tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
 </table>
 <br />
 
