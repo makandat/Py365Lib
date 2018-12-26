@@ -1,6 +1,6 @@
 #
 #  TkApp クラス
-#    version 1.00  2018-11-25
+#    version 1.01  2018-12-26
 #
 import json, os
 import tkinter as tk
@@ -12,16 +12,8 @@ from syslog import syslog
 #  Tkinter Application クラス
 # ===============================
 class TkApp(tk.Frame) :
-  widgets = []  # ウィジェットのリスト
-  didgets = {}  # ウィジェットのリストへのポインタのリスト (キーはウィジェットの名前)
-  layouts = []  # ウィジェットのレイアウトのリスト
-  commands = {} # ウィジェットのコマンドのハッシュ (キーはウィジェットの名前)
-  images = []   # 画像のリスト
-  menubar = None    # メニューバー
-  menudata = None   # メニューデータ
-  radioval = None  # ラジオボックスの値
-  textvals = {}   # テキストボックスの値 (キーは名前)
-    
+  APPCONF = "AppConf.ini"
+
   # JSON ファイル、オプションのキー分類
   Keys_TkApp = ("name", "type", "layout", "container")
   Keys_place = ( "x", "y", "relx", "rely" )
@@ -32,16 +24,41 @@ class TkApp(tk.Frame) :
   # コンストラクタ
   def __init__(self, master, winprop, filename="") :
     super().__init__(master)
-    self.__master = master
-    self.fixedborder = False
+    self.widgets = []  # ウィジェットのリスト
+    self.didgets = {}  # ウィジェットのリストへのポインタのリスト (キーはウィジェットの名前)
+    self.layouts = []  # ウィジェットのレイアウトのリスト
+    self.commands = {} # ウィジェットのコマンドのハッシュ (キーはウィジェットの名前)
+    self.images = []   # 画像のリスト
+    self.menubar = None    # メニューバー
+    self.menudata = None   # メニューデータ
     self.radioval = tk.IntVar()  # ラジオボックスの値
     self.radioval.set(0)
+    self.textvals = {}   # テキストボックスの値 (キーは名前)
+    self.readConf()
+    self.__master = master
+    self.fixedborder = False
     if "fixedborder" in winprop :
       self.fixedborder = winprop['fixedborder']
     self.setMasterProperties(winprop['title'], winprop['left'], winprop['top'], winprop['width'], 
       winprop['height'], self.fixedborder)
     self.pack()
     self.createWidgets(filename)
+    return
+
+  # 構成ファイル AppConf.ini を読み込んで self.conf に内容を保存
+  def readConf(self) :
+    self.conf = {}
+    if not os.path.exists(TkApp.APPCONF) :
+      return
+    with open(TkApp.APPCONF) as f :
+      for line in f :
+        if line[0] == '#' or line[0] == '[' or len(line) == 0:
+          continue
+        kv = line.split('=')
+        if len(kv) == 2 :
+          key = kv[0].strip()
+          value = kv[1].strip()
+          self.conf[key] = value
     return
 
   # マスターウィンドウの属性を設定する。

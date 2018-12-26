@@ -1,6 +1,6 @@
-#  注意　"python3 G0.py" として実行すること。 
+#  注意　"python3 test_TkApp0.py" として実行すること。 
 import sys
-import TkApp as tkapp
+from Py365Lib import TkApp as tkapp
 import tkinter as tk
 
 

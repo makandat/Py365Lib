@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト
-#   フォームとクッキー
+#   フォーム
 import WebPage as page
-import FileSystem as fsys
+import FileSystem as fs
 # import os
 
 class TestPage(page.WebPage) :
@@ -11,12 +11,9 @@ class TestPage(page.WebPage) :
   def __init__(self, template) :
     super().__init__(template)
     if 'text1' in self.params :
-        self.vars['message'] = self.params['text1'].value + "<br />\n"
+        self.vars['message'] = self.params['text1'].value
     else :
-        self.vars['message'] = fsys.getCurrentDirectory() + "<br />\n"  # os.getcwd()
-    self.cookie('key1', 'value1')
-    if 'key1' in self.cookies :
-        self.vars['message'] += (" cookie key1=" + self.cookies['key1'])
+        self.vars['message'] = fs.getCurrentDirectory()
 
 # メイン開始位置
 wp = TestPage('templates/template.html')

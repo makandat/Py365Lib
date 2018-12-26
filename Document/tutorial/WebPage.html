@@ -24,7 +24,16 @@ header, article, fooder {
   margin-left:5%;
   margin-right:5%;
 }
+
+img {
+  border: solid thin gray;
+  padding:5px;
+}
 </style>
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 
@@ -44,12 +53,16 @@ header, article, fooder {
 <ul>
  <li><a href="#1">WebPage の概要</a></li>
  <li><a href="#2">WebPage の基本的な使い方</a></li>
- <li><a href="#3"></a></li>
- <li><a href="#4"></a></li>
- <li><a href="#5"></a></li>
- <li><a href="#6"></a></li>
- <li><a href="#7"></a></li>
- <li><a href="#8"></a></li>
+ <li><a href="#3">HTML テンプレート</a></li>
+ <li><a href="#4">リクエストとパラメータ</a></li>
+ <li><a href="#5">レスポンス</a></li>
+ <li><a href="#6">クッキー</a></li>
+ <li><a href="#7">HTTP ヘッダ</a></li>
+ <li><a href="#8">ファイルアップロード</a></li>
+ <li><a href="#9">リダイレクト</a></li>
+ <li><a href="#10">Ajax</a></li>
+ <li><a href="#11">設定ファイル</a></li>
+ <li><a href="#12">設置</a></li>
 </ul>
 <br />
 
@@ -57,17 +70,726 @@ header, article, fooder {
 <!-- WebPage の概要 -->
 <h2><a id="1"></a>WebPage の概要</h2>
 <p>
-
+WebPage は Python で CGI を簡単に作れるようにしたクラスです。そして、WebPage.py には WebPage クラスを含みます。
 </p>
+<p>CGI は WebPage クラスを基底クラスとして派生させたクラスをカスタマイズすることにより作成できます。</p>
+<p>WebPage クラスは次の機能を有します。</p>
+<ul>
+ <li>HTTP リクエストを処理してパラメータを得る。</li>
+ <li>HTTP レスポンスをクライアントへ返す。</li>
+ <li>クッキーの送受信</li>
+ <li>HTML テンプレートファイルから応答 HTML を作成する。</li>
+ <li>構成ファイル (INI) の読み込み</li>
+ <li>ファイルアップロード</li>
+ <li>URL リダイレクト</li>
+ <li>HTML タグ作成</li>
+ <li>テキスト、JSON、画像データ応答 (Ajax 対応)</li>
+</ul>
+
 <br />
 
 
 <!-- WebPage の基本的な使い方 -->
 <h2><a id="2"></a>WebPage の基本的な使い方</h2>
 <p>
+CGI アプリケーションは、WebPage クラスを基底クラスとして派生させた CGI アプリクラスをインスタンス化して開始します。
+</p>
+<p>クライアントへの応答となる HTML はテンプレートファイルから読み込むことができます。テンプレートファイルに変数埋め込みマーカを作っておいて、そのマーカを変数の値や HTML 文字列で置き換えることにより、完全な HTML を作成します。
+</p>
+<p>
+テンプレートはデータ(ヒアドキュメント)として CGI ファイルに内蔵しても構いません。その場合は、コンストラクタで self.html にその内容を設定します。
+</p>
+<p>Ajax を使う場合は、画面部分と応答を返す部分の２つの CGI が必要です。さらに HTML テンプレートには JavaScript のコードが必要です。その JavaScript でリクエストを行い、得られた結果をテンプレートに埋め込んで表示します。</p>
+<p>単に文字列を表示するだけの CGI (hello_world.cgi) の例を示します。</p>
+<p>"Hello, world!" という文字列を self.vars ディクショナリにのキー "message" に設定しておくと、テンプレートの "(*message*)" が "Hello, world!" に置き換わります。</p>
+<br />
+<h4><a id="hello_world.cgi"></a>hello_world.cgi の表示例</h4>
+<figure>
+ <img src="CGI_hello_world.png" />
+</figure>
+<h4>CGI (hello_world.cgi)</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+# Hello, world!
+import WebPage as page
+import FileSystem as fsys
+# import os
 
+class Hello(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    self.vars['message'] = "Hello, world!"
+
+# メイン開始位置
+wp = Hello('templates/hellow_world.html')
+wp.echo()
+</code></pre>
+<h4>テンプレートファイル (hello_world.html)</h4>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用&lt;/title>
+&lt;style>
+ a:link, a:visited {
+   color: royalblue;
+   text-decoration: none;
+ }
+&lt;/style>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト (hellow_world.cgi)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/cgi">CGI Index&lt;/a>&lt;/p>
+&lt;br />
+&lt;p style="text-align:center;color:magenta;font-size:2em;">
+(*message*)
+&lt;/p>
+&lt;p>&nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+<!-- HTML テンプレート -->
+<h2><a id="3"></a>HTML テンプレート</h2>
+<p>WebPage の HTML テンプレートは文法的にはただの HTML です。特別な構文はなく、単なる "(*" と "*)" で囲んだ key に一致するワードを self.vars[key] で置き換えるだけです。self.vars[key] の内容は単なる値だけでなく一般的には HTML です。
+</p>
+<p>
+WebPage の HTML テンプレートには特別な構文がないので、繰り返しや条件を使って生成される HTML は、Python で作成し、<span>self.vars[key]</span> に入れて HTML 応答送信前に "(*key*)" をその内容で置き換えます。
+</p>
+<p>先の <a href="#hello_world.cgi">hello_world.cgi</a> の例で、テンプレート (hellow_world.html) の "(*message*)" が CGI (hello_world.cgi) の self.vars['message'] に置き換えられます。
 </p>
 <br />
+
+
+<!-- リクエストとパラメータ -->
+<h2><a id="4">リクエストとパラメータ</a></h2>
+<p>
+HTTP リクエストにより得られたパラメータはメソッドの種別によらず <span>self.params</span> に格納されます。このインスタンス変数の型はディクショナリでキーがパラメータの名前、値がパラメータの値です。
+</p>
+<br />
+<h4>(Example) フォーム</h4>
+<p>このサンプルは、フォーム上のテキストボックスに入力した文字列をそのまま表示します。</p>
+<figure>
+ <img src="CGI_request_param.png" />
+</figure>
+<br />
+<p>Python CGI コード</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト
+#   フォーム
+import WebPage as page
+import FileSystem as fs
+# import os
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'text1' in self.params :
+        self.vars['message'] = self.params['text1'].value
+    else :
+        self.vars['message'] = fs.getCurrentDirectory()
+
+# メイン開始位置
+wp = TestPage('templates/template.html')
+wp.echo()
+</code></pre>
+<br />
+<p>テンプレート</p>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用&lt;/title>
+&lt;style>
+ a:link, a:visited {
+  text-decoration:none;
+  color:dodgerblue;
+ }
+ input[type="submit"] {
+   background-color:lime;
+   height:32px;
+   border-radius:5px;
+ }
+&lt;/style>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:deeppink;padding:10px;">WebPage テスト&lt;/h1>
+&lt;p style="text-align:center;">&lt;a href="/cgi">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST" style="margin-left:25%;">
+&lt;div style="float:left">
+&lt;label for="text1">text1&amp;nbsp;&lt;/label>&lt;input type="text" name="text1" id="text1" />
+&lt;/div>
+&lt;div>&lt;input type="submit" value="submit" />
+&lt;/form>
+&lt;br style="clear:both;" />
+&lt;p style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+
+<!-- レスポンス -->
+<h2><a id="5">レスポンス</a></h2>
+<p>
+HTML を応答として返すには echo() メソッドを使います。これは、クラスをインスタンス化して、そのインスタンスの echo() メソッドをコールして行います。
+</p>
+<p>
+HTML 以外の文字列やデータを応答として返すこともできます。それについては <a href="#10">Ajax</a> を参照してください。
+</p>
+<pre class="sample"># CGI をインスタンス化して応答を返す。
+p = CGI('templates/cgi.html')
+p.echo()
+</code></pre>
+<br />
+
+
+
+<!-- クッキー -->
+<h2><a id="6">クッキー</a></h2>
+<p>
+受信したクッキーはインスタンス変数 <span>self.cookies</span> で取得できます。この変数は、キーがクッキー名のディクショナリです。
+</p>
+<p>
+クッキーの送信は、<span>self.cookie(key, value)</span> で送信できます。self.cookies に含まれるクッキーも同時に再送信されます。クッキーを削除するには、ディクショナリの要素を削除します。(del 文で削除できる)
+</p>
+<p>クッキーの値を変更するにも、self.cookie(key, value) を使用できます。</p>
+<br />
+<h4>(Example) Cookie</h4>
+<p>次のサンプルはページがリロードした回数をクッキーに保存してそれを表示します。</p>
+<figure>
+ <img src="CGI_cookie.png" />
+</figure>
+
+<p>CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト
+#   クッキー
+import WebPage as page
+import FileSystem as fs
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'count' in self.cookies :
+        c = int(self.cookies['count'].value)
+        c += 1
+        self.cookie('count', str(c))
+        self.vars['count'] = str(c)
+    else :
+        self.vars['count'] = '0'
+        self.cookie('count', '0')
+
+# メイン開始位置
+wp = TestPage('templates/template8.html')
+wp.echo()
+</code></pre>
+<br />
+<p>テンプレート</p>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用&lt;/title>
+&lt;style>
+ a:link, a:visited {
+  text-decoration:none;
+  color:dodgerblue;
+ }
+ input[type="button"] {
+   background-color:lime;
+   height:32px;
+   border-radius:5px;
+ }
+ input[type="text"] {
+   height:30px;
+   border-radius:5px;
+ }
+&lt;/style>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:deeppink;padding:10px;">WebPage テスト(Cookie)&lt;/h1>
+&lt;p style="text-align:center;">&lt;a href="/cgi">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;div style="text-align:center;">
+  &lt;input type="button" value="ページをリロードする" onclick="location.reload();" />
+  &lt;br />
+  &lt;p style="text-align:center;color:magenta;font-size:1.8em;">
+  count: (*count*)
+  &lt;/p>
+&lt;/div>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+
+
+<!-- HTTP ヘッダ -->
+<h2><a id="7">HTTP ヘッダ</a></h2>
+<p>
+クライアントへ送信する HTTP ヘッダはインスタンス変数 <span>self.headers</span> に格納しておきます。この変数は文字列のリストで、クライアントへは先頭から順番に送信されます。
+</p>
+<p>デフォルトでは、HTML 用のヘッダ ("Content-Type: text/html") が先頭に格納されています。もし、追加のヘッダを送信したい場合には、このリストにヘッダを追加しておきます。</p>
+<p>self.header() メソッドは self.headers の内容をクライアントへ送信します。このメソッドはクラス内部で使用します。</p>
+<br />
+
+
+
+<!-- ファイルアップロード -->
+<h2><a id="8">ファイルアップロード</a></h2>
+<p><span>self.saveFile(key, dir)</span> メソッドはアップロードされたファイルを dir で指定されたディレクトリへ保存します。key はフォームの input(type="file", name=key) で指定された文字列です。保存されるファイル名は、ローカルのファイル名になります。
+</p>
+<p>
+ファイルアップロードの場合、フォームのメソッドは必ず POST である必要があり、enctype="multipart/form-data" の指定も必要です。
+</p>
+<p>
+ファイルの保存先フォルダは Apache2 ユーザ "www-data" が書き込み可能になっている必要があります。
+</p>
+<br />
+<h4>(Example) File Upload</h4>
+<p>次のサンプルは、ファイルをアップロードしてサーバにファイル保存するだけのプログラムです。</p>
+<figure>
+ <img src="CGI_fileUpload.png" />
+</figure>
+<p>CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト (2)
+#   ファイルアップロード
+import WebPage as page
+import FileSystem as fsys
+import MySQL
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'file1' in self.params.keys() :
+      self.saveFile('file1', '/var/www/data')
+      file1 = self.params['file1']
+      self.vars['message'] = 'アップロードOK　' + file1.filename
+    else :
+      self.vars['message'] = 'ファイルを指定してください。'
+
+# メイン開始位置
+wp = TestPage('templates/template2.html')
+wp.echo()
+</code></pre>
+<p>テンプレート</p>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (File Upload)&lt;/title>
+&lt;link rel="stylesheet" href="/css/default.css" />
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1>WebPage テスト (File Upload)&lt;/h1>
+&lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST" enctype="multipart/form-data" style="margin-left:20%;">
+&lt;div style="float:left">
+&lt;label for="file1">file1&lt;/label> &lt;input type="file" name="file1" id="file1" />
+&lt;/div>
+&lt;div>&lt;input type="submit" value="submit" />
+&lt;/form>
+&lt;br style="clear:both;" />
+&lt;p style="text-align:center;color:gray;">
+(*message*)
+&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+
+<!-- リダイレクト -->
+<h2><a id="9">リダイレクト</a
+></h2>
+<p><span>self.redirect(url, wait=1)</span> メソッドを使用すると、リクエストを指定された URL へリダイレクトすることができます。url はリダイレクト先の URL で、wait はリダイレクトされるまでの待ち時間(秒)です。
+</p>
+<h4>(Example) Redirect</h4>
+<p>次のサンプルは、テキストボックスに入力した URL へジャンプするものです
+</p>
+<figure>
+ <img src="CGI_redirect.png" />
+</figure>
+<p>CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト (3)
+#   リダイレクト 
+import WebPage as page
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    if 'text1' in self.params :
+        #self.vars['message'] = self.params['text1'] + "&lt;br />\n"
+        self.redirect(self.params['text1'])
+    else :
+        self.vars['message'] = "指定URLへジャンプします。"
+
+# メイン開始位置
+wp = TestPage('templates/template3.html')
+wp.echo()
+</code></pre>
+<p>テンプレート</p>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (3)&lt;/title>
+&lt;style>
+  input[type="submit"] {
+    background-color:lime;
+    height:32px;
+    border-radius:5px;
+  }
+  a:link, a:visited {
+    text-decoration:none;
+    color:dodgerblue;
+  }
+&lt;/style>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:deeppink;padding:10px;">WebPage テスト (URL redirect)&lt;/h1>
+&lt;p style="text-align:center;">&lt;a href="/cgi">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST" style="margin-left:20%;">
+&lt;div style="float:left">
+&lt;label for="text1">URL &lt;/label>&lt;input type="text" name="text1" id="text1" value="http://www.yahoo.co.jp" size="40" />
+&lt;/div>
+&lt;div>&lt;input type="submit" value=" Redirect " />
+&lt;/form>
+&lt;br style="clear:both;" />
+&lt;p style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+
+<!-- Ajax -->
+<h2><a id="10">Ajax</a></h2>
+<p>
+JavaScript でサーバからのデータを取得して処理するためには、JavaScript を含むテンプレートを表示して、そこでデータを返す CGI を呼び出してサーバのデータを取得します。
+</p>
+<p>
+WebPage クラスには、プレーンテキストを返す <span>sendText(str)</span>、JSON テキストを返す <span>sendJson(json)</span>、画像データを返す <span>sendImage(file)</span> メソッドが用意されています。そして、これらのメソッドはすべてスタティックです。
+</p>
+<figure>
+ <img src="CGI_Normal.png" />
+ <figcaption>通常の CGI の動作</figcaption>
+</figure>
+<figure>
+ <img src="CGI_Ajax.png" />
+ <figcaption>Ajax の動作</figcaption>
+</figure>
+<br />
+
+<h4>(Example) getText(str)</h4>
+<figure>
+  <img src="CGI_fahren.png" />
+</figure>
+<br />
+<p>テンプレート</p>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (4)&lt;/title>
+&lt;script src="/js/jquery.min.js">&lt;/script>
+&lt;script>
+  function btnclick() {
+    var text1 = $('#text1').val();
+    var temp = $('input[name="temp"]:checked').val();
+    $.get('/cgi-bin/Py365Lib/fahren.cgi',
+     {"text1":text1, "temp":temp}, 
+     function(data) { $('#message').text(data); });
+  }
+&lt;/script>
+&lt;style>
+  a:link, a:visited {
+    text-decoration: none;
+    color: red;
+  }
+  input[type="button"] {
+    background-color: lime;
+    height: 32px;
+    border-radius: 5px;
+  }
+&lt;/style>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:deeppink;">WebPage テスト (fahren.cgi)&lt;/h1>
+&lt;p style="text-align:center;">&lt;a href="/cgi">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;form method="POST" style="margin-left:25%;">
+&lt;div style="margin-bottom:15px;">
+&lt;label for="text1">温度　&lt;/label>&lt;input type="text" name="text1" id="text1" value="32.0" />
+&lt;/div>
+&lt;div style="margin-bottom:18px;">
+ &lt;label>&lt;input type="radio" name="temp" value="C" checked="checked" /> 華氏温度へ&lt;/label>
+ &lt;label>&lt;input type="radio" name="temp" value="F" /> 摂氏温度へ&lt;/label>
+&lt;/div>
+&lt;div>&lt;input type="button" value=" 変換する " id="btnConvert" onclick="btnclick();" />&lt;/div>
+&lt;/form>
+&lt;br />
+&lt;p id="message" style="text-align:center;color:blue;">
+(*message*)
+&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+<p>画面 CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト (4)
+#   Ajax getText
+import WebPage as page
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    self.params['message'] = ''
+
+# メイン開始位置
+wp = TestPage('templates/template4.html')
+wp.echo()</code></pre>
+<br />
+<p>Ajax CGI (fahren.cgi)</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  華氏温度と摂氏温度変換
+import WebPage as page
+
+class MyPage(page.WebPage) :
+  def __init__(self) :
+    super().__init__(self)
+    t = float(self.params['text1'].value)
+    fahren = self.params['temp'].value
+    if fahren == 'F' :
+      # 華氏温度へ
+      self.ct = 9.0 * t / 5.0 + 32.0
+    else :
+      # 摂氏温度へ
+      self.ct = 5.0 * (t - 32.0) / 9.0
+    MyPage.sendText(str(self.ct))    
+
+MyPage()</code></pre>
+<br />
+
+<h4>(Example) getJson(json)</h4>
+<figure>
+  <img src="CGI_complex.png" />
+</figure>
+<br />
+<p>テンプレート</p>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (5)&lt;/title>
+&lt;script src="/js/jquery.min.js">&lt;/script>
+&lt;script>
+$(function() {
+  $('#button1').click(function() {
+    complex = $('#complex').val();
+    $.getJSON('/cgi-bin/Py365Lib/complex.cgi', {"complex":complex}, function(data) { $('#result').text(data); });
+  });
+});
+&lt;/script>
+&lt;style>
+  a:link, a:visited {
+    text-decoration: none;
+    color:red;
+  }
+  input[type="button"] {
+    background-color:lime;
+    height:32px;
+    border-radius:5px;
+  }
+&lt;/style>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:deeppink;padding:10px;">WebPage テスト (complex.cgi)&lt;/h1>
+&lt;p style="text-align:center">&lt;a href="/cgi">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;p style="margin-left:25%;margin-bottom:20px;">複素数の極形式を返す。&lt;/p>
+&lt;form method="POST" style="margin-left:25%;>
+&lt;div>
+&lt;label for="complex">複素数(a+bj)　&lt;/label>&lt;input type="text" name="complex" id="complex" value="1+2j" />
+&lt;/div>
+&lt;br />
+&lt;div>&lt;input type="button" id="button1" value="変換する" />&lt;/div>
+&lt;/form>
+&lt;br />
+&lt;p id="result" style="text-align:center;color:blue;">&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+<p>画面 CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト(5)
+#   Ajax getJSON
+import WebPage as page
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    self.vars['message'] = ''
+
+# メイン開始位置
+wp = TestPage('templates/template5.html')
+wp.echo()
+</code></pre>
+<br />
+<p>Ajax CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  複素数の極形式変換
+import WebPage as page
+import cmath
+
+class MyPage(page.WebPage) :
+  def __init__(self) :
+    super().__init__(self)
+    z = complex(self.params['complex'].value)
+    pz = cmath.polar(z)
+    json = "[" + str(pz[0]) + "," + str(pz[1]) + "]"
+    MyPage.sendJson(json)    
+
+MyPage()
+</code></pre>
+<br />
+
+<h4>(Example) getImage(file)</h4>
+<figure>
+  <img src="CGI_image.png" />
+</figure>
+<br />
+<p>テンプレート</p>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-jp">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>WebPage テスト用 (6)&lt;/title>
+&lt;style>
+  a:link, a:visited {
+    text-decoration: none;
+    color: red;
+  }
+&lt;/style>
+&lt;/head>
+
+&lt;body style="margin-left:5%;margin-right:5%">
+&lt;h1 style="text-align:center;color:deeppink;padding:10px;">WebPage テスト (image.cgi)&lt;/h1>
+&lt;p style="margin-left:10%;">&lt;a href="/cgi">HOME&lt;/a>&lt;/p>
+&lt;br />
+&lt;p style="text-align:center;color:blue;">
+  &lt;img src="/cgi-bin/Py365Lib/image.cgi?img=0" />
+  &lt;img src="/cgi-bin/Py365Lib/image.cgi?img=1" />
+  &lt;img src="/cgi-bin/Py365Lib/image.cgi?img=2" />
+  &lt;img src="/cgi-bin/Py365Lib/image.cgi?img=3" />
+&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+<p>画面 CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+# -*- code=utf-8 -*-
+# WebPage クラスのテスト(5)
+#   Ajax getJson
+import WebPage as page
+
+class TestPage(page.WebPage) :
+  # コンストラクタ
+  def __init__(self, template) :
+    super().__init__(template)
+    self.params['message'] = ''
+
+# メイン開始位置
+wp = TestPage('templates/template6.html')
+wp.echo()
+</code></pre>
+<br />
+<p>Ajax CGI</p>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  画像を返す。
+import WebPage as page
+import os
+
+class MyPage(page.WebPage) :
+  IMGDIR = '/var/www/html/img'
+
+  def __init__(self) :
+    super().__init__(self)
+    files = os.listdir(MyPage.IMGDIR)
+    img = int(self.params['img'].value)
+    path = MyPage.IMGDIR + "/" + files[img]
+    MyPage.sendImage(path)
+
+MyPage()
+</code></pre>
+<br />
+
+
+
+<!-- 設定ファイル -->
+<h2><a id="11">設定ファイル</a></h2>
+<p>設定ファイルは <span>"AppConf.ini"</span> という名前の INI ファイルです。このファイルは、コンストラクタで読み込まれて <span>self.conf</span> というインスタンス変数(ディクショナリ)に保存されます。このディクショナリのキーが INI ファイルの式の左辺、値が式の右辺です。
+</p>
+<p>INI ファイルのセクション情報は無視されます。(セクションはコメント扱いです)</p>
+<br />
+
+
+
+<!-- 設置 -->
+<h2><a id="12">設置</a></h2>
+<p>CGI は cgi-bin フォルダに設置する必要がある。Ubuntu 18.04 LTS の Apache 2 の場合、デフォルトでは、cgi-bin フォルダは、 /usr/lib/cgi-bin になっています。</p>
+<p>このフォルダの所有者は、root となっているので注意が必要です。</p>
+<p>パッケージ Py365Lib へのパスが参照できない場合も考えられるので、WebPage.py その他のファイルも cgi-bin にコピーするかリンクを作っておきます。</p>
+<p>CGI として実行する Python ファイルの拡張子は .cgi に変更します。さらに、実行権を付与する必要があります。</p>
+<br />
+
+
+
 
 
 </article>

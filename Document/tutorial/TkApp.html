@@ -24,7 +24,15 @@ header, article, fooder {
   margin-left:5%;
   margin-right:5%;
 }
+
+dt {
+  font-weight: bold;
+}
 </style>
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 
@@ -44,12 +52,14 @@ header, article, fooder {
 <ul>
  <li><a href="#1">TkApp の概要</a></li>
  <li><a href="#2">TkApp の基本的な使い方</a></li>
- <li><a href="#3"></a></li>
- <li><a href="#4"></a></li>
- <li><a href="#5"></a></li>
- <li><a href="#6"></a></li>
- <li><a href="#7"></a></li>
- <li><a href="#8"></a></li>
+ <li><a href="#3">ウィジェット定義ファイル</a></li>
+ <li><a href="#4">構成ファイル</a></li>
+ <li><a href="#5">ウィジェットの配置(レイアウト)</a></li>
+ <li><a href="#6">TkApp クラスの説明</a></li>
+ <li><a href="#7">フォーム</a></li>
+ <li><a href="#8">イベント</a></li>
+ <li><a href="#9">画像</a></li>
+ <li><a href="#10">ウィンドウ</a></li>
 </ul>
 <br />
 
@@ -57,17 +67,334 @@ header, article, fooder {
 <!-- TkApp の概要 -->
 <h2><a id="1"></a>TkApp の概要</h2>
 <p>
-
+TkApp.py には TkApp クラスが含まれています。このクラスは、tkinter を使いやすくしたものです。（ただし、機能は削られている)
 </p>
+<p>tkinter は Tk (Tool Kit) を Python から使えるようにしたものです。つまり、tkinter を使うと、Python で GUI (Graphical User Interface) プログラムを作れることを意味します。</p>
+<p>このため、TkApp クラスを使うプログラムは、ウィンドウ環境でしか動作しません。よって、Ubuntu などで言えば、デスクトップ版が必要です。</p>
+<p>TkApp を使うと、画面のウィジェットを JSON データで定義できます。これにより、画面構築のための長く退屈なコードを書く必要がありません。(ただし、すべてのウィジェットの機能をサポートしてはいない)</p>
+<p>(注意) 実行するときは、<u>必ず python3 コマンドで行ってください。</u></p>
+<blockquote>$ python3 myprog.py</blockquote>
 <br />
 
 
 <!-- TkApp の基本的な使い方 -->
 <h2><a id="2"></a>TkApp の基本的な使い方</h2>
 <p>
+まず、tkinter.Tk クラスをインスタンス化して root オブジェクトを作成します。root オブジェクトは Tk の基本機能を有しています。ウィジェット定義ファイルを作成します。
+</p>
+<p>
+TkApp クラスをインスタンス化して TkApp オブジェクトを作成します。このとき、コンストラクタには root, メインウィンドウ定義情報、ウィジェット定義ファイルのパス名を引数として渡します。
+</p>
+<p>メインウィンドウ定義情報はディクショナリ型で、タイトルバーの文字列、ウィンドウ表示位置、ウィンドウサイズ、ウィンドウ境界の種別からなります。</p>
+<p>ウィジェット定義ファイルのパス名は、ウィジェット定義情報を含む JSON ファイルのパス名です。</p>
+<p>次のサンプルはウィンドウに "Hello, World!" と表示するだけのプログラムです。このため、イベントはこのプログラムにはありません。一般には、イベント処理が必要なのでもっと複雑なコードになります。</p>
+<br />
 
+<h4>スタティックな文字列を表示するサンプル</h4>
+<figure>
+ <img src="Tk_Hello.png" />
+</figure>
+
+<p>Hello, World (test_TkApp0.py)</p>
+<pre class="sample"><code>#  注意　"python3 test_TkApp0.py" として実行すること。 
+import sys
+from Py365Lib import TkApp as tkapp
+import tkinter as tk
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"Hello", "left":100, "top":100, "width":400, "height":200, "fixedborder":True}
+app = tkapp.TkApp(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+
+
+<p>ウィジェット定義ファイル (test_TkApp0.json)
+<pre class="sample"><code>[
+  {"type":"label", "name":"label1", "text":"Hello, world", "fg":"green"}
+]</code></pre>
+
+<br />
+
+"anchor", "expand", "fill", "ipadx", "ipady", "padx", "pady", "side" 
+
+<!-- ウィジェット定義ファイル -->
+<h2><a id="3">ウィジェット定義ファイル</a></h2>
+<p>ウィジェット定義ファイルは、フォームに描画するウィジェットのリストであり、JSON 形式ファイルです。
+</p>
+<p>このファイルは、TkApp クラスのコンストラクタの引数として指定できます。</p>
+<p>ウィジェット定義はディクショナリであり、次のようなキーの値を定義したものです。</p>
+<ul>
+ <li><span>type</span> ウィジェットの種別。"button", "label", "check", "radio", "list", "frame", "menubar" のそれか。</li>
+ <li><span>name</span> ウィジェットの名前。ユニークであること。</li>
+ <li><span>layout</span> ウィジェットのレイアウト種別。"pack", "grid", "place" のどれか。</li>
+ <li><span>container</span> ウィジェットのコンテナ。フレームの名前などを指定する。</li>
+ <li><span>fg</span> 前景色</li>
+ <li><span>bg</span> 背景色</li>
+ <li><span>x</span> "place" レイアウト時の絶対座標 x</li>
+ <li><span>y</span> "place" レイアウト時の絶対座標 y</li>
+ <li><span>relx</span> "place" レイアウト時の相対座標 x</li>
+ <li><span>rely</span> "place" レイアウト時の相対座標 y</li>
+ <li><span>row</span> "grid" レイアウト時の行</li>
+ <li><span>column</span> "grid" レイアウト時の列</li>
+ <li><span>rowspan</span> "grid" レイアウト時の行間隔</li>
+ <li><span>columnspan</span> "grid" レイアウト時の列間隔</li>
+ <li><span>sticky</span> "grid" レイアウト時のみ。pack の anchor + fill のような属性。例えば、全体に引き延ばすには sticky=Tk.W + Tk.E + Tk.N + Tk.S などとする。</li>
+ <li><span>padx</span> "grid", "pack" レイアウト時の外側横方向の空白</li>
+ <li><span>pady</span> "grid", "pack" レイアウト時の外側たて方向の空白</li>
+ <li><span>ipadx</span> "pack" レイアウト時の内側横方向の空白</li>
+ <li><span>ipady</span> "pack" レイアウト時の内側たて方向の空白</li>
+ <li><span>anchor</span> "pack" レイアウト時のウィジェットをどの方向に固定するかの指定。'n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw','center'</li>
+ <li><span>expand</span> "pack" レイアウト時の</li>
+ <li><span>fill</span> "pack" レイアウト時の空白詰め方向。 'x', 'y', 'both', 'none' のどれか</li>
+ <li><span>side</span> "pack" レイアウト時のウィジェットの並び方向。'left', 'right', 'top', 'bottom' のどれか。</li>
+</ul>
+<p>(注意) 上記の詳しい意味は tkinter の関連文書を調べてください。ウィジェット定義ファイルのサンプルを以下に示します。</p>
+<br />
+<figure>
+ <img src="Tk_test1.png" />
+</figure>
+<br />
+<h4>Python ソースファイル</h4>
+<pre class="sample"><code>#  注意　"python3 test_TkApp1.py" として実行すること。 
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp1", "left":100, "top":100, "width":400, "height":200, "fixedborder":True}
+app = tkapp.TkApp(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+<h4>ウィジェット定義 JSON ファイル</h4>
+<p>ここではレイアウトの指定がありませんが、デフォルトは "pack" となります。</p>
+<pre class="sample"><code>[
+  {"type":"button", "name":"button1", "text":"Button1"},
+  {"type":"label", "name":"label1", "text":"Label1"},
+  {"type":"text", "name":"text1", "text":"Text1"},
+  {"type":"check", "name":"check1", "text":"Check1"},
+  {"type":"radio", "name":"radio1", "text":"Radio1", "value":0},
+  {"type":"radio", "name":"radio2", "text":"Radio2", "value":1}
+]
+</code></pre>
+<br />
+
+
+
+
+<!-- 構成ファイル -->
+<h2><a id="4">構成ファイル</a></h2>
+<p>
+構成ファイルは、"AppConf.ini" という名前の INI ファイルです。このファイルはプログラムと同じ場所に置いておきます。このファイルはオプションなのでなくてもかまいません。
+</p>
+<p>
+構成ファイルがあると、内容を自動的に読み取って、self.conf というディクショナリに内容を格納します。このインスタンス変数の型はディクショナリで、キーが INI ファイルの行の左辺、値が右辺の値です。セクション ([] で囲った文字列行) はコメント扱いで使用されません。
 </p>
 <br />
+
+
+
+<!-- ウィジェットの配置(レイアウト) -->
+<h2><a id="5"></a>ウィジェットの配置(レイアウト)</h2>
+<p>Tk にはウィジェットをフォームに配置するレイアウトマネージャが3種あり、"pack", "grid", "place" と呼ばれます。"pack" はデフォルトでは、ウィジェットを上から下へ順に並べます。"grid" は格子上にウィジェットを配置するレイアウトです。"place" は座標を指定してウィジェットを配置します。</p>
+<p>次のサンプルは、pack, grid, place のレイアウトのイメージをわかりやすく示したものです。</p>
+<br />
+<figure>
+ <img src="Tk_test2.png" />
+</figure>
+<br />
+<h4>Python ソースファイル</h4>
+<pre class="sample"><code>#  注意　"python3 test_TkApp2.py" として実行すること。 
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp2", "left":100, "top":100, "width":512, "height":320, "fixedborder":False}
+app = tkapp.TkApp(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+
+<h4>ウィジェット定義 JSON ファイル</h4>
+<pre class="sample"><code>[
+  {"type":"frame", "name":"north", "layout":"pack", "border":3, "relief":"ridge", "container":[
+      { "type":"label", "name":"label01", "layout":"pack", "text":"Label01", "bg":"silver", "width":30 },
+      { "type":"label", "name":"label02", "layout":"pack", "text":"Label02", "bg":"wheat", "width":30 },
+      { "type":"label", "name":"label04", "layout":"pack", "text":"Label03", "bg":"coral", "width":30 }
+    ]
+  },
+  {"type":"frame", "name":"center", "layout":"grid", "border":3, "relief":"groove", "container":[
+      { "type":"label", "layout":"grid", "column":0, "row":0, "name":"label11", "text":"Label1", "bg":"silver" },
+      { "type":"label", "layout":"grid", "column":1, "row":0, "name":"label12", "text":"Label12", "bg":"gainsboro" },
+      { "type":"label", "layout":"grid", "column":0, "row":1, "name":"label13", "text":"Label13", "bg":"gray", "fg":"white" },
+      { "type":"label", "layout":"grid", "column":1, "row":1, "name":"label14", "text":"Label14", "bg":"whitesmoke" }
+    ]
+  },
+  {"type":"frame", "name":"south", "layout":"place", "border":1, "relief":"flat", "bg":"red", "width":300, "height":100, "container":[
+      { "type":"label", "layout":"place", "x":1, "y":1, "name":"label21", "text":"Label21", "bg":"yellow", "fg":"magenta" },
+      { "type":"label", "layout":"place", "x":50, "y":30, "name":"label22", "text":"Label22", "bg":"green", "fg":"lime" }
+    ]
+  }
+]
+</code></pre>
+<br />
+
+
+
+
+<!-- TkApp クラスの説明 -->
+<h2><a id="6">TkApp クラスの説明</a></h2>
+<h3>コンストラクタ</h3>
+<p>コンストラクタは、次のパラメータを持ちます。</p>
+<ul>
+ <li><span>root</span> tkinter.Tk() の値 (Tk オブジェクト) を持つ root というグローバル変数であること。</li>
+ <li><span>winprop</span> メインウィンドウの属性。ディクショナリ型で以下のキーを持つ。
+  <ul>
+   <li>"title":  ウィンドウのタイトル</li>
+   <li>"left": ウィンドウの表示位置の X 座標</li>
+   <li>"top": ウィンドウの表示位置の Y 座標</li>
+   <li>"width": ウィンドウの幅</li>
+   <li>"height": ウィンドウの高さ</li>
+   <li>"fixedborder": True ならウィンドウ境界線は固定、False なら可変。</li>
+  </ul>
+</li>
+ <li><span>deffile</span> ウィジェット定義ファイルのパス名</li>
+</ul>
+<br />
+
+<h3>インスタンス変数</h3>
+<p>
+</p>
+<table style="width:100%">
+<tr><th>変数名</th><th>型</th><th>説明</th></tr>
+<tr><td>widgets</td><td>ウィジェットオブジェクトのリスト</td><td>ウィジェットのリスト</td></tr>
+<tr><td>didgets</td><td>widgets の要素へのポインタのディクショナリ</td><td>ウィジェットのリストへのポインタのリスト (キーはウィジェットの名前)</td></tr>
+<tr><td>layouts</td><td>リスト</td><td>ウィジェットのレイアウトのリスト</td></tr>
+<tr><td>commands</td><td>ディクショナリ</td><td>ウィジェットのコマンドのディクショナリ (キーはウィジェットの名前)</td></tr>
+<tr><td>images</td><td>tk.PhotoImage のリスト</td><td>画像のリスト</td></tr>
+<tr><td>menubar</td><td>tk.Menu</td><td>メニューバー</td></tr>
+<tr><td>menudata</td><td>メニューのディクショナリ</td><td>メニューデータ</td></tr>
+<tr><td>radioval</td><td>tk.IntVar</td><td>ラジオボックスの値</td></tr>
+<tr><td>textvals</td><td>テキストボックスの値のディクショナリ</td><td>テキストボックスの値 (キーは名前)</td></tr>
+</table>
+<br />
+
+
+<h3>インスタンスメソッド</h3>
+<p>ここで説明するメソッドは、内部で主に使用されるメソッドは除きます。</p>
+</p>
+
+<dl>
+<dt>self.getWindowSize(win)</dt>
+<dd>win で指定されたウィンドウのサイズ(tuple)を得る。</dd>
+</dl>
+
+<dl>
+<dt>self.getScreenSize()</dt>
+<dd>スクリーンのサイズ(tuple)を得る。</dd>
+</dl>
+
+<dl>
+<dt>self.getWidget(name)</dt>
+<dd>名前 name で指定されたウィジェットオブジェクトを得る。</dd>
+</dl>
+
+
+<dl>
+<dt>self.setWidget(name, key, value)</dt>
+<dd>名前 name で指定したウィジェットのオプション(key で指定した value) を変更（あるいは追加）する。</dd>
+</dl>
+
+
+<dl>
+<dt>self.getWidgetName(idx)</dt>
+<dd>指定した番号 idx のウィジェットの名前を得る。</dd>
+</dl>
+
+
+<dl>
+<dt>self.messageBox(message, mbtype="info")</dt>
+<dd>メッセージボックスを表示する。mbtype は "info", "error", "warning", "okcancel", "question", "retry" のいずれか。</dd>
+</dl>
+
+
+<dl>
+<dt>self.fileDailog(initdir)</dt>
+<dd>ファイル選択ダイアログを開く</dd>
+</dl>
+
+
+<dl>
+<dt>parent.createWindow(title, size, location=(0, 0))</dt>
+<dd>子ウィンドウを作成する。</dd>
+</dl>
+
+
+<dl>
+<dt>self.getWidgetValue(name)</dt>
+<dd>name で指定されたウィジェットの値を得る。</dd>
+</dl>
+
+<br />
+
+
+
+
+
+<!-- フォーム -->
+<h2><a id="7">フォーム</a></h2>
+<p>
+</p>
+<br />
+
+
+
+<!-- イベント -->
+<h2><a id="8">イベント</a></h2>
+<p>
+</p>
+<br />
+
+
+
+<!-- 画像 -->
+<h2><a id="9">画像</a></h2>
+<p>
+</p>
+<br />
+
+
+
+<!-- ウィンドウ -->
+<h2><a id="10">ウィンドウ</a></h2>
+<p>
+</p>
+<br />
+
+
+
+
+
 
 
 </article>
