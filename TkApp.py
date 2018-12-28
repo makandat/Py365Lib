@@ -1,6 +1,6 @@
 #
 #  TkApp クラス
-#    version 1.01  2018-12-26
+#    version 1.02  2018-12-27
 #
 import json, os
 import tkinter as tk
@@ -33,6 +33,7 @@ class TkApp(tk.Frame) :
     self.menudata = None   # メニューデータ
     self.radioval = tk.IntVar()  # ラジオボックスの値
     self.radioval.set(0)
+    self.checkval = {}  # チェックボックスの値
     self.textvals = {}   # テキストボックスの値 (キーは名前)
     self.readConf()
     self.__master = master
@@ -147,7 +148,8 @@ class TkApp(tk.Frame) :
           c = tk.Entry(parent, textvariable=self.textvals[item['name']])
         self.__appendKeys(c, item)
       elif item["type"] == "check" or item["type"] == "checkbox": # チェックボックス
-        c = ttk.Checkbutton(parent, text=item["text"])
+        self.checkval[item['name']] = tk.BooleanVar()
+        c = ttk.Checkbutton(parent, text=item["text"], variable=self.checkval[item['name']])
         self.__appendKeys(c, item)
       elif item["type"] == "radio" or item["type"] == "radiobutton":  # ラジオボタン
         c = ttk.Radiobutton(parent, text=item["text"], variable=self.radioval, value=item['value'])
@@ -417,7 +419,7 @@ class TkApp(tk.Frame) :
 
   # 子ウィンドウを作成する。
   def createWindow(parent, title, size, location=(0, 0)) :
-    newwin = Toplevel(parent)
+    newwin = tk.Toplevel(parent)
     newwin.geometry("{0:d}x{1:d}+{2:d}+{3:d}".format(size[0], size[1], location[0], location[1]))
     newwin.title(title)
     return newwin
@@ -430,8 +432,10 @@ class TkApp(tk.Frame) :
       rv = w.get()
     elif type(w) is tk.Label:
       rv = w["text"]
-    elif type(w) is ttk.Checkbutton or type(w) is ttk.Radiobutton:
-      rv = True if w.state()[0] == "focus" else False
+    elif type(w) is ttk.Checkbutton :
+      rv = self.checkval[name].get()
+    elif type(w) is type(w) is ttk.Radiobutton :
+      rv = self.radioval.get()
     elif type(w) is tk.Listbox :
       try :
         rv = w.curselection()[0]

@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-#  HTApp のテスト (1)
-import os
+#  hello_world.py
 import urllib
 import http.server
 from Py365Lib import HTApp
-from pprint import pprint
-from syslog import syslog
 
 # / のハンドラ
 def root(path) :
@@ -20,30 +17,17 @@ def root(path) :
   }
   h1 {
     padding: 8px;
-    color: crimson;
+    color: deeppink;
+    text-align:center;
+    margin-top:30px;
   }
  </style>
 </head>
 <body>
- <h1>HTApp1 (test_HTApp1.py)</h1>
- <p>root (/) の応答</p>
- <ul>
-   <li><a href="/about">/about</a></li>
- </ul>
+ <h1>Hello, World!</h1>
 </body>
 </html>
   """
-  return ('text/html', html)
-
-# /about のハンドラ
-def about(path) :
-  with open(HTApp.TEMPLATES + "/about.html") as f :
-    html = f.read()
-  # AppConf の内容を表示する。
-  itemlist = ""
-  for k, v in conf.items() :
-    itemlist += HTApp.tag("li", f"{k}: {v}")
-  html = html.replace("(*appconf*)", itemlist)
   return ('text/html', html)
 
 
@@ -53,7 +37,6 @@ try :
   conf = HTApp.readConf()
   #  ハンドラを登録する。
   HTApp.routes['/'] = root
-  HTApp.routes['/about'] = about
   #  サーバを作成
   server_name = conf['server_name']
   port = int(conf['port'])

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title>静的コンテンツの表示</title>
+  <link rel="stylesheet" href="styles/default.css" />
+  <script src="scripts/jquery.min.js"></script>
+  <script>
+    n = 0
+    $(document).ready(function() {
+       $('#button1').click(function() {
+           n++;
+           $('#label1').text(n);
+        });
+    });
+  </script>
+</head>
+
+<body>
+  <h1>静的コンテンツの表示</h1>
+  <h2>画像</h2>
+  <p>html/images フォルダにある画像を表示する。</p>
+  <figure>
+    <img src="images/LoveLive.jpg" />
+    <img src="images/home.png" />
+    <img src="images/kirino1.gif" />
+    <img src="images/resister_color.svg" style="width:10%;" />
+    <figcaption>images/LoveLive.jpg, images/home.png, images/kirino1.gif, images/resister_color.svg</figcaption>
+  </figure>
+  <br />
+  <h2>静的なHTMLページ</h2>
+  <p>html フォルダにある about.html を表示する。</p>
+  <blockquote><a href="/about.html">/about.html</a></blockquote>
+  <br />
+  <h2>JavaScript</h2>
+  <p>html/scripts にある jquery.min.js を使う。クリック回数が表示される。</p>
+  <blockquote><button type="button" id="button1">Click Me!</button><br />
+    <div style="padding:5px; color:blue;font-size:1.5em;" id="label1"></div>
+  </blockquote>
+  <br />
+  <h2>CSS</h2>
+  <p>h1 の文字列が青、h2 の文字列が青緑に表示されれば、CSS (html/styles/default.css) が有効になっています。</p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<title>form_select</title>
+<link rel="stylesheet" href="styles/default.css" />
+<style>
+  form {
+     margin-left:25%;
+  }
+  button {
+      background-color:yellowgreen;
+      width:80px;
+      height:32px;
+      border-radius:5px;
+  }
+</style>
+</head>
+
+<body>
+<h1>リストボックスとボタンを持つフォーム</h2>
+<p style="text-align:center;padding:4px;"><a href="/">Reset</a></p>
+<p style="text-align:center;padding:10px;">path=(*path*)</p>
+<form method="GET" action="/form_select_action">
+ <div>
+   <select name="select1" size="6" style="width:120px;">
+    <option>国語</option>
+    <option>算数</option>
+    <option>理科</option>
+    <option>社会</option>
+    <option>音楽</option>
+    <option>体育</option>
+   </select>
+ </div>
+ <div style="margin-top:10px;"><button type="submit">確認</button></div>
+ <div style="font-size:1.5em;color:magenta;margin-top:15px;">(*result*)</div>
+</form>
+</body>
+</html>

@@ -24,6 +24,7 @@ class TkApp6(tkapp.TkApp) :
     message += str(self.getWidgetValue('list1'))
     message += ", check1="
     message += str(self.getWidgetValue('check1'))
+    self.setWidget("statusbar", "text", "radio: " + str(self.radioval.get()))
     self.messageBox(message, "info")
 
 # widget 定義ファイル名を決める。

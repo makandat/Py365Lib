@@ -1,29 +1,24 @@
 #!/usr/bin/env python3
-#  HTApp のテスト (2)
-import os
+#  テキストボックスとボタンを持つフォーム
 import urllib
 import http.server
 from Py365Lib import HTApp
-from pprint import pprint
-from syslog import syslog
 
-# / のハンドラ
+#  "/" ハンドラ
 def root(path) :
-  with open(HTApp.TEMPLATES + "/index2.html") as f :
-    html = f.read()
+  HTApp.vars['path'] = path
+  HTApp.vars['result'] = ''
+  html = HTApp.set_template('form_text.html')
   return ('text/html', html)
 
-# /about のハンドラ
-def about(path) :
-  with open(HTApp.TEMPLATES + "/about.html") as f :
-    html = f.read()
-  # AppConf の内容を表示する。
-  itemlist = ""
-  for k, v in conf.items() :
-    itemlist += HTApp.tag("li", f"{k}: {v}")
-  html = html.replace("(*appconf*)", itemlist)
+# "/form_text_action" ハンドラ
+def form_text_action(path) :
+  HTApp.vars['result'] = ''
+  if 'text1' in HTApp.params.keys() :
+    HTApp.vars['result'] = HTApp.params['text1'].title()
+  HTApp.vars['path'] = path
+  html = HTApp.set_template('form_text.html')
   return ('text/html', html)
-
 
 # 開始
 try :
@@ -31,7 +26,7 @@ try :
   conf = HTApp.readConf()
   #  ハンドラを登録する。
   HTApp.routes['/'] = root
-  HTApp.routes['/about'] = about
+  HTApp.routes['/form_text_action'] = form_text_action
   #  サーバを作成
   server_name = conf['server_name']
   port = int(conf['port'])

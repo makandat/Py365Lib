@@ -25,6 +25,10 @@ header, article, fooder {
   margin-right:5%;
 }
 </style>
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 
@@ -44,7 +48,7 @@ header, article, fooder {
 <ul>
  <li><a href="#1">HTApp の概要</a></li>
  <li><a href="#2">HTApp の基本的な使い方</a></li>
- <li><a href="#3"></a></li>
+ <li><a href="#3">ルートとハンドラ</a></li>
  <li><a href="#4"></a></li>
  <li><a href="#5"></a></li>
  <li><a href="#6"></a></li>
@@ -57,17 +61,116 @@ header, article, fooder {
 <!-- HTApp の概要 -->
 <h2><a id="1"></a>HTApp の概要</h2>
 <p>
-
+HTApp クラスを使用すると、HTTP サーバを使ったアプリケーション (アプリケーションサーバ) を作成できます。
 </p>
+<p>CGI でも同じようなことができますが、CGI と違ってウェブサーバが必要ありません。ウェブサーバが他のマシンで動いている場合は、CGI はいろいろな制限を受けます。</p>
+<p>CGI はウェブサーバが Apache2 の場合、www-data というユーザで動作するので、ファイル書き込みが制限を受けます。</p>
+<p>一方、HTApp クラスを使うと、それ自身がウェブサーバとして動作するので、動作制限がほとんどありません。</p>
+<p>HTApp アプリも WebPage クラスを使った CGI と同様に HTML テンプレートを使います。この２つの HTML テンプレートは互換性があります。Python コードも似ているので、一方の知識があれば、片方のアプリケーションは簡単に作れるし、移植も簡単です。</p>
+<p><u>(制限) フォームデータを POST することはできません。常に GET メソッドを使う必要があります。そのため、ファイルアップロードなどもできません。</u>これは、Python の http.server.BaseHTTPRequestHandler クラスの制限によるものです。</p>
 <br />
 
 
 <!-- HTApp の基本的な使い方 -->
 <h2><a id="2"></a>HTApp の基本的な使い方</h2>
 <p>
-
+HTApp.py には HTApp クラスとモジュール関数が含まれています。HTApp クラスは GET メソッドの標準的な処理を行う機能が含まれています。POST メソッドのハンドラも含まれていますが、フォームデータを POST できないため、ほとんど使われないはずです。
 </p>
+<p>
+よって、アプリケーションを作成する場合は、ルートに対するハンドラを定義し、クラス変数 HTApp.routes にハンドラを登録するだけになります。このクラス変数はディクショナリでキーがルートで、値がハンドラ名になります。ルート "/" に対するハンドラは必ず作成して登録する必要があります。
+</p>
+<p>図「HTApp の動作」において、http.server.HTTPServer は、HTApp クラスに基づいて動作します。HTML テンプレート、ハンドラ、スタティックなファイルはユーザが作成または用意します。</p>
+<figure>
+ <img src="HTApp.png" />
+ <figcaption>HTApp の動作</figcaption>
+</figure>
+<p>
+HTApp アプリケーションを配置するフォルダには、サブフォルダ templates と html が必要です。templates は HTML テンプレートファイルを置いておきます。html フォルダにはスタティックな HTML や画像ファイルを置いておきます。
+</p>
+<p>ただし、アプリケーション構成ファイル (AppConf.ini) は Python プログラムと同じフォルダに置いておきます。</p>
+<figure>
+ <img src="HTApp_folder.png" />
+ <figcaption>HTApp のフォルダ構成</figcaption>
+</figure>
 <br />
+<p>次のコードはブラウザに "Hello, World!" と表示するだけのコードです。このプログラムでは HTML テンプレートは Python プログラムに埋め込まれているので、テンプレートファイルは使用されません。</p>
+<h4>Python コード</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  hello_world.py
+import urllib
+import http.server
+from Py365Lib import HTApp
+
+# / のハンドラ
+def root(path) :
+  html = """&lt;html>
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;title>HTApp1&lt;/title>
+ &lt;style>
+  body {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  h1 {
+    padding: 8px;
+    color: deeppink;
+    text-align:center;
+    margin-top:30px;
+  }
+ &lt;/style>
+&lt;/head>
+&lt;body>
+ &lt;h1>Hello, World!&lt;/h1>
+&lt;/body>
+&lt;/html>
+  """
+  return ('text/html', html)
+
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+<p>この例で、設定ファイル AppConf.ini の内容は次のようになっています。[mysql] セクションの内容はここでは使用していません。</p>
+<pre class="sample"><code>[httpserver]
+ server_name=
+ port=3330
+
+[mysql]
+ host=localhost
+ uid=user
+ password=???????
+ database=Db1
+</code></pre>
+<br />
+
+
+
+
+<!-- ルートとハンドラ -->
+<h2><a id="3">ルートとハンドラ</a></h2>
+<p>
+HTApp アプリケーションでは、ユーザが作る(コーディング)する部分は、主にルートに対するハンドラです。メインプログラム部分は、ルートとハンドラの関連付け以外、ほとんど変更する必要がありません。
+</p>
+<p>ルートとハンドラの関連付けは、self.routes ディクショナリにキーとしてルートを、値としてハンドラを設定します。</p>
+<p>ハンドラはパラメータ path のみを持つ関数で、タプル (MIMEタイプ, 応答データ) を返します。</p>
+<br />
+
+
 
 </article>
 

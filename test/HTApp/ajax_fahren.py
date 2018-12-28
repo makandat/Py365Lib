@@ -1,36 +1,29 @@
 #!/usr/bin/env python3
-#  HTApp のテスト (5)
-#    Ajax
-import os, io
+#  Ajax
 import http.server
-import http.cookies
+#import http.cookies
 from Py365Lib import HTApp
 import json
-import urllib.parse as urlparse
-from pprint import pprint
-from syslog import syslog
+import urllib.parse
 
 MAXBYTES = 1024 * 16
 
 # / のハンドラ
 def root(path) :
-  with open(HTApp.TEMPLATES + "/index5.html") as f :
-    html = f.read()
   HTApp.vars['result'] = ""
-  html = HTApp.embed(html)
+  html = HTApp.set_template('ajax_fahren.html')
   return ('text/html', html)
 
 # フォームのハンドラ
 def convert(path) :
-  with open(HTApp.TEMPLATES + "/index5.html") as f :
-    html = f.read()
+  html = HTApp.set_template('ajax_fahren.html')
   data = ""
   try :
     n = path.index('?')
     data = path[n+1:len(path)]
   except :
     pass
-  param = urlparse.parse_qs(data)
+  param = urllib.parse.parse_qs(data)
   f = float(param['fahren'][0])
   c = 5.0 / 9.0 * (f - 32.0)
   result = '{"result":' + str(c) + "}"

@@ -2,7 +2,7 @@
 #  HTApp のテスト (3)
 import os
 import http.server
-import HTApp
+from Py365Lib import HTApp
 import urllib.parse as urlparse
 from pprint import pprint
 from syslog import syslog

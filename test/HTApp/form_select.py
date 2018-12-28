@@ -1,29 +1,27 @@
 #!/usr/bin/env python3
-#  HTApp のテスト (2)
-import os
+#  リストボックスとボタンを持つフォーム
 import urllib
 import http.server
 from Py365Lib import HTApp
-from pprint import pprint
-from syslog import syslog
 
-# / のハンドラ
+#  "/" ハンドラ
 def root(path) :
-  with open(HTApp.TEMPLATES + "/index2.html") as f :
-    html = f.read()
+  HTApp.vars['path'] = path
+  HTApp.vars['result'] = ''
+  html = HTApp.set_template('form_select.html')
   return ('text/html', html)
 
-# /about のハンドラ
-def about(path) :
-  with open(HTApp.TEMPLATES + "/about.html") as f :
-    html = f.read()
-  # AppConf の内容を表示する。
-  itemlist = ""
-  for k, v in conf.items() :
-    itemlist += HTApp.tag("li", f"{k}: {v}")
-  html = html.replace("(*appconf*)", itemlist)
+# "/form_select_action" ハンドラ
+def form_select_action(path) :
+  # 選択されている項目を表示
+  result = ""
+  for v in HTApp.params.values() :
+    result += (v + ";")
+  HTApp.vars['result'] = result
+  # path を表示
+  HTApp.vars['path'] = path
+  html = HTApp.set_template('form_select.html')
   return ('text/html', html)
-
 
 # 開始
 try :
@@ -31,7 +29,7 @@ try :
   conf = HTApp.readConf()
   #  ハンドラを登録する。
   HTApp.routes['/'] = root
-  HTApp.routes['/about'] = about
+  HTApp.routes['/form_select_action'] = form_select_action
   #  サーバを作成
   server_name = conf['server_name']
   port = int(conf['port'])

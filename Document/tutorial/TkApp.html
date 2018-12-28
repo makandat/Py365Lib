@@ -56,10 +56,11 @@ dt {
  <li><a href="#4">構成ファイル</a></li>
  <li><a href="#5">ウィジェットの配置(レイアウト)</a></li>
  <li><a href="#6">TkApp クラスの説明</a></li>
- <li><a href="#7">フォーム</a></li>
+ <li><a href="#7">フォームとフレーム</a></li>
  <li><a href="#8">イベント</a></li>
  <li><a href="#9">画像</a></li>
- <li><a href="#10">ウィンドウ</a></li>
+ <li><a href="#10">メニュー</a></li>
+ <li><a href="#11">ウィンドウ</a></li>
 </ul>
 <br />
 
@@ -352,7 +353,7 @@ app.mainloop()
 
 <dl>
 <dt>self.getWidgetValue(name)</dt>
-<dd>name で指定されたウィジェットの値を得る。</dd>
+<dd>name で指定されたウィジェットの値を得る。なお、値のセットは setWidget メソッドを使用する。</dd>
 </dl>
 
 <br />
@@ -361,10 +362,94 @@ app.mainloop()
 
 
 
-<!-- フォーム -->
-<h2><a id="7">フォーム</a></h2>
+<!-- フォームとフレーム -->
+<h2><a id="7">フォームとフレーム</a></h2>
 <p>
+フォームにウィジェットを配置する場合、pack レイアウトだと上下あるいは左右方向にウィジェットを並べることしかできません。grid レイアウトだと、ウィジェットを格子状に並べるしかできません。
 </p>
+<p>
+place レイアウトを使うと任意の位置にウィジェットを配置できますが、Visual Studio のような IDE がないと、座標を指定する必要があるので配置が面倒です。
+</p>
+<p>
+pack レイアウトと grid レイアウトを使うと、ウィンドウサイズが変わっても、それに合わせてウィジェットの配置も変わるので狭い画面でウィンドウサイズを小さくしてもある程度対応できます。
+</p>
+<p>pack レイアウトと grid レイアウトだけでもフレームを使うと、かなり柔軟なウィジェットの配置ができます。フレームはウィジェットのコンテナになっていて、ウィジェットをフレームごとに並べることができます。</p>
+<br />
+<h4>フレームとイベントのサンプル</h4>
+<p>次のサンプルは、フレームを組み合わせてフォームを構成しています。そして、OK ボタンをクリックするとメッセージボックスを開いて、現在のウィジェットの値を表示します。Cancel ボタンをクリックすると、アプリケーションを終了します。</p>
+
+<figure>
+ <img src="Tk_test61.png" />
+ <img src="Tk_test62.png" />
+</figure>
+<br />
+<h4>Python ソースファイル</h4>
+<pre class="sample"><code>#  TkApp6.py
+# -*- coding: utf-8 -*-
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+
+# TkApp から継承するクラス
+class TkApp6(tkapp.TkApp) :
+
+  # コンストラクタ
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+    self.commands["button1"] = self.button1_click
+    self.commands["button2"] = root.destroy
+    self.setCommands()
+
+  # OK ボタンがクリックされたとき
+  def button1_click(self) :
+    message = "text1="
+    message += self.getWidgetValue('text1')
+    message += ", text2="
+    message += self.getWidgetValue('text2')
+    message += ", list1="
+    message += str(self.getWidgetValue('list1'))
+    message += ", check1="
+    message += str(self.getWidgetValue('check1'))
+    self.setWidget("statusbar", "text", "radio: " + str(self.radioval.get()))
+    self.messageBox(message, "info")
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp6", "left":100, "top":100, "width":512, "height":320}
+app = TkApp6(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+<h4>ウィジェット定義 JSON ファイル</h4>
+<pre class="sample"><code>[
+  {"type":"frame", "name":"north", "layout":"grid", "border":1, "relief":"flat", "container":[
+    {"type":"label", "name":"label1", "text":"label1", "layout":"grid", "column":0, "row":0, "anchor":"w"},
+    {"type":"text", "name":"text1", "text":"text1", "width":10, "layout":"grid", "column":1, "row":0, "anchor":"w"},
+    {"type":"label", "name":"label2", "text":"label2", "layout":"grid", "column":0, "row":1, "anchor":"w"},
+    {"type":"text", "name":"text2", "text":"text2", "layout":"grid", "column":1, "row":1, "anchor":"w"},
+    {"type":"label", "name":"label3", "text":"label3", "layout":"grid", "column":0, "row":2, "anchor":"w"},
+    {"type":"list", "name":"list1", "items":["Item1", "item2", "Item3", "Item4", "Item5"], "height":3, "layout":"grid", "column":1, "row":2, "anchor":"w"},
+    {"type":"check", "name":"check1", "text":"Check1", "layout":"grid", "column":0, "row":3, "anchor":"w"},
+    {"type":"frame", "name":"frameradio", "text":"radio buttons", "layout":"grid", "column":0, "row":4, "border":3, "relief":"groove", "width":80, "height":40, "container":[
+      {"type":"radio", "name":"radio1", "text":"Radio1", "layout":"pack", "value":0 },
+      {"type":"radio", "name":"radio2", "text":"Radio2", "layout":"pack", "value":1 }
+    ]},
+    {"type":"button", "name":"button1", "text":"OK", "layout":"grid", "column":0, "row":5, "anchor":"w", "command":"button1"},
+    {"type":"button", "name":"button2", "text":"Cancel", "layout":"grid", "column":1, "row":5, "anchor":"w","command":"button2"}
+  ]},
+  {"type":"frame", "name":"south", "layout":"pack", "border":1, "relief":"flat", "container":[
+    {"type":"label", "name":"statusbar", "text":"status", "anchor":"w"}
+  ]} 
+]
+</code></pre>
+<br />
+
 <br />
 
 
@@ -372,7 +457,17 @@ app.mainloop()
 <!-- イベント -->
 <h2><a id="8">イベント</a></h2>
 <p>
+イベントについては、今のところ、ボタンクリックのみサポートしています。ボタンクリックはコンストラクタで、インスタンス変数 self.commands ディクショナリにイベントハンドラを登録します。
 </p>
+<p>下のコードは、<a href="#7">「フォームとフレーム」</a>のサンプルコードの一部です。</p>
+<pre class="sample"><code>    self.commands["button1"] = self.button1_click
+    self.commands["button2"] = root.destroy
+    self.setCommands()
+</code></pre>
+<p>self.commands のキーはウィジェット定義ファイルでボタンの command プロパティに設定します。こうすることで、ボタンがクリックされたときのイベントがハンドラに関連付けられます。</p>
+<pre class="sample"><code>    {"type":"button", "name":"button1", "text":"OK", "layout":"grid", "column":0, "row":5, "anchor":"w", "command":"button1"},
+    {"type":"button", "name":"button2", "text":"Cancel", "layout":"grid", "column":1, "row":5, "anchor":"w","command":"button2"}
+</code></pre>
 <br />
 
 
@@ -380,15 +475,207 @@ app.mainloop()
 <!-- 画像 -->
 <h2><a id="9">画像</a></h2>
 <p>
+画像を表示するのは非常に簡単で、ウィジェット定義ファイルの変更だけで可能です。
+</p><p>
+画像を表示するウィジェットはラベルです。ラベルの "text" プロパティの代わりに "file" プロパティに画像ファイルのパスを設定するだけで表示できます。
 </p>
+<br />
+
+<h4>画像のサンプル</h4>
+<figure>
+ <img src="Tk_test4.png" />
+</figure>
+<br />
+
+<h4>Python ソース</h4>
+<pre class="sample"><code>#  注意　"python3 test_TkApp4.py" として実行すること。 
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+# TkApp から継承するクラス
+class TkApp4(tkapp.TkApp) :
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp4", "left":100, "top":100, "width":512, "height":320}
+app = TkApp4(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()</code></pre>
+<br />
+
+<h4>ウィジェット定義 JSON ファイル</h4>
+<pre class="sample"><code>[
+  { "type":"image", "name":"image1", "file":"rect1.png", "anchor":"nw", "side":"left", "padx":15, "pady":10 },
+  { "type":"label", "name":"label1", "text":"(rect1.png)", "anchor":"nw", "side":"left" },
+  { "type":"image", "name":"image2", "file":"circle1.png", "anchor":"nw", "side":"left", "padx":15, "pady":10 },
+  { "type":"label", "name":"label2", "text":"(circle1.png)", "anchor":"nw" }
+]
+</code></pre>
+<br />
+
+<br />
+
+
+<!-- メニュー -->
+<h2><a id="10">メニュー</a></h2>
+<p>
+</p>
+<h4>メニューのサンプル</h4>
+<figure>
+ <img src="Tk_test5.png" />
+</figure>
+<br />
+
+<h4>Python ソース</h4>
+<pre class="sample"><code>#  TkApp5.py
+# -*- coding: utf-8 -*-
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+
+# TkApp から継承するクラス
+class TkApp5(tkapp.TkApp) :
+
+  # コンストラクタ
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+    self.commands["mnuOpen_Click"] = self.mnuOpen_Click
+    self.commands["mnuQuit_Click"] = root.destroy
+    self.commands["mnuAbout_Click"] = self.mnuAbout_Click
+    self.setCommands()
+
+  # Open メニューハンドラ
+  def mnuOpen_Click(self) :
+    w = self.getWidget('label1')
+    w['text'] = "mnuOpen_Click"
+    return
+
+  # Help メニューハンドラ
+  def mnuAbout_Click(self) :
+    w = self.getWidget('label1')
+    w['text'] = "mnuAbout_Click"
+    return
+
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp5", "left":100, "top":100, "width":512, "height":320}
+app = TkApp5(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+
+<h4>ウィジェット定義 JSON ファイル</h4>
+<pre class="sample"><code>[
+  {
+    "type":"menubar", "name":"menubar", "menulist":
+    [
+      { "type":"topmenu", "name":"topmenu1", "text":"Menu", "submenulist":
+        [
+          { "type":"menuitem", "name":"mnuOpen", "text":"Open", "command":"mnuOpen_Click" },
+          { "type":"separator" },
+          { "type":"menuitem", "name":"mnuQuit", "text":"Quit", "command":"mnuQuit_Click" }
+        ]
+      },
+      { "type":"topmenu", "name":"topmenu2", "text":"Help", "submenulist":
+        [
+          { "type":"menuitem", "name":"mnuAbout", "text":"About ..", "command":"mnuAbout_Click" }
+        ]
+      }
+    ]
+  },
+  { "type":"label", "name":"label1", "text":"Label1", "pady":20 }
+]
+</code></pre>
+<br />
 <br />
 
 
 
 <!-- ウィンドウ -->
-<h2><a id="10">ウィンドウ</a></h2>
+<h2><a id="11">ウィンドウ</a></h2>
 <p>
+今まではメインウィンドウのみを扱ってきましたが、ここでは子ウィンドウを表示してみます。一般の子ウィンドウを作成するには、self.createWindow(title, size, location) メソッドを使用します。
 </p>
+<p>
+しかし、現在のバージョンでは子ウィンドウの扱いは限定的です。つまり、ウィジェット定義ファイルは利用できません。もし、ウィジェットを使うなら、tkinter のメソッドを直接使って操作を行う必要があります。
+</p>
+<p>一方、既成のウィンドウとしてファイル選択ダイアログが利用できます。また、メッセージボックスも一種の子ウィンドウとして利用可能です。</p>
+
+<h4>ウィンドウのサンプル</h4>
+<p>次のサンプルはファイル選択ダイアログの使用例と子ウィンドウの表示例を含みます。</p>
+<figure>
+ <img src="Tk_test71.png" />
+ <img src="Tk_test72.png" />
+ <img src="Tk_test73.png" />
+</figure>
+<br />
+
+<h4>Python ソース</h4>
+<pre class="sample"><code>#  test_TkApp7.py
+# -*- coding: utf-8 -*-
+import sys
+import TkApp as tkapp
+import tkinter as tk
+
+# TkApp から継承するクラス
+class TkApp7(tkapp.TkApp) :
+
+  # コンストラクタ
+  def __init__(self, parent, winprop, deffile) :
+    super().__init__(parent, winprop, deffile)
+    self.win = None
+    self.commands["button1"] = self.button1_click  # File ..
+    self.commands["button2"] = self.button2_click  # Window ..
+    self.commands["button3"] = root.destroy  # Quit
+    self.setCommands()
+
+  # File ..
+  def button1_click(self) :
+    fileName = self.fileDailog("/home/user/temp")
+    self.setWidget("status", "text", fileName)
+    return
+
+  # Window ..
+  def button2_click(self) :
+    self.win = self.createWindow("Child", (250, 125), location=(200, 200))
+    return
+
+# widget 定義ファイル名を決める。
+deffile = sys.argv[0].replace('.py', '.json')
+
+# root を作る。グローバル変数 "root" は存在する必要がある。
+root = tk.Tk()
+# Application を作る。
+winprop = {"title":"TkApp7", "left":300, "top":200, "width":512, "height":320}
+app = TkApp7(root, winprop, deffile)
+# イベントループに入る。
+app.mainloop()
+</code></pre>
+<br />
+
+<h4>ウィジェット定義 JSON ファイル</h4>
+<pre class="sample"><code>[
+  {"type":"button", "name":"button1", "text":"File ..", "layout":"pack",  "side":"left" ,"command":"button1"},
+  {"type":"button", "name":"button2", "text":"Window ..", "layout":"pack", "side":"left", "command":"button2"},
+  {"type":"button", "name":"button3", "text":"Quit", "layout":"pack", "side":"left"},
+  {"type":"label", "name":"status", "text":"", "anchor":"sw"}
+]
+</code></pre>
+<br />
 <br />
 
 

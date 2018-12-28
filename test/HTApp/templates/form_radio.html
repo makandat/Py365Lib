@@ -1,0 +1,33 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<title>form_radio</title>
+<link rel="stylesheet" href="styles/default.css" />
+<style>
+  form {
+     margin-left:25%;
+  }
+  button {
+      background-color:yellowgreen;
+      width:80px;
+      height:32px;
+      border-radius:5px;
+  }
+</style>
+</head>
+
+<body>
+<h1>ラジオボタンとボタンを持つフォーム</h2>
+<p style="text-align:center;padding:4px;"><a href="/">Reset</a></p>
+<p style="text-align:center;padding:10px;">path=(*path*)</p>
+<form method="GET" action="/form_radio_action">
+ <div><label><input type="radio" name="radio" value="現国" (*radio1*) />　現国</label></div>
+ <div><label><input type="radio" name="radio" value="古文" (*radio2*) />　古文</label></div>
+ <div><label><input type="radio" name="radio" value="数I" (*radio3*) />　数I</label></div>
+ <div><label><input type="radio" name="radio" value="物理" (*radio4*) />　物理</label></div>
+ <div><label><input type="radio" name="radio" value="日本史" (*radio5*) />　日本史</label></div>
+ <div style="margin-top:10px;"><button type="submit">確認</button></div>
+ <div style="font-size:1.5em;color:magenta;margin-top:15px;">(*result*)</div>
+</form>
+</body>
+</html>
