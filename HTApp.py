@@ -20,7 +20,7 @@ params = {}
 cookies = {}
 # 動的な埋め込み変数
 vars = {}
-# POST のときの読み込み先
+# POST のときの読み込み先(使用されない)
 posted_file = io.BufferedIOBase()
 
 # 設定ファイルを読む。

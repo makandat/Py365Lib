@@ -72,14 +72,14 @@ header, article, fooder {
  </li>
  <li><a href="#samples">サンプル</a>
 <ul>
-  <li><a href="tutorial/index.html">もくじ</a></li>
-  <li><a href="tutorial/Common.html">コンソールアプリ</a></li>
-  <li><a href="tutorial/MySQL.html">MySQL</a></li>
-  <li><a href="tutorial/AWSS3.html">AWS S3</a></li>
-  <li><a href="tutorial/WebPage.html">CGI</a></li>
-  <li><a href="tutorial/CursesApp.html">curses アプリ</a></li>
-  <li><a href="tutorial/TkApp.html">tkinterアプリ</a></li>
-  <li><a href="tutorial/HTApp.html">HTTP サーバ</a></li>
+  <li><a href="samples/index.html">もくじ</a></li>
+  <li><a href="samples/Common.html">コンソールアプリ</a></li>
+  <li><a href="samples/MySQL.html">MySQL</a></li>
+  <li><a href="samples/AWSS3.html">AWS S3</a></li>
+  <li><a href="samples/WebPage.html">CGI</a></li>
+  <li><a href="samples/CursesApp.html">curses アプリ</a></li>
+  <li><a href="samples/TkApp.html">tkinterアプリ</a></li>
+  <li><a href="samples/HTApp.html">HTTP サーバ</a></li>
  </ul>
  </li>
  <li><a href="#utilities">ユーティリティ</a>
@@ -710,11 +710,15 @@ text: タグ内部テキスト<br />
 attr: 完全な属性文字列
 </td><td>完全なタグ</td><td>HTML要素を作成する。</td><td>モジュール関数</td></tr>
  <tr><td>embed(html)</td><td>html: 変数の埋め込み先のHTML</td><td>完全なHTML</td><td>連想配列 vars をHTMLに埋め込む。</td><td>モジュール関数</td></tr>
- <tr><td>do_GET()</td><td>なし</td><td>なし</td><td>GET メソッドに対して標準動作を行う。</td><td>必要ならオーバーライドする。</td></tr>
- <tr><td>do_POST()</td><td>なし</td><td>なし</td><td>GET メソッドに対して限定的な動作を行う。</td><td>POST メソッドではパラメータを受け取れないので、POST メソッドは使用しない。</td></tr>
- <tr><td>responseHtml(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>テキスト(HTML, CSS, JAVASCRIPT, SVG)ファイルを応答として返す。</td><td>オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
- <tr><td>responseImage(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>画像ファイルを応答として返す。</td><td>オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
-<tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
+ <tr><td>set_template(fileName, embed_vars=True)</td><td>fileName: テンプレートファイルのパス名<br />embed_vars=True の場合、内部で embed(html) 関数を呼び出して動的変数の埋め込みを行う。</td><td>完全なHTML</td><td>テンプレートファイルを読み込み、embed_vars=True の場合は、連想配列 vars をHTMLに埋め込む。</td><td>モジュール関数</td></tr>
+ <tr><td>do_GET()</td><td>なし</td><td>なし</td><td>GET メソッドに対して標準動作を行う。</td><td>HTApp クラスのインスタンスメソッド。必要ならオーバーライドする。</td></tr>
+ <tr><td>do_POST()</td><td>なし</td><td>なし</td><td>POST メソッドに対して限定的な動作を行う。</td><td>HTApp クラスのインスタンスメソッド。POST メソッドではパラメータを受け取れないので、POST メソッドは使用しない。</td></tr>
+ <tr><td>responseHtml(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>テキスト(HTML, CSS, JAVASCRIPT, SVG)ファイルを応答として返す。</td><td>HTApp クラスのインスタンスメソッド。オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
+ <tr><td>responseImage(ppath)</td><td>ppath: ファイルへのパス</td><td>なし</td><td>画像ファイルを応答として返す。</td><td>HTApp クラスのインスタンスメソッド。オーバーライドしないこと。内部で使用するので、明示的に呼び出す必要はない。</td></tr>
+<tr><td>HTApp.params</td><td></td><td></td><td>外部から来る変数。例えば、キーがフォームの input タグの name プロパティ、値は input の value の内容 (文字列型) になる。</td><td>モジュール変数</td></tr>
+<tr><td>HTApp.cookies</td><td></td><td></td><td>クッキーを保持する変数。キーがクッキーの名前、値はクッキーの内容(文字列型)になる。</td><td>モジュール変数</td></tr>
+<tr><td>HTApp.routes</td><td></td><td></td><td>ルート(route)を保持する変数。キーがルート、値はハンドラの名前 (型は Callable) になる。</td><td>モジュール変数</td></tr>
+<tr><td>HTApp.vars</td><td></td><td></td><td>動的に埋め込む変数。キーが "(*name*)" の name、値は埋め込む値なる。値は文字列型であること。</td><td>モジュール変数</td></tr>
 </table>
 <br />
 

@@ -24,6 +24,11 @@ header, article, fooder {
   margin-left:5%;
   margin-right:5%;
 }
+
+img {
+  border:solid thin gray;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
+}
 </style>
 <!-- highlight.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs.min.css">
@@ -49,11 +54,9 @@ header, article, fooder {
  <li><a href="#1">HTApp の概要</a></li>
  <li><a href="#2">HTApp の基本的な使い方</a></li>
  <li><a href="#3">ルートとハンドラ</a></li>
- <li><a href="#4"></a></li>
- <li><a href="#5"></a></li>
- <li><a href="#6"></a></li>
- <li><a href="#7"></a></li>
- <li><a href="#8"></a></li>
+ <li><a href="#4">フォーム</a></li>
+ <li><a href="#5">クッキー</a></li>
+ <li><a href="#6">Ajax</a></li>
 </ul>
 <br />
 
@@ -130,7 +133,7 @@ def root(path) :
 
 # 開始
 try :
-  #  設定ファイルを読む。
+  #  構成ファイルを読む。
   conf = HTApp.readConf()
   #  ハンドラを登録する。
   HTApp.routes['/'] = root
@@ -145,7 +148,7 @@ except KeyboardInterrupt :
   print()
 </code></pre>
 <br />
-<p>この例で、設定ファイル AppConf.ini の内容は次のようになっています。[mysql] セクションの内容はここでは使用していません。</p>
+<p>この例で、構成ファイル AppConf.ini の内容は次のようになっています。[mysql] セクションの内容はここでは使用していません。構成ファイルはなくても構いません。もし、存在する場合は、HTApp.readConf() 関数を使って読み込みます。読み込まれた結果はディクショナリとして返されます。セクションはコメント扱いとされ、式の左辺がキー、右辺が値となります。</p>
 <pre class="sample"><code>[httpserver]
  server_name=
  port=3330
@@ -157,17 +160,665 @@ except KeyboardInterrupt :
  database=Db1
 </code></pre>
 <br />
-
+<p>このサンプルコードでコメント「#  サーバを作成」以降は、ほぼ変更の必要はありません。キーボード割り込み処理は Ctrl+C で終了させたとき、エラーメッセージが出るのを抑制しています。</p>
+<br />
 
 
 
 <!-- ルートとハンドラ -->
-<h2><a id="3">ルートとハンドラ</a></h2>
+<h2><a id="3">ルート (routes) とハンドラ (handlers)</a></h2>
 <p>
 HTApp アプリケーションでは、ユーザが作る(コーディング)する部分は、主にルートに対するハンドラです。メインプログラム部分は、ルートとハンドラの関連付け以外、ほとんど変更する必要がありません。
 </p>
 <p>ルートとハンドラの関連付けは、self.routes ディクショナリにキーとしてルートを、値としてハンドラを設定します。</p>
 <p>ハンドラはパラメータ path のみを持つ関数で、タプル (MIMEタイプ, 応答データ) を返します。</p>
+<p>次のコードは、root (/) ハンドラ、/Sum ハンドラ、/Average ハンドラの定義例です。</p>
+<pre class="sample"><code>
+#  / ハンドラ (必須)
+def root(path) :
+  # html を作成する。
+  return ('text/html', html)
+
+#  /Sum ハンドラ
+def SumHandler(path) :
+  # html を作成する。
+  return ('text/html', html)
+
+#  /Average ハンドラ
+def AverageHandler(path) :
+  # html を作成する。
+  return ('text/html', html)
+
+
+
+# 開始
+try :
+  #  設定ファイルを読む。
+
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/Sum'] = SumHandler
+  HTApp.routes['/Average'] = AverageHandler
+  #  サーバを作成
+  
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+
+
+
+<!-- フォーム -->
+<h2><a id="4">フォーム</a></h2>
+
+<!--  テキストボックスとボタンを持つフォームの例 -->
+<h3>テキストボックスとボタンを持つフォームの例</h3>
+<p>次のサンプルは、テキストボックスの内容を読み取り、単語の先頭を大文字にして表示します。ルート(ハンドラ) は "/" と "/form_text_action" の２つあります。"/" ハンドラはユーザがデータを入力する前の画面を表示します。"/form_text_action" ハンドラは、パラメータ(テキストボックスの値)を受け取り、文字列の先頭を大文字に変換して '(*result*)' に埋め込んでクライアントへ返します。同時に '(*path*)' にハンドラのパラメータ path の値を埋め込んでいます。</p>
+<p>テキストボックスの名前は 'text1' なので、HTApp.params にキーが 'text1' として格納されます。'(*result*)' に埋め込む値は HTApp.params['text1'] になります。</p>
+<br />
+<figure>
+ <img src="HT_form_text.png" />
+</figure>
+<br />
+<h4>Python ソース</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  テキストボックスとボタンを持つフォーム
+import urllib
+import http.server
+from Py365Lib import HTApp
+
+#  "/" ハンドラ
+def root(path) :
+  HTApp.vars['path'] = path
+  HTApp.vars['result'] = ''
+  html = HTApp.set_template('form_text.html')
+  return ('text/html', html)
+
+# "/form_text_action" ハンドラ
+def form_text_action(path) :
+  HTApp.vars['result'] = ''
+  if 'text1' in HTApp.params.keys() :
+    HTApp.vars['result'] = HTApp.params['text1'].title()
+  HTApp.vars['path'] = path
+  html = HTApp.set_template('form_text.html')
+  return ('text/html', html)
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/form_text_action'] = form_text_action
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+<h4>テンプレートファイル</h4>
+<pre class="sample"><code>&lt;!DOCTYPE html>
+&lt;html>
+&lt;head>
+  &lt;meta charset="utf-8" />
+  &lt;title>form_text&lt;/title>
+  &lt;link rel="stylesheet" href="styles/default.css" />
+  &lt;style>
+  button {
+      background-color: lawngreen;
+      height: 32px;
+      border-radius:5px;
+  }
+  div {
+      padding:5px;
+      margin-bottom:5px;
+  }
+  &lt;/style>
+&lt;/head>
+
+&lt;body>
+&lt;h1>テキストボックスとボタンを持つフォーム&lt;/h1>
+&lt;br />
+&lt;p style="text-align:center;">path=(*path*)&lt;/p>
+&lt;br />
+&lt;form method="GET" action="/form_text_action" style="margin-left:20%;">
+&lt;div>&lt;label>英数字を入力　&lt;/label>&lt;input type="text" name="text1" size="40" value="apple, orange, banana" />&lt;/div>
+&lt;div>&lt;button type="submit">Submit&lt;/button>&lt;/div>
+&lt;div style="font-size:1.5em;color:magenta;">(*result*)&lt;/div>
+&lt;/form>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+<!--  チェックボックスとボタンを持つフォームの例 -->
+<h3>チェックボックスとボタンを持つフォームの例</h3>
+<p>次のサンプルは、チェックボックスのチェック状態を読み取って、それを表示するプログラムです。</p>
+<br />
+<figure>
+ <img src="HT_form_check.png" />
+</figure>
+<br />
+<h4>Python ソース</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  チェックボックスとボタンを持つフォーム
+import urllib
+import http.server
+from Py365Lib import HTApp
+
+#  "/" ハンドラ
+def root(path) :
+  HTApp.vars['path'] = path
+  HTApp.vars['result'] = ''
+  # チェックボックスをすべてクリア
+  HTApp.params = {}
+  for i in range(1, 5) :
+    HTApp.vars["check" + str(i)] = ""
+  html = HTApp.set_template('form_check.html')
+  return ('text/html', html)
+
+# "/form_check_action" ハンドラ
+def form_check_action(path) :
+  # チェックされている項目を表示
+  result = ""
+  for v in HTApp.params.values() :
+    result += (v + ";")
+  HTApp.vars['result'] = result
+  # チェックボックスの状態を復元
+  for i in range(1, 5) :
+    HTApp.vars["check" + str(i)] = ""
+  for k in HTApp.params.keys() :
+    HTApp.vars[k] = "checked"
+  # path を表示
+  HTApp.vars['path'] = path
+  html = HTApp.set_template('form_check.html')
+  return ('text/html', html)
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/form_check_action'] = form_check_action
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+<h4>テンプレートファイル</h4>
+<pre class="sample"><code>&lt;html>
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>form_check&lt;/title>
+&lt;link rel="stylesheet" href="styles/default.css" />
+&lt;style>
+  form {
+     margin-left:25%;
+  }
+  button {
+      background-color:yellowgreen;
+      width:80px;
+      height:32px;
+      border-radius:5px;
+  }
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+&lt;h1>チェックボックスとボタンを持つフォーム&lt;/h2>
+&lt;p style="text-align:center;padding:4px;">&lt;a href="/">Reset&lt;/a>&lt;/p>
+&lt;p style="text-align:center;padding:10px;">path=(*path*)&lt;/p>
+&lt;form method="GET" action="/form_check_action">
+ &lt;div>&lt;label>&lt;input type="checkbox" name="check1" value="文学" (*check1*) />　文学&lt;/label>&lt;/div>
+ &lt;div>&lt;label>&lt;input type="checkbox" name="check2" value="法学" (*check2*) />　法学&lt;/label>&lt;/div>
+ &lt;div>&lt;label>&lt;input type="checkbox" name="check3" value="経済学" (*check3*) />　経済学&lt;/label>&lt;/div>
+ &lt;div>&lt;label>&lt;input type="checkbox" name="check4" value="経営学" (*check4*) />　経営学&lt;/label>&lt;/div>
+ &lt;div style="margin-top:10px;">&lt;button type="submit">確認&lt;/button>&lt;/div>
+ &lt;div style="font-size:1.5em;color:magenta;margin-top:15px;">(*result*)&lt;/div>
+&lt;/form>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+<!--  ラジオボタンとボタンを持つフォームの例 -->
+<h3>ラジオボタンとボタンを持つフォームの例</h3>
+<p>次のサンプルは、ラジオボタンの状態を読み取って、チェックされているラジオボタンを表示する例です。</p>
+<br />
+<figure>
+ <img src="HT_form_radio.png" />
+</figure>
+<br />
+<h4>Python ソース</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  テキストボックスとボタンを持つフォーム
+import urllib
+import http.server
+from Py365Lib import HTApp
+
+#  "/" ハンドラ
+def root(path) :
+  HTApp.vars['path'] = path
+  HTApp.vars['result'] = ''
+  # ラジオボタンをリセット
+  HTApp.vars['radio1'] = "checked"
+  HTApp.vars['radio2'] = ""
+  HTApp.vars['radio3'] = ""
+  HTApp.vars['radio4'] = ""
+  HTApp.vars['radio5'] = ""
+  html = HTApp.set_template('form_radio.html')
+  return ('text/html', html)
+
+# "/form_radio_action" ハンドラ
+def form_radio_action(path) :
+  # チェックされている項目を表示
+  result = ""
+  for v in HTApp.params.values() :
+    result += (v + ";")
+  HTApp.vars['result'] = result
+  # ラジオボタンの状態を復元
+  for i in range(1, 6) :
+    HTApp.vars["radio" + str(i)] = ""
+  k = recover_checked()
+  HTApp.vars[k] = "checked"
+  # path を表示
+  HTApp.vars['path'] = path
+  html = HTApp.set_template('form_radio.html')
+  return ('text/html', html)
+
+def recover_checked() :
+  key = ""
+  if HTApp.params['radio'] == '現国' :
+    key = "radio1"
+  elif HTApp.params['radio'] == '古文' :
+    key = "radio2"
+  elif HTApp.params['radio'] == '数I' :
+    key = "radio3"
+  elif HTApp.params['radio'] == '物理' :
+    key = "radio4"
+  elif HTApp.params['radio'] == '日本史' :
+    key = "radio5"
+  else :
+    pass
+  return key
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/form_radio_action'] = form_radio_action
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+<h4>テンプレートファイル</h4>
+<pre class="sample"><code>&lt;html>
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>form_radio&lt;/title>
+&lt;link rel="stylesheet" href="styles/default.css" />
+&lt;style>
+  form {
+     margin-left:25%;
+  }
+  button {
+      background-color:yellowgreen;
+      width:80px;
+      height:32px;
+      border-radius:5px;
+  }
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+&lt;h1>ラジオボタンとボタンを持つフォーム&lt;/h2>
+&lt;p style="text-align:center;padding:4px;">&lt;a href="/">Reset&lt;/a>&lt;/p>
+&lt;p style="text-align:center;padding:10px;">path=(*path*)&lt;/p>
+&lt;form method="GET" action="/form_radio_action">
+ &lt;div>&lt;label>&lt;input type="radio" name="radio" value="現国" (*radio1*) />　現国&lt;/label>&lt;/div>
+ &lt;div>&lt;label>&lt;input type="radio" name="radio" value="古文" (*radio2*) />　古文&lt;/label>&lt;/div>
+ &lt;div>&lt;label>&lt;input type="radio" name="radio" value="数I" (*radio3*) />　数I&lt;/label>&lt;/div>
+ &lt;div>&lt;label>&lt;input type="radio" name="radio" value="物理" (*radio4*) />　物理&lt;/label>&lt;/div>
+ &lt;div>&lt;label>&lt;input type="radio" name="radio" value="日本史" (*radio5*) />　日本史&lt;/label>&lt;/div>
+ &lt;div style="margin-top:10px;">&lt;button type="submit">確認&lt;/button>&lt;/div>
+ &lt;div style="font-size:1.5em;color:magenta;margin-top:15px;">(*result*)&lt;/div>
+&lt;/form>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+<!--  リストボックスとボタンを持つフォームの例 -->
+<h3>リストボックスとボタンを持つフォームの例</h3>
+<p>次のサンプルはリストボックスで選択された項目を表示する例です。</p>
+<br />
+<figure>
+ <img src="HT_form_select.png" />
+</figure>
+<br />
+<h4>Python ソース</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  リストボックスとボタンを持つフォーム
+import urllib
+import http.server
+from Py365Lib import HTApp
+
+#  "/" ハンドラ
+def root(path) :
+  HTApp.vars['path'] = path
+  HTApp.vars['result'] = ''
+  html = HTApp.set_template('form_select.html')
+  return ('text/html', html)
+
+# "/form_select_action" ハンドラ
+def form_select_action(path) :
+  # 選択されている項目を表示
+  result = ""
+  for v in HTApp.params.values() :
+    result += (v + ";")
+  HTApp.vars['result'] = result
+  # path を表示
+  HTApp.vars['path'] = path
+  html = HTApp.set_template('form_select.html')
+  return ('text/html', html)
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/form_select_action'] = form_select_action
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+<h4>テンプレートファイル</h4>
+<pre class="sample"><code>&lt;html>
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>form_select&lt;/title>
+&lt;link rel="stylesheet" href="styles/default.css" />
+&lt;style>
+  form {
+     margin-left:25%;
+  }
+  button {
+      background-color:yellowgreen;
+      width:80px;
+      height:32px;
+      border-radius:5px;
+  }
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+&lt;h1>リストボックスとボタンを持つフォーム&lt;/h2>
+&lt;p style="text-align:center;padding:4px;">&lt;a href="/">Reset&lt;/a>&lt;/p>
+&lt;p style="text-align:center;padding:10px;">path=(*path*)&lt;/p>
+&lt;form method="GET" action="/form_select_action">
+ &lt;div>
+   &lt;select name="select1" size="6" style="width:120px;">
+    &lt;option>国語&lt;/option>
+    &lt;option>算数&lt;/option>
+    &lt;option>理科&lt;/option>
+    &lt;option>社会&lt;/option>
+    &lt;option>音楽&lt;/option>
+    &lt;option>体育&lt;/option>
+   &lt;/select>
+ &lt;/div>
+ &lt;div style="margin-top:10px;">&lt;button type="submit">確認&lt;/button>&lt;/div>
+ &lt;div style="font-size:1.5em;color:magenta;margin-top:15px;">(*result*)&lt;/div>
+&lt;/form>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+<!-- クッキー -->
+<h2><a id="5">クッキー</a></h2>
+<p>次のサンプルは、クッキーを使って値を覚えておき、１回ページをリロードするごとに値に＋１して表示します。クッキーに値を保存しておかないと、値は増えませんが、クッキーを使うことで値を増やすことができます。</p>
+<br />
+<figure>
+ <img src="HT_cookie.png" />
+</figure>
+<br />
+<h4>Python ソース</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+# cookie 
+import os
+import http.server
+import http.cookies
+from Py365Lib import HTApp
+import urllib.parse as urlparse
+
+# / のハンドラ
+def root(path) :
+  html = HTApp.set_template('cookie.html', False)
+  if 'count' in HTApp.cookies :
+    count = int(HTApp.cookies['count']) + 1
+  else :
+    count = 0
+  HTApp.cookies['count'] = str(count)
+  HTApp.vars['count'] = str(count)
+  html = HTApp.embed(html)
+  return ('text/html', html)
+
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/AppCreator'] = root
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+<h4>テンプレートファイル</h4>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-JP">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>cookie.py&lt;/title>
+&lt;link rel="stylesheet" href="styles/default.css" />
+&lt;script src="scripts/jquery.min.js">&lt;/script>
+&lt;script>
+    $(document).ready(function() {
+        $('#btnReload').click(function() {
+            location.reload();
+        });
+    });
+&lt;/script>
+&lt;style>
+.fr {
+  text-align:center;
+  padding: 7px;
+  font-size:larger;
+  color:magenta;
+}
+
+input[type="button"] {
+  width:150px;
+  height:32px;
+  background-color:yellowgreen;
+  border-radius:5px;
+}
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+&lt;h1>クッキー (cookie.py)&lt;/h1>
+&lt;p>&nbsp;&lt;/p>
+&lt;p class="fr">COUNT=(*count*)&lt;/p>
+&lt;div style="text-align:center;">&lt;input type="button" value=" Reload " id="btnReload" />&lt;/div>
+
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<br />
+
+
+<!-- Ajax -->
+<h2><a id="6">Ajax</a></h2>
+<p>次のサンプルは、華氏温度をテキストボックスから読んで、摂氏温度に変換して表示するものです。</p>
+<br />
+<figure>
+ <img src="HT_ajax_fahren.png" />
+</figure>
+<br />
+<h4>Python ソース</h4>
+<pre class="sample"><code>#!/usr/bin/env python3
+#  Ajax
+import http.server
+#import http.cookies
+from Py365Lib import HTApp
+import json
+import urllib.parse
+
+MAXBYTES = 1024 * 16
+
+# / のハンドラ
+def root(path) :
+  HTApp.vars['result'] = ""
+  html = HTApp.set_template('ajax_fahren.html')
+  return ('text/html', html)
+
+# フォームのハンドラ
+def convert(path) :
+  html = HTApp.set_template('ajax_fahren.html')
+  data = ""
+  try :
+    n = path.index('?')
+    data = path[n+1:len(path)]
+  except :
+    pass
+  param = urllib.parse.parse_qs(data)
+  f = float(param['fahren'][0])
+  c = 5.0 / 9.0 * (f - 32.0)
+  result = '{"result":' + str(c) + "}"
+  return ('application/json', result)
+
+# 開始
+try :
+  #  設定ファイルを読む。
+  conf = HTApp.readConf()
+  #  ハンドラを登録する。
+  HTApp.routes['/'] = root
+  HTApp.routes['/Fahren'] = convert
+  #  サーバを作成
+  server_name = conf['server_name']
+  port = int(conf['port'])
+  server = http.server.HTTPServer((server_name, port), HTApp.HTApp)
+  print("START Server. Port=%d" % port)
+  #  リクエスト待ち
+  server.serve_forever()
+except KeyboardInterrupt :
+  print()
+</code></pre>
+<br />
+<h4>テンプレートファイル</h4>
+<pre class="sample"><code>&lt;!doctype html>
+&lt;html lang="ja-JP">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;title>fahren&lt;/title>
+&lt;link rel="stylesheet" href="/styles/default.css" />
+&lt;script src="/scripts/jquery.min.js">&lt;/script>
+&lt;script>
+    $(document).ready(function() {
+        $('button').click(function() {
+            data = {"fahren": $('input[name="fahren"]').val()}
+            $.getJSON('/Fahren', data, function(json) {
+                $('#result').text("摂氏 " + json['result'] + "度");
+            });
+        });
+    });
+&lt;/script>
+&lt;style>
+.fr {
+  text-align:center;
+  padding: 7px;
+  font-size:larger;
+  color:magenta;
+}
+.d1 {
+  margin-bottom:10px;
+  padding:4px;
+}
+button {
+  background-color: yellowgreen;
+  width:120px;
+  height:32px;
+  border-radius:5px;
+}
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+&lt;h1>Ajax 華氏温度計算&lt;/h1>
+&lt;p>&nbsp;&lt;/p>
+&lt;div class="d1">
+&lt;p style="text-align:center;">華氏温度を摂氏に変換します。&lt;p>
+&lt;form style="margin-left:25%;">
+ &lt;div class="d1">&lt;label>華氏温度　&lt;input type="text" name="fahren" style="width:100px;height:32px;border-radius:5px;" value="32.0" />&lt;/label>&nbsp;
+ &lt;button type="button">変換&lt;/button>&lt;/div>
+&lt;/form>
+&lt;br >
+&lt;p id="result" class="fr">&lt;/p>
+&lt;/div>
+
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;p>&amp;nbsp;&lt;/p>
+&lt;/body>
+&lt;/html>
+</code></pre>
 <br />
 
 
