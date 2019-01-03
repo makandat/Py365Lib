@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- code=utf-8 -*-
-# WebPage クラスのテスト (1)
+# 
 #   MySQL を利用
 import WebPage as page
 import FileSystem as fsys
@@ -17,8 +17,8 @@ class TestPage(page.WebPage) :
       # クエリー
       self.getResult(rows)
       self.vars['message'] = "クエリー OK"
-    except :
-      self.vars['message'] = "致命的エラーを検出。詳しくは Apache2 ログを参照。"
+    except Exception as e:
+      self.vars['message'] = "致命的エラーを検出。" + str(e)
 
   # クエリー結果を表にする。
   def getResult(self, rows) :
