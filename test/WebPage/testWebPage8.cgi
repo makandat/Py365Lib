@@ -10,7 +10,7 @@ class TestPage(page.WebPage) :
   def __init__(self, template) :
     super().__init__(template)
     if 'count' in self.cookies :
-        c = int(self.cookies['count'].value)
+        c = int(self.getCookie('count'))
         c += 1
         self.cookie('count', str(c))
         self.vars['count'] = str(c)

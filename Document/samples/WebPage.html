@@ -37,7 +37,7 @@ figure {
 <div class="i2">
 
 <h3>サンプル１</h3>
-<p>フォームとクッキーの使用例</p>
+<p>フォームの使用例</p>
 <figure>
  <img src="img/testWebPage0.png" />
 </figure>
@@ -45,7 +45,7 @@ figure {
 <pre class="code"><code>#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト
-#   フォームとクッキー
+#   フォーム
 import WebPage as page
 import FileSystem as fsys
 # import os
@@ -55,7 +55,7 @@ class TestPage(page.WebPage) :
   def __init__(self, template) :
     super().__init__(template)
     if 'text1' in self.params :
-        self.vars['message'] = self.params['text1'].value + "<br />\n"
+        self.vars['message'] = self.getParam('text1') + "<br />\n"
     else :
         self.vars['message'] = fsys.FileSystem.getCurrentDirectory() + "<br />\n"  # os.getcwd()
     self.cookie('key1', 'value1')
@@ -185,7 +185,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'file1' in self.params.keys() :
+    if self.isParam('file1') :
       self.saveFile('file1', '/var/www/data')
       file1 = self.params['file1']
       self.vars['message'] = 'アップロードOK　' + file1.filename
@@ -245,9 +245,8 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'text1' in self.params :
-        #self.vars['message'] = self.params['text1'] + "<br />\n"
-        self.redirect(self.params['text1'])
+    if self.isParam('text1') :
+        self.redirect(self.getParam('text1'))
     else :
         self.vars['message'] = "指定URLへジャンプします。"
 
@@ -301,8 +300,8 @@ import WebPage as page
 class MyPage(page.WebPage) :
   def __init__(self) :
     super().__init__(self)
-    t = float(self.params['text1'].value)
-    fahren = self.params['temp'].value
+    t = float(self.getParam('text1'))
+    fahren = self.getParams('temp')
     if fahren == 'F' :
       # 華氏温度へ
       self.ct = 9.0 * t / 5.0 + 32.0
@@ -374,7 +373,7 @@ import cmath
 class MyPage(page.WebPage) :
   def __init__(self) :
     super().__init__(self)
-    z = complex(self.params['complex'].value)
+    z = complex(self.getParam('complex'))
     pz = cmath.polar(z)
     json = "[" + str(pz[0]) + "," + str(pz[1]) + "]"
     MyPage.sendJson(json)    
@@ -439,7 +438,7 @@ class MyPage(page.WebPage) :
   def __init__(self) :
     super().__init__(self)
     files = os.listdir(MyPage.IMGDIR)
-    img = int(self.params['img'].value)
+    img = int(self.getParam('img'))
     path = MyPage.IMGDIR + "/" + files[img]
     MyPage.sendImage(path)
 
@@ -490,7 +489,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'text1' in self.params :
+    if self.isParam('text1') :
         self.vars['message'] = self.getValues()
     else :
         self.vars['message'] = os.getcwd()
@@ -498,10 +497,10 @@ class TestPage(page.WebPage) :
   # コントロールの値を得る。
   def getValues(self) :
     buff = ""
-    buff += page.WebPage.tag('pre', self.params['text1'].value)
-    buff += page.WebPage.tag('p', "Select1 = " + self.params['select1'].value)
-    buff += page.WebPage.tag('p', "Check1 = " + self.params['check1'].value if 'check1' in self.params.keys() else 'Check1 is not checked')
-    buff += page.WebPage.tag('p', "Radio1 = " + self.params['radio1'].value)
+    buff += page.WebPage.tag('pre', self.getParam('text1'))
+    buff += page.WebPage.tag('p', "Select1 = " + self.getParam('select1'))
+    buff += page.WebPage.tag('p', "Check1 = " + self.getParam('check1') if self.isParam('check1') else 'Check1 is not checked')
+    buff += page.WebPage.tag('p', "Radio1 = " + self.getParam('radio1'))
     return buff
 
 # メイン開始位置

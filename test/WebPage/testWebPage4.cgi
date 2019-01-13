@@ -8,7 +8,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    self.params['message'] = ''
+    self.vars['message'] = ''
 
 # メイン開始位置
 wp = TestPage('templates/template4.html')

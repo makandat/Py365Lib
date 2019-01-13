@@ -10,8 +10,8 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'text1' in self.params :
-        self.vars['message'] = self.params['text1'].value
+    if self.isParam('text1') :
+        self.vars['message'] = self.getParam('text1')
     else :
         self.vars['message'] = fs.getCurrentDirectory()
 

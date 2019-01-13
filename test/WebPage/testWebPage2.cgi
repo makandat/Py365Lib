@@ -10,7 +10,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'file1' in self.params.keys() :
+    if self.isParam('file1') :
       self.saveFile('file1', '/var/www/data')
       file1 = self.params['file1']
       self.vars['message'] = 'アップロードOK　' + file1.filename

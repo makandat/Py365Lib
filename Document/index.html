@@ -478,14 +478,17 @@ host: ホストのアドレス<br />
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>__init__(template="")</td><td>template: HTML ファイル</td><td>N/A</td><td>コンストラクタ</td><td>template を省略した場合は、手動でHTMLを html に設定する。</td></tr>
  <tr><td>vars[key]</td><td>key: キー</td><td>key に対する値</td><td>埋め込み変数の連想配列。HTML の (*var*) 部分を置換する。</td><td>R/W property</td></tr>
- <tr><td>params[key]</td><td>key: キー</td><td>key に対する値</td><td>HTTP パラメータの連想配列。型は MiniStrage 型なので、値は .value になるので注意。</td><td>R/O property</td></tr>
+ <tr><td>params[key]</td><td>key: キー</td><td>key に対する値</td><td>HTTP パラメータの連想配列。型は MiniStorage 型なので、値は .value になるので注意。(getParam() を使用したほうが良い)</td><td>R/O property</td></tr>
  <tr><td>conf[key]</td><td>key: キー</td><td>key に対する値</td><td>INI ファイル・パラメータの連想配列</td><td>R/O property</td></tr>
- <tr><td>cookies[key]</td><td>key: キー</td><td>key に対する値</td><td>受信したクッキーの連想配列</td><td>R/W property</td></tr>
+ <tr><td>cookies[key]</td><td>key: キー</td><td>key に対する値</td><td>受信したクッキーの連想配列。値は .value になるので注意。(getCookie, setCookie を使用したほうが良い)</td><td>R/W property</td></tr>
  <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定</td><td>R/W property</td></tr>
  <tr><td>echo()</td><td>なし</td><td>なし</td><td>HTML を送信する(ヘッダーとクッキーも同時送信)</td><td></td></tr>
  <tr><td>header(str)</td><td>str:ヘッダー文字列</td><td>なし</td><td>HTTP ヘッダーを送信する。</td><td></td></tr>
  <tr><td>cookie(key, val)</td><td>key:クッキーのキー<br />
 val:クッキーの値</td><td>なし</td><td>クッキーを送信する。</td><td>実際の動作は self.cookies に追加する。</td></tr>
+ <tr><td>setCookie(key, val)</td><td>cookie() と同じ。</td><td>なし</td><td>cookie() のシノニム</td><td></td></tr>
+ <tr><td>getCookie(key)</td><td>key: クッキーのキー</td><td>クッキーの値</td><td>キー key が存在すれば、その連想配列の値 (self.cookies[key].value) 、なければ "" を返す。</td><td></td></tr>
+ <tr><td>getParam(key)</td><td>key: パラメータのキー</td><td>パラメータの値</td><td>キー key が存在すれば、その連想配列の値 (self.params[key].value) 、なければ "" を返す。</td><td></td></tr>
  <tr><td>readConf(file)</td><td>file: コンフィグファイル</td><td>なし</td><td>コンフィグファイルを読み込んで conf を初期化する。</td><td></td></tr>
  <tr><td>tag(name, str)</td><td>name: タグ名<br />
 str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作る。</td><td>static</td></tr>

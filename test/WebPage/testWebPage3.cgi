@@ -8,9 +8,8 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'text1' in self.params :
-        #self.vars['message'] = self.params['text1'] + "<br />\n"
-        self.redirect(self.params['text1'])
+    if self.isParam('text1') :
+        self.redirect(self.getParam('text1'))
     else :
         self.vars['message'] = "指定URLへジャンプします。"
 
