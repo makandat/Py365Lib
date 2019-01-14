@@ -64,10 +64,10 @@ header, article, fooder {
   <li><a href="tutorial/DateTime.html">DateTime モジュール</a></li>
   <li><a href="tutorial/MySQL.html">MySQL</a></li>
   <li><a href="tutorial/AWSS3.html">AWS S3</a></li>
-  <li><a href="tutorial/WebPage.html">CGI</a></li>
-  <li><a href="tutorial/CursesApp.html">curses アプリ</a></li>
-  <li><a href="tutorial/TkApp.html">tkinterアプリ</a></li>
-  <li><a href="tutorial/HTApp.html">HTTP サーバ</a></li>
+  <li><a href="tutorial/WebPage.html">WebPage (CGI)</a></li>
+  <li><a href="tutorial/CursesApp.html">CursesApp (curses アプリ)</a></li>
+  <li><a href="tutorial/TkApp.html">TkApp (tkinter アプリ)</a></li>
+  <li><a href="tutorial/HTApp.html">HTApp (HTTP サーバ)</a></li>
  </ul>
  </li>
  <li><a href="#samples">サンプル</a>
@@ -369,6 +369,15 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>re_split(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>なし</td><td>対象の文字列を正規表現で分割してリストにする。</td><td>関数</td></tr>
  <tr><td>re_replace(re, c, s)</td><td>re: 正規表現文字列<br />c:置き換える文字列<br />s: 対象文字列</td>
   <td>新しい文字列</td><td>対象文字列 s を正規表現 re で検索して見つかった部分文字列を c で置き換える。</td><td>関数</td></tr>
+ <tr><td>money(x)</td><td>x: 整数・浮動小数点数</td><td>金額</td><td>数字に3文字ごとにカンマを挿入した文字列を返す。</td><td>関数</td></tr>
+ <tr><td>substring(s, start, length)</td><td>s: 元の文字列<br />start: 部分文字列の開始位置<br />length: 部分文字列の長さ</td><td>部分文字列</td><td>元の文字列 s の位置 start から長さ length だけ切り取った部分文字列を返す。</td>
+<td>関数</td></tr>
+ <tr><td>substr(s, start, end)</td><td>s: 元の文字列<br />start: 部分文字列の開始位置<br />end: 部分文字列の終了位置</td><td>部分文字列</td><td>元の文字列 s の位置 start から位置 end まで切り取った部分文字列を返す。
+</td><td>関数</td></tr>
+ <tr><td>left(s, length)</td><td>s: 元の文字列<br />length: 部分文字列の長さ</td><td>部分文字列</td>
+<td>元の文字列 s の先頭から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
+ <tr><td>right(s, length)</td><td>s: 元の文字列<br />length: 部分文字列の長さ</td><td>部分文字列</td>
+<td>元の文字列 s の最後から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
 </table>
 
 

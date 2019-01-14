@@ -55,9 +55,9 @@ class TestPage(page.WebPage) :
   def __init__(self, template) :
     super().__init__(template)
     if 'text1' in self.params :
-        self.vars['message'] = self.getParam('text1') + "<br />\n"
+        self.vars['message'] = self.getParam('text1') + "&lt;br />\n"
     else :
-        self.vars['message'] = fsys.FileSystem.getCurrentDirectory() + "<br />\n"  # os.getcwd()
+        self.vars['message'] = fsys.FileSystem.getCurrentDirectory() + "&lt;br />\n"  # os.getcwd()
     self.cookie('key1', 'value1')
     if 'key1' in self.cookies :
         self.vars['message'] += (" cookie key1=" + self.cookies['key1'])

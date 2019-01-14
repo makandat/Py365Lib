@@ -190,7 +190,7 @@ class TestPage(page.WebPage) :
   def __init__(self, template) :
     super().__init__(template)
     if 'text1' in self.params :
-        self.vars['message'] = self.params['text1'].value
+        self.vars['message'] = self.getParam('text1')  # self.params['text1'].value も可。
     else :
         self.vars['message'] = fs.getCurrentDirectory()
 
@@ -285,7 +285,8 @@ class TestPage(page.WebPage) :
   def __init__(self, template) :
     super().__init__(template)
     if 'count' in self.cookies :
-        c = int(self.cookies['count'].value)
+        c = int(self.getCookie('count'))
+        # c = int(self.cookies['count'].value) でも可。
         c += 1
         self.cookie('count', str(c))
         self.vars['count'] = str(c)
@@ -381,7 +382,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'file1' in self.params.keys() :
+    if self.isParam('file1') :
       self.saveFile('file1', '/var/www/data')
       file1 = self.params['file1']
       self.vars['message'] = 'アップロードOK　' + file1.filename
@@ -445,9 +446,9 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'text1' in self.params :
-        #self.vars['message'] = self.params['text1'] + "&lt;br />\n"
-        self.redirect(self.params['text1'])
+    if self.isParam('text1') :
+        #self.vars['message'] = self.getParams('text1') + "&lt;br />\n"
+        self.redirect(self.getParam('text1'))
     else :
         self.vars['message'] = "指定URLへジャンプします。"
 
@@ -596,8 +597,8 @@ import WebPage as page
 class MyPage(page.WebPage) :
   def __init__(self) :
     super().__init__(self)
-    t = float(self.params['text1'].value)
-    fahren = self.params['temp'].value
+    t = float(self.getParam('text1'))
+    fahren = self.getParams('temp')
     if fahren == 'F' :
       # 華氏温度へ
       self.ct = 9.0 * t / 5.0 + 32.0
@@ -688,7 +689,7 @@ import cmath
 class MyPage(page.WebPage) :
   def __init__(self) :
     super().__init__(self)
-    z = complex(self.params['complex'].value)
+    z = complex(self.getParam('complex'))
     pz = cmath.polar(z)
     json = "[" + str(pz[0]) + "," + str(pz[1]) + "]"
     MyPage.sendJson(json)    
@@ -742,7 +743,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    self.params['message'] = ''
+    self.vars['message'] = ''
 
 # メイン開始位置
 wp = TestPage('templates/template6.html')
@@ -761,7 +762,7 @@ class MyPage(page.WebPage) :
   def __init__(self) :
     super().__init__(self)
     files = os.listdir(MyPage.IMGDIR)
-    img = int(self.params['img'].value)
+    img = int(self.getParam('img'))
     path = MyPage.IMGDIR + "/" + files[img]
     MyPage.sendImage(path)
 
