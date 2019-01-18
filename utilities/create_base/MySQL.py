@@ -1,6 +1,8 @@
 # -*- code=utf-8 -*-
 # Version 0.50  2018-09-12
 # Version 1.00  2018-10-03
+# Version 1.10  2018-12-01
+#    To install mysql connector
 #  sudo pip3 install mysql-connector-python
 import mysql.connector
 
@@ -68,7 +70,17 @@ class MySQL :
             self.__client.rollback()
             raise
         return n
-            
+
+    # 値を1つだけ返すクエリーを実行し、その値を得る。
+    def getValue(self, sql) :
+        result = None
+        self.__cursor.execute(sql)
+        self.__rows = self.__cursor.fetchall()
+        if len(self.__rows) >= 1 :
+            row = self.__rows[0]
+            result = row[0]
+        return result
+
     # カーソルを閉じる。
     def cursorClose(self) :
         self.__cursor.close()

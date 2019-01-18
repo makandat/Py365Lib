@@ -1,6 +1,6 @@
 #
 #  TkApp クラス
-#    version 1.00  2018-11-25
+#    version 1.02  2018-12-27
 #
 import json, os
 import tkinter as tk
@@ -12,16 +12,8 @@ from syslog import syslog
 #  Tkinter Application クラス
 # ===============================
 class TkApp(tk.Frame) :
-  widgets = []  # ウィジェットのリスト
-  didgets = {}  # ウィジェットのリストへのポインタのリスト (キーはウィジェットの名前)
-  layouts = []  # ウィジェットのレイアウトのリスト
-  commands = {} # ウィジェットのコマンドのハッシュ (キーはウィジェットの名前)
-  images = []   # 画像のリスト
-  menubar = None    # メニューバー
-  menudata = None   # メニューデータ
-  radioval = None  # ラジオボックスの値
-  textvals = {}   # テキストボックスの値 (キーは名前)
-    
+  APPCONF = "AppConf.ini"
+
   # JSON ファイル、オプションのキー分類
   Keys_TkApp = ("name", "type", "layout", "container")
   Keys_place = ( "x", "y", "relx", "rely" )
@@ -32,16 +24,42 @@ class TkApp(tk.Frame) :
   # コンストラクタ
   def __init__(self, master, winprop, filename="") :
     super().__init__(master)
-    self.__master = master
-    self.fixedborder = False
+    self.widgets = []  # ウィジェットのリスト
+    self.didgets = {}  # ウィジェットのリストへのポインタのリスト (キーはウィジェットの名前)
+    self.layouts = []  # ウィジェットのレイアウトのリスト
+    self.commands = {} # ウィジェットのコマンドのハッシュ (キーはウィジェットの名前)
+    self.images = []   # 画像のリスト
+    self.menubar = None    # メニューバー
+    self.menudata = None   # メニューデータ
     self.radioval = tk.IntVar()  # ラジオボックスの値
     self.radioval.set(0)
+    self.checkval = {}  # チェックボックスの値
+    self.textvals = {}   # テキストボックスの値 (キーは名前)
+    self.readConf()
+    self.__master = master
+    self.fixedborder = False
     if "fixedborder" in winprop :
       self.fixedborder = winprop['fixedborder']
     self.setMasterProperties(winprop['title'], winprop['left'], winprop['top'], winprop['width'], 
       winprop['height'], self.fixedborder)
     self.pack()
     self.createWidgets(filename)
+    return
+
+  # 構成ファイル AppConf.ini を読み込んで self.conf に内容を保存
+  def readConf(self) :
+    self.conf = {}
+    if not os.path.exists(TkApp.APPCONF) :
+      return
+    with open(TkApp.APPCONF) as f :
+      for line in f :
+        if line[0] == '#' or line[0] == '[' or len(line) == 0:
+          continue
+        kv = line.split('=')
+        if len(kv) == 2 :
+          key = kv[0].strip()
+          value = kv[1].strip()
+          self.conf[key] = value
     return
 
   # マスターウィンドウの属性を設定する。
@@ -130,7 +148,8 @@ class TkApp(tk.Frame) :
           c = tk.Entry(parent, textvariable=self.textvals[item['name']])
         self.__appendKeys(c, item)
       elif item["type"] == "check" or item["type"] == "checkbox": # チェックボックス
-        c = ttk.Checkbutton(parent, text=item["text"])
+        self.checkval[item['name']] = tk.BooleanVar()
+        c = ttk.Checkbutton(parent, text=item["text"], variable=self.checkval[item['name']])
         self.__appendKeys(c, item)
       elif item["type"] == "radio" or item["type"] == "radiobutton":  # ラジオボタン
         c = ttk.Radiobutton(parent, text=item["text"], variable=self.radioval, value=item['value'])
@@ -400,7 +419,7 @@ class TkApp(tk.Frame) :
 
   # 子ウィンドウを作成する。
   def createWindow(parent, title, size, location=(0, 0)) :
-    newwin = Toplevel(parent)
+    newwin = tk.Toplevel(parent)
     newwin.geometry("{0:d}x{1:d}+{2:d}+{3:d}".format(size[0], size[1], location[0], location[1]))
     newwin.title(title)
     return newwin
@@ -413,8 +432,10 @@ class TkApp(tk.Frame) :
       rv = w.get()
     elif type(w) is tk.Label:
       rv = w["text"]
-    elif type(w) is ttk.Checkbutton or type(w) is ttk.Radiobutton:
-      rv = True if w.state()[0] == "focus" else False
+    elif type(w) is ttk.Checkbutton :
+      rv = self.checkval[name].get()
+    elif type(w) is type(w) is ttk.Radiobutton :
+      rv = self.radioval.get()
     elif type(w) is tk.Listbox :
       try :
         rv = w.curselection()[0]

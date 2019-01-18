@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-#  version 0.50  2018-11-09
+#  version 1.00  2018-12-28
 import os, sys, io
 import http.server
 import http.cookies
-import urllib.parse as urlparse
+import urllib.parse
 from pprint import pprint
 from syslog import syslog
 
@@ -14,11 +14,13 @@ TEMPLATES = "./templates"
 
 # リクエスト対ハンドラのリスト
 routes = {}
+# 外部からくるパラメータ
+params = {}
 # クッキー
 cookies = {}
 # 動的な埋め込み変数
 vars = {}
-# POST のときの読み込み先
+# POST のときの読み込み先(使用されない)
 posted_file = io.BufferedIOBase()
 
 # 設定ファイルを読む。
@@ -41,6 +43,7 @@ def readConf(filename="AppConf.ini") :
 
 # リクエストに対応する HTML, JSON, TEXT を返す。
 #   戻り値はタプル (type, content)
+#   HTApp クラス内部で使用する。
 def getContent(path, post=False) :
   # ルートが見つからない場合のエラーページを定義する。
   HTML = '''<html>
@@ -99,12 +102,33 @@ def tag(tagname, text, attr="") :
 
 # 動的な埋め込み変数を HTML に埋め込む。
 def embed(html) :
-  for key in vars :
-    html = html.replace('(*'+key+'*)', vars[key])
+  for key in vars.keys() :
+    if len(vars[key]) == 0 :
+      html = html.replace('(*'+key+'*)', "")
+    else :
+      html = html.replace('(*'+key+'*)', vars[key])
   return html
 
+# テンプレートファイルを指定する。(fileName はファイル名本体)
+#   戻り値は HTMLテンプレート
+def set_template(fileName, embed_vars=True) :
+  result = ""
+  html = "<html><head><title>Error</title></head><body>Error: Not found template file.</body></html>"
+  try :
+    with open(TEMPLATES + "/" + fileName) as f :
+      html = f.read()
+    if embed_vars :
+      result = embed(html)
+    else :
+      result = html
+  except :
+    pass
+  return result
 
-# カスタマイズしたリクエストハンドラ
+
+
+
+## カスタマイズしたリクエストハンドラ
 class HTApp(http.server.BaseHTTPRequestHandler) :
 
   # GET メソッドハンドラ
@@ -143,6 +167,8 @@ class HTApp(http.server.BaseHTTPRequestHandler) :
       header = ['Content-Type', 'image/x-icon']
       content = self.responseImage("./html/favicon.ico")
     else :
+      # 外部から来るGETパラメータを取得する。
+      self.__getParams()
       # 動的な HTML (応答する内容を取得する)
       (type, content) = getContent(self.path, False)
       if type == "" :
@@ -163,6 +189,19 @@ class HTApp(http.server.BaseHTTPRequestHandler) :
     self.end_headers()
     # コンテンツを送る。
     self.wfile.write(content)
+    return
+
+  # 外部から来るGETパラメータを取得する。
+  def __getParams(self) :
+    try :
+      n = self.path.index('?')
+    except :
+      return
+    data = self.path[n+1:len(self.path)]
+    lparams = urllib.parse.parse_qs(data)
+    params.clear()
+    for key, arr in lparams.items() :
+      params[key] = arr[0]
     return
 
   # POST メソッドハンドラ
