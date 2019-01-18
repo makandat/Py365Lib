@@ -7,10 +7,9 @@ cp -uv ../Text.py ./create_base/
 cp -uv ../DateTime.py ./create_base/
 cp -uv ../MySQL.py ./create_base/
 cp -uv ../AWSS3.py ./create_base/
-cp -uv ../AWSS3.py ./create_base/
-cp -uv ../../CursesApp/CursesApp.py ./create_base/
-cp -uv ../../HTApp/HTApp.py ./create_base/
-cp -uv ../../TkApp/TkApp.py ./create_base/
-cp -uv ../../WebApp/WebPage.py ./create_base/
+cp -uv ../CursesApp.py ./create_base/
+cp -uv ../HTApp.py ./create_base/
+cp -uv ../TkApp.py ./create_base/
+cp -uv ../WebPage.py ./create_base/
 tar cfvz create_base.tgz create_base/
 
