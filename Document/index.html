@@ -490,8 +490,10 @@ host: ホストのアドレス<br />
  <tr><td>params[key]</td><td>key: キー</td><td>key に対する値</td><td>HTTP パラメータの連想配列。型は MiniStorage 型なので、値は .value になるので注意。(getParam() を使用したほうが良い)</td><td>R/O property</td></tr>
  <tr><td>conf[key]</td><td>key: キー</td><td>key に対する値</td><td>INI ファイル・パラメータの連想配列</td><td>R/O property</td></tr>
  <tr><td>cookies[key]</td><td>key: キー</td><td>key に対する値</td><td>受信したクッキーの連想配列。値は .value になるので注意。(getCookie, setCookie を使用したほうが良い)</td><td>R/W property</td></tr>
- <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定</td><td>R/W property</td></tr>
- <tr><td>echo()</td><td>なし</td><td>なし</td><td>HTML を送信する(ヘッダーとクッキーも同時送信)</td><td></td></tr>
+ <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定。v1.20 で、JSON などのテキストファイルもロードできるようにした。<br />
+バイナリーデータは self.binbuff に保存するが、self.html を "" にしないと、self.binbuff は使用できない。
+</td><td>R/W property</td></tr>
+ <tr><td>echo()</td><td>なし</td><td>なし</td><td>HTML を送信する(ヘッダーとクッキーも同時送信)。設定によっては、画像やJSONなどの送信も可能である。</td><td></td></tr>
  <tr><td>header(str)</td><td>str:ヘッダー文字列</td><td>なし</td><td>HTTP ヘッダーを送信する。</td><td></td></tr>
  <tr><td>cookie(key, val)</td><td>key:クッキーのキー<br />
 val:クッキーの値</td><td>なし</td><td>クッキーを送信する。</td><td>実際の動作は self.cookies に追加する。</td></tr>
@@ -520,6 +522,11 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
    url: URL<br />wait: 待ち時間（秒）
 </td><td>なし</td><td>指定した URL へジャンプする。</td><td></td></tr>
 <tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
+<tr><td>cacheControl(value)</td><td>"no-cache"などを指定</td><td>なし</td><td>キャッシュコントロールヘッダ(Cahce-Control)を追加する。</td><td>v1.20 で追加。</td></tr>
+<tr><td>cacheExpires(date)</td><td>date: 有効期限。例：Wed, 21 Oct 2015 07:28:00 GMT</td><td>なし</td><td>コンテンツの有効期限を追加する。</td><td>v1.20 で追加。</td></tr>
+<tr><td>isBinaryFile(file)</td><td>file:ファイルのパス名</td><td>バイナリーファイルなら True</td><td>(サポートする)バイナリーファイルか判別。</td><td>v1.20 で追加。内部で使用する。</td></tr>
+<tr><td>loadFile(filePath)</td><td>filePath: ロードするファイルのパス名</td><td>なし</td><td>ファイルを読み込んで、self.html または self.binbuff に保存する。どちらにロードするかは、テキストファイルかバイナリーファイルかによる。</td><td>v1.20 で追加。</td></tr>
+<tr><td>self.binbuff</td><td></td><td></td><td>バイナリーファイルを loadFile() めそっどでロードしたときの保存先。その際、self.html は "" であること。</td><td>v1.20 で追加。</td></tr>
  </table>
 <br />
 

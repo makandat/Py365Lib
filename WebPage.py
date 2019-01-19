@@ -122,13 +122,13 @@ class WebPage :
 
   # キャッシュコントロールヘッダ(Cahce-Control)を追加する。
   #   value の例:  max-age=seconds, no-cache, no-store
-  def cacheControl(value) :
+  def cacheControl(self, value) :
     self.headers.append('Cache-Control: ' + value)
     return
 
   # コンテンツの有効期限を追加する。
   #    date の例: Wed, 21 Oct 2015 07:28:00 GMT
-  def cacheExpires(date) :
+  def cacheExpires(self, date) :
     self.headers.append('Expiresl: ' + date)
     return
 
