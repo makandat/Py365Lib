@@ -1,5 +1,5 @@
 # coding:utf-8
-# Version 1.20  2019-01-19 機能強化
+# Version 1.21  2019-01-20 機能強化
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -9,7 +9,7 @@ import urllib.parse
 from syslog import syslog
 
 
-VERSION = '1.20'
+VERSION = '1.21'
 
 #
 #  WebPage クラス
@@ -50,10 +50,11 @@ class WebPage :
       cc.load(os.environ["HTTP_COOKIE"])
       for k, v in cc.items() :
         self.cookies[k] = v
+    return
+
 
   # コンテンツを送信する。
   def echo(self) :
-    syslog(self.extension)
     if self.extension == ".html" :
       # クッキーをヘッダーに追加
       for k, v in self.cookies.items() :
@@ -69,17 +70,24 @@ class WebPage :
       else :
        return
     elif self.extension == '.txt' :
+      for k, v in self.vars.items() :
+        self.html = self.html.replace("(*" + k + "*)", str(v))
       WebPage.sendText(self.html)
     elif self.extension == '.json' :
+      for k, v in self.vars.items() :
+        self.html = self.html.replace("(*" + k + "*)", str(v))
       WebPage.sendJson(self.html)
     elif self.extension == '.xml' :
+      for k, v in self.vars.items() :
+        self.html = self.html.replace("(*" + k + "*)", str(v))
       print("Content-Type: application/xml\n")
       print(self.html)
     elif self.extension == '.svg' :
+      for k, v in self.vars.items() :
+        self.html = self.html.replace("(*" + k + "*)", str(v))
       print("Content-Type: image/svg+xml\n")
       print(self.html)
     elif self.extension == '.jpg' :
-      syslog(str(len(self.binbuff)))
       buff = b"Content-Type: image/jpeg\n\n" + self.binbuff
       sys.stdout.buffer.write(buff)
     elif self.extension == '.png' :
