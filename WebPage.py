@@ -1,5 +1,5 @@
 # coding:utf-8
-# Version 1.22  2019-01-26 機能強化
+# Version 1.23  2019-01-26 機能強化
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -141,6 +141,9 @@ class WebPage :
     return
 
 
+  # クッキーがあるかどうかを返す。
+  def isCookie(self, key) :
+    return key in self.cookies.keys()
 
   # クッキーを登録する。
   def cookie(self, key, value) :

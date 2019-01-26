@@ -499,6 +499,7 @@ host: ホストのアドレス<br />
  <tr><td>cookie(key, val)</td><td>key:クッキーのキー<br />
 val:クッキーの値</td><td>なし</td><td>クッキーを送信する。</td><td>実際の動作は self.cookies に追加する。</td></tr>
  <tr><td>setCookie(key, val)</td><td>cookie() と同じ。</td><td>なし</td><td>cookie() のシノニム</td><td></td></tr>
+ <tr><td>isCookie(key)</td><td>key: キー</td><td>キー key というクッキーが存在すれば True</td><td>指定したキーのクッキーが存在するかを調べる。</td><td></td></tr>
  <tr><td>getCookie(key)</td><td>key: クッキーのキー</td><td>クッキーの値</td><td>キー key が存在すれば、その連想配列の値 (self.cookies[key].value) 、なければ "" を返す。</td><td></td></tr>
  <tr><td>getParam(key)</td><td>key: パラメータのキー</td><td>パラメータの値</td><td>キー key が存在すれば、その連想配列の値 (self.params[key].value) 、なければ "" を返す。</td><td></td></tr>
  <tr><td>readConf(file)</td><td>file: コンフィグファイル</td><td>なし</td><td>コンフィグファイルを読み込んで conf を初期化する。</td><td></td></tr>
