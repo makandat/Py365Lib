@@ -1,5 +1,5 @@
 # FileSystem.py
-# Version 1.12  2018-12-14
+# Version 1.13  2019-01-23
 import os
 import shutil
 import glob
@@ -93,6 +93,11 @@ def isDirectory(dir:str) -> bool:
 # リンクかどうか調べる。
 def isLink(path:str) -> bool:
   return os.path.islink(path)
+
+# ファイルサイズを得る。
+def getFileSize(path) :
+  return os.path.getsize(path)
+
 
 # ファイルやディレクトリの属性を得る。
 def getAttr(path:str) -> int:

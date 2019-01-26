@@ -296,6 +296,7 @@ method(line): １行づつ処理する関数</td><td>なし</td><td>ファイル
  <tr><td>rmdir(dir, recursive=False)</td><td>dir: ディレクトリ名<br />
 recursive: True ならファイルやサブディレクトリも削除</td><td>なし</td><td>ディレクトリを削除する。</td><td>関数</td></tr>
  <tr><td>grep(str, file)</td><td>str: 検索文字列<br />file: 対象ファイル</td><td>見つかった行番号の配列</td><td>ファイル内を検索する。</td><td>関数</td></tr>
+ <tr><td>getFileSize(file)</td><td>file: 対象ファイル</td><td>ファイルのバイト数</td><td>ファイルの長さを得る。</td><td>関数</td></tr>
  <tr><td>listFiles(dir, wildcard="*")</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイルとサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>listDirectories(dir)</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>サブディレクトリ一覧リスト</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>getFileName(path)</td><td>path: パス名</td><td>パスのファイル名部分</td><td>path のファイル名部分を得る。</td><td>関数</td></tr>
@@ -526,7 +527,8 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
 <tr><td>cacheExpires(date)</td><td>date: 有効期限。例：Wed, 21 Oct 2015 07:28:00 GMT</td><td>なし</td><td>コンテンツの有効期限を追加する。</td><td>v1.20 で追加。</td></tr>
 <tr><td>isBinaryFile(file)</td><td>file:ファイルのパス名</td><td>バイナリーファイルなら True</td><td>(サポートする)バイナリーファイルか判別。</td><td>v1.20 で追加。内部で使用する。</td></tr>
 <tr><td>loadFile(filePath)</td><td>filePath: ロードするファイルのパス名</td><td>なし</td><td>ファイルを読み込んで、self.html または self.binbuff に保存する。どちらにロードするかは、テキストファイルかバイナリーファイルかによる。</td><td>v1.20 で追加。</td></tr>
-<tr><td>self.binbuff</td><td></td><td></td><td>バイナリーファイルを loadFile() めそっどでロードしたときの保存先。その際、self.html は "" であること。</td><td>v1.20 で追加。</td></tr>
+<tr><td>self.binbuff</td><td></td><td></td><td>バイナリーファイルを loadFile() メソッドでロードしたときの保存先。その際、self.html は "" であること。</td><td>v1.20 で追加。</td></tr>
+<tr><td>isPostback()</td><td></td><td>パラメータがなければ False、あれば True。</td><td>呼び出しがポストバックか判別</td><td>v1.22 で追加。</td></tr>
  </table>
 <br />
 

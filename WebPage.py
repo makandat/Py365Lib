@@ -1,5 +1,5 @@
 # coding:utf-8
-# Version 1.21  2019-01-20 機能強化
+# Version 1.22  2019-01-26 機能強化
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -158,6 +158,10 @@ class WebPage :
       return self.cookies[key].value
     else:
       return ''
+
+  # ポストバックか？
+  def isPostback(self) :
+    return len(self.params) > 0
 
   # パラメータが存在するかどうかを返す。v1.1 で追加
   def isParam(self, key) :
