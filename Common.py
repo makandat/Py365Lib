@@ -1,5 +1,5 @@
 # -*- code=utf-8 -*-
-#   ver 2.20  2018-12-12
+#   ver 2.21  2019-02-22
 import sys
 import os
 import subprocess
@@ -63,13 +63,16 @@ def init_logger(filename:str=None) -> None:
 
 
 # コマンド引数のリストを返す。
-def args() -> StrList:
+def args(ix=-1) -> StrList:
   n = len(sys.argv)
   a = []
   if n > 1 :
     for i in range(1, n) :
       a.append(sys.argv[i])
-  return a
+  if ix < 0 :
+    return a
+  else :
+    return a[ix]
 
 # コマンド引数の数
 def count_args() -> int:
