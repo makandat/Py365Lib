@@ -189,7 +189,7 @@ header, article, fooder {
 <table>
  <tr><th>関数</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>init_log(filename)</td><td>filename: ログファイルのパス名。省略時は Py365Lib.log となる。</td><td>なし</td><td>ログ機能を有効にする。</td><td>logger モジュールのメソッドでログを出力する。</td></tr>
- <tr><td>args()</td><td>なし</td><td>コマンド引数の配列</td><td>コマンド引数を得る。</td><td>コマンド名は含まれない</td></tr>
+ <tr><td>args(ix=-1)</td><td>ix: パラメータのインデックス。負の数だとパラメータ配列全体</td><td>コマンド引数またはそのの配列</td><td>コマンド引数を得る。</td><td>コマンド名は含まれない</td></tr>
  <tr><td>count_args()</td><td>なし</td><td>コマンド引数の数</td><td>コマンド引数の数を返す。</td><td></td></tr>
  <tr><td>stop(code = 0, message = "", color=ESC_FG_RED)</td><td>
 code: 終了コード<br />message: 終了時に表示するメッセージ。<br />表示色または属性
