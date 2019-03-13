@@ -278,4 +278,4 @@ if  __name__ == "__main__" :
     else :
       Common.stop(5, "\nエラーによりひな型の作成に失敗しました。")
   except Exception as e :
-    Common.esc_print("red", e.message)
+    Common.esc_print("red", str(e))
