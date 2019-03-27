@@ -1,15 +1,11 @@
 # coding:utf-8
-# Version 1.23  2019-01-26 機能強化
+# Version 1.10  2019-03-27 added methods.
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
 import locale
 import http.cookies as Cookie
 import urllib.parse
-from syslog import syslog
-
-
-VERSION = '1.21'
 
 #
 #  WebPage クラス
@@ -19,25 +15,21 @@ class WebPage :
         
     # コンストラクタ
   def __init__(self, template="") :
-    self.extension = os.path.splitext(template)[1].lower()  # テンプレートファイルの拡張子
     self.headers = ["Content-Type: text/html"] # HTTP ヘッダーのリスト
     self.vars =    {}  # HTML 埋め込み変数
     self.params =  {}  # HTTP パラメータ
     self.conf =    {}  # AppConf.ini の値
     self.cookies = {}  # Cookie の値
-    self.html = ""     # HTML (.html, .svg, .xml, .xsl, .json, .txt)
-    self.binbuff = bytes() # バイナリー値 (.jpg, .png, .gif, zip, gz, wav, mp3, ogg, ogv, mp4) のバッファ
     # stdin, stdout のコードを UTF-8 にする。デフォルトは ASCII になっているので文字化けする。
     sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     # HTML テンプレートを設定する。
-    if template == "" :
+    self.html = ""
+    try :
+      with open(template, encoding='utf-8') as f :
+        self.html = f.read()
+    except :
       pass
-    else :
-      try :
-        self.loadFile(template)
-      except :
-        pass
     # AppConf.ini を読む。
     self.readConf()
     # HTTP パラメータを得る。
@@ -50,75 +42,19 @@ class WebPage :
       cc.load(os.environ["HTTP_COOKIE"])
       for k, v in cc.items() :
         self.cookies[k] = v
-    return
-
 
   # コンテンツを送信する。
   def echo(self) :
-    if self.extension == ".html" :
-      # クッキーをヘッダーに追加
-      for k, v in self.cookies.items() :
-        self.headers.append("Set-Cookie: " + k + "=" + str(v))
-      # ヘッダーを送信
-      self.header()
-      # 埋め込み変数を処理
-      for k, v in self.vars.items() :
-        self.html = self.html.replace("(*" + k + "*)", str(v))
-      # HTML を送信
-      if self.html != "" :
-        print(self.html)
-      else :
-       return
-    elif self.extension == '.txt' :
-      for k, v in self.vars.items() :
-        self.html = self.html.replace("(*" + k + "*)", str(v))
-      WebPage.sendText(self.html)
-    elif self.extension == '.json' :
-      for k, v in self.vars.items() :
-        self.html = self.html.replace("(*" + k + "*)", str(v))
-      WebPage.sendJson(self.html)
-    elif self.extension == '.xml' :
-      for k, v in self.vars.items() :
-        self.html = self.html.replace("(*" + k + "*)", str(v))
-      print("Content-Type: application/xml\n")
-      print(self.html)
-    elif self.extension == '.svg' :
-      for k, v in self.vars.items() :
-        self.html = self.html.replace("(*" + k + "*)", str(v))
-      print("Content-Type: image/svg+xml\n")
-      print(self.html)
-    elif self.extension == '.jpg' :
-      buff = b"Content-Type: image/jpeg\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.png' :
-      buff = b"Content-Type: image/png\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.gif' :
-      buff = b"Content-Type: image/gif\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.zip' :
-      buff = b"Content-Type: application/zip\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.gz' :
-      buff = b"Content-Type: application/x-compress\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.wav' :
-      buff = b"Content-Type: audio/wav\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.mp3' :
-      buff = b"Content-Type: audio/mp3\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.ogg' :
-      buff = b"Content-Type: audio/ogg\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.ogv' :
-      buff = b"Content-Type: video/ogv\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    elif self.extension == '.mp4' :
-      buff = b"Content-Type: video/wav\n\n" + self.binbuff
-      sys.stdout.buffer.write(buff)
-    else :
-      pass
+    # クッキーをヘッダーに追加
+    for k, v in self.cookies.items() :
+      self.headers.append("Set-Cookie: " + k + "=" + str(v))
+    # ヘッダーを送信
+    self.header()
+    # 埋め込み変数を処理
+    for k, v in self.vars.items() :
+      self.html = self.html.replace("(*" + k + "*)", str(v))
+    # HTML を送信
+    print(self.html)
     return
              
   # HTTP ヘッダーを送信する。
@@ -126,57 +62,41 @@ class WebPage :
     for s in self.headers :
       print(s)
     print()
-    return
 
-  # キャッシュコントロールヘッダ(Cahce-Control)を追加する。
-  #   value の例:  max-age=seconds, no-cache, no-store
-  def cacheControl(self, value) :
-    self.headers.append('Cache-Control: ' + value)
-    return
+  # プレースホルダに値を設定する。
+  def setPlaceHolder(self, key, value) :
+    self.vars[key] = value
 
-  # コンテンツの有効期限を追加する。
-  #    date の例: Wed, 21 Oct 2015 07:28:00 GMT
-  def cacheExpires(self, date) :
-    self.headers.append('Expiresl: ' + date)
-    return
-
-
-  # クッキーがあるかどうかを返す。
-  def isCookie(self, key) :
-    return key in self.cookies.keys()
-
-  # クッキーを登録する。
-  def cookie(self, key, value) :
-    self.cookies[key] =value
-    return
-
-  # cookie() のシノニム  v1.1 で追加
-  def setCookie(self, key, value) :
-    self.cookie(key, value)
-    return
-
-  # クッキーの値を返す。キーが存在しない場合は '' を返す。v1.1 で追加
-  def getCookie(self, key) :
-    if key in self.cookies :
-      return self.cookies[key].value
-    else:
-      return ''
-
-  # ポストバックか？
-  def isPostback(self) :
-    return len(self.params) > 0
-
-  # パラメータが存在するかどうかを返す。v1.1 で追加
+  # パラメータ key があるかどうかを返す。
   def isParam(self, key) :
-    return key in self.params
-
-  # パラメータの値を返す。キーが存在しない場合は '' を返す。v1.1 で追加
+    return key in self.params.keys()
+    
+  # 外部から来る引数の値を得る。
   def getParam(self, key) :
     if self.isParam(key) :
       return self.params[key].value
     else :
       return ''
 
+  # クッキー key の有無を返す。
+  def isCookie(self, key) :
+    return key in self.cookies.keys()
+    
+  # クッキーを得る。
+  def getCookie(self, key) :
+    if self.isCookie(key) :
+      return self.cookies[key]
+    else :
+      return ''
+
+  # クッキーを登録する。
+  def setCookie(self, key, value) :
+    self.cookie(key, value)
+
+  # クッキーを登録する。(Alias)
+  def cookie(self, key, value) :
+      self.cookies[key] = value
+  
   # AppConf.ini を読む。
   def readConf(self) :
     self.conf = {}
@@ -198,7 +118,6 @@ class WebPage :
     filename = os.path.basename(self.params[key].filename)
     with open(f"{dir}/{filename}", "wb") as f :
       f.write(self.params[key].file.read())
-    return
 
   # リダイレクト
   def redirect(self, url, wait=1) :
@@ -220,7 +139,6 @@ class WebPage :
     else :
       self.html = html.format(url.value, wait)
     self.cookies = {}
-    return
 
   # タグ作成
   @staticmethod
@@ -258,40 +176,15 @@ class WebPage :
     buff = b"Content-Type: image/" + type + b"\n\n" + b
     #buff = b"Content-Type: image/png\n\n" + b
     sys.stdout.buffer.write(buff)
-    return
 
   # JSON テキストを応答
   @staticmethod
   def sendJson(json) :
     print("Content-Type: application/json\n")
     print(json)
-    return
 
   # プレーンテキストを応答
   @staticmethod
   def sendText(str) :
     print("Content-Type: text/plain\n")
     print(str)
-    return
-
-  # 拡張子の判別(バイナリーファイルかどうか)
-  @staticmethod
-  def isBinaryFile(file) :
-    binexts = ['.jpg', '.png', '.gif', '.zip', '.gz', '.wav', '.mp3', '.ogg', '.mp4']
-    b = False
-    ext = os.path.splitext(file)[1].lower()
-    for x in binexts :
-      if ext == x :
-        b = True
-        break
-    return b
-
-  # ファイルをバッファに読み込む。
-  def loadFile(self, filePath) :
-    if WebPage.isBinaryFile(filePath) :
-      with open(filePath, mode='rb') as f :
-        self.binbuff = f.read()
-    else :
-      with open(filePath, mode='r', encoding='utf-8') as f :
-        self.html = f.read()
-    return
