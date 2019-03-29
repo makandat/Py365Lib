@@ -64,10 +64,10 @@ header, article, fooder {
   <li><a href="tutorial/DateTime.html">DateTime モジュール</a></li>
   <li><a href="tutorial/MySQL.html">MySQL</a></li>
   <li><a href="tutorial/AWSS3.html">AWS S3</a></li>
-  <li><a href="tutorial/WebPage.html">WebPage (CGI)</a></li>
-  <li><a href="tutorial/CursesApp.html">CursesApp (curses アプリ)</a></li>
-  <li><a href="tutorial/TkApp.html">TkApp (tkinter アプリ)</a></li>
-  <li><a href="tutorial/HTApp.html">HTApp (HTTP サーバ)</a></li>
+  <li><a href="tutorial/WebPage.html">CGI</a></li>
+  <li><a href="tutorial/CursesApp.html">curses アプリ</a></li>
+  <li><a href="tutorial/TkApp.html">tkinterアプリ</a></li>
+  <li><a href="tutorial/HTApp.html">HTTP サーバ</a></li>
  </ul>
  </li>
  <li><a href="#samples">サンプル</a>
@@ -185,11 +185,11 @@ header, article, fooder {
 <h2><a id="Common">Common モジュール</a></h2>
 <p>Common モジュールは主にコンソールアプリを構築するのに便利な雑多な関数を含む。Common モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
 <p style="text-align:center;"><a href="samples/Common.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/Common.html">チュートリアル</a></p><br />
-<p style="text-align:center;"><b>Common モジュールのメンバー一覧</b></p>
+<p style="text-align:center;"><b>FileSystem モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>関数</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
  <tr><td>init_log(filename)</td><td>filename: ログファイルのパス名。省略時は Py365Lib.log となる。</td><td>なし</td><td>ログ機能を有効にする。</td><td>logger モジュールのメソッドでログを出力する。</td></tr>
- <tr><td>args(ix=-1)</td><td>ix: パラメータのインデックス。負の数だとパラメータ配列全体</td><td>コマンド引数またはそのの配列</td><td>コマンド引数を得る。</td><td>コマンド名は含まれない</td></tr>
+ <tr><td>args()</td><td>なし</td><td>コマンド引数の配列</td><td>コマンド引数を得る。</td><td>コマンド名は含まれない</td></tr>
  <tr><td>count_args()</td><td>なし</td><td>コマンド引数の数</td><td>コマンド引数の数を返す。</td><td></td></tr>
  <tr><td>stop(code = 0, message = "", color=ESC_FG_RED)</td><td>
 code: 終了コード<br />message: 終了時に表示するメッセージ。<br />表示色または属性
@@ -296,7 +296,6 @@ method(line): １行づつ処理する関数</td><td>なし</td><td>ファイル
  <tr><td>rmdir(dir, recursive=False)</td><td>dir: ディレクトリ名<br />
 recursive: True ならファイルやサブディレクトリも削除</td><td>なし</td><td>ディレクトリを削除する。</td><td>関数</td></tr>
  <tr><td>grep(str, file)</td><td>str: 検索文字列<br />file: 対象ファイル</td><td>見つかった行番号の配列</td><td>ファイル内を検索する。</td><td>関数</td></tr>
- <tr><td>getFileSize(file)</td><td>file: 対象ファイル</td><td>ファイルのバイト数</td><td>ファイルの長さを得る。</td><td>関数</td></tr>
  <tr><td>listFiles(dir, wildcard="*")</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイルとサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>listDirectories(dir)</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>サブディレクトリ一覧リスト</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>getFileName(path)</td><td>path: パス名</td><td>パスのファイル名部分</td><td>path のファイル名部分を得る。</td><td>関数</td></tr>
@@ -370,15 +369,6 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>re_split(re, s)</td><td>re: 正規表現文字列<br />s: 対象文字列</td><td>なし</td><td>対象の文字列を正規表現で分割してリストにする。</td><td>関数</td></tr>
  <tr><td>re_replace(re, c, s)</td><td>re: 正規表現文字列<br />c:置き換える文字列<br />s: 対象文字列</td>
   <td>新しい文字列</td><td>対象文字列 s を正規表現 re で検索して見つかった部分文字列を c で置き換える。</td><td>関数</td></tr>
- <tr><td>money(x)</td><td>x: 整数・浮動小数点数</td><td>金額</td><td>数字に3文字ごとにカンマを挿入した文字列を返す。</td><td>関数</td></tr>
- <tr><td>substring(s, start, length)</td><td>s: 元の文字列<br />start: 部分文字列の開始位置<br />length: 部分文字列の長さ</td><td>部分文字列</td><td>元の文字列 s の位置 start から長さ length だけ切り取った部分文字列を返す。</td>
-<td>関数</td></tr>
- <tr><td>substr(s, start, end)</td><td>s: 元の文字列<br />start: 部分文字列の開始位置<br />end: 部分文字列の終了位置</td><td>部分文字列</td><td>元の文字列 s の位置 start から位置 end まで切り取った部分文字列を返す。
-</td><td>関数</td></tr>
- <tr><td>left(s, length)</td><td>s: 元の文字列<br />length: 部分文字列の長さ</td><td>部分文字列</td>
-<td>元の文字列 s の先頭から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
- <tr><td>right(s, length)</td><td>s: 元の文字列<br />length: 部分文字列の長さ</td><td>部分文字列</td>
-<td>元の文字列 s の最後から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
 </table>
 
 
@@ -491,16 +481,15 @@ host: ホストのアドレス<br />
  <tr><td>params[key]</td><td>key: キー</td><td>key に対する値</td><td>HTTP パラメータの連想配列。型は MiniStorage 型なので、値は .value になるので注意。(getParam() を使用したほうが良い)</td><td>R/O property</td></tr>
  <tr><td>conf[key]</td><td>key: キー</td><td>key に対する値</td><td>INI ファイル・パラメータの連想配列</td><td>R/O property</td></tr>
  <tr><td>cookies[key]</td><td>key: キー</td><td>key に対する値</td><td>受信したクッキーの連想配列。値は .value になるので注意。(getCookie, setCookie を使用したほうが良い)</td><td>R/W property</td></tr>
- <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定。v1.20 で、JSON などのテキストファイルもロードできるようにした。<br />
-バイナリーデータは self.binbuff に保存するが、self.html を "" にしないと、self.binbuff は使用できない。
-</td><td>R/W property</td></tr>
- <tr><td>echo()</td><td>なし</td><td>なし</td><td>HTML を送信する(ヘッダーとクッキーも同時送信)。設定によっては、画像やJSONなどの送信も可能である。</td><td></td></tr>
+ <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定</td><td>R/W property</td></tr>
+ <tr><td>setPlaceHolder(key, value)</td><td>key: キー<br />value: 値</td><td>なし</td><td>html に含まれる "(*key*)" を value ですべて置換する。</td><td>メソッド</td></tr>
+ <tr><td>echo()</td><td>なし</td><td>なし</td><td>HTML を送信する(ヘッダーとクッキーも同時送信)</td><td></td></tr>
  <tr><td>header(str)</td><td>str:ヘッダー文字列</td><td>なし</td><td>HTTP ヘッダーを送信する。</td><td></td></tr>
  <tr><td>cookie(key, val)</td><td>key:クッキーのキー<br />
 val:クッキーの値</td><td>なし</td><td>クッキーを送信する。</td><td>実際の動作は self.cookies に追加する。</td></tr>
  <tr><td>setCookie(key, val)</td><td>cookie() と同じ。</td><td>なし</td><td>cookie() のシノニム</td><td></td></tr>
- <tr><td>isCookie(key)</td><td>key: キー</td><td>キー key というクッキーが存在すれば True</td><td>指定したキーのクッキーが存在するかを調べる。</td><td></td></tr>
  <tr><td>getCookie(key)</td><td>key: クッキーのキー</td><td>クッキーの値</td><td>キー key が存在すれば、その連想配列の値 (self.cookies[key].value) 、なければ "" を返す。</td><td></td></tr>
+ <tr><td>isParam(key)</td><td>key: パラメータのキー</td><td>パラメータ有無を返す</td><td>キー key が存在すれば、True、そうでなければ False.</td><td></td></tr>
  <tr><td>getParam(key)</td><td>key: パラメータのキー</td><td>パラメータの値</td><td>キー key が存在すれば、その連想配列の値 (self.params[key].value) 、なければ "" を返す。</td><td></td></tr>
  <tr><td>readConf(file)</td><td>file: コンフィグファイル</td><td>なし</td><td>コンフィグファイルを読み込んで conf を初期化する。</td><td></td></tr>
  <tr><td>tag(name, str)</td><td>name: タグ名<br />
@@ -524,12 +513,6 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
    url: URL<br />wait: 待ち時間（秒）
 </td><td>なし</td><td>指定した URL へジャンプする。</td><td></td></tr>
 <tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
-<tr><td>cacheControl(value)</td><td>"no-cache"などを指定</td><td>なし</td><td>キャッシュコントロールヘッダ(Cahce-Control)を追加する。</td><td>v1.20 で追加。</td></tr>
-<tr><td>cacheExpires(date)</td><td>date: 有効期限。例：Wed, 21 Oct 2015 07:28:00 GMT</td><td>なし</td><td>コンテンツの有効期限を追加する。</td><td>v1.20 で追加。</td></tr>
-<tr><td>isBinaryFile(file)</td><td>file:ファイルのパス名</td><td>バイナリーファイルなら True</td><td>(サポートする)バイナリーファイルか判別。</td><td>v1.20 で追加。内部で使用する。</td></tr>
-<tr><td>loadFile(filePath)</td><td>filePath: ロードするファイルのパス名</td><td>なし</td><td>ファイルを読み込んで、self.html または self.binbuff に保存する。どちらにロードするかは、テキストファイルかバイナリーファイルかによる。</td><td>v1.20 で追加。</td></tr>
-<tr><td>self.binbuff</td><td></td><td></td><td>バイナリーファイルを loadFile() メソッドでロードしたときの保存先。その際、self.html は "" であること。</td><td>v1.20 で追加。</td></tr>
-<tr><td>isPostback()</td><td></td><td>パラメータがなければ False、あれば True。</td><td>呼び出しがポストバックか判別</td><td>v1.22 で追加。</td></tr>
  </table>
 <br />
 
