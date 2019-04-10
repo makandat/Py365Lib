@@ -1,5 +1,5 @@
 # coding:utf-8
-# Version 1.10  2019-03-27 added methods.
+# Version 1.11  2019-04-05 getCookie() method bug fix
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -85,7 +85,11 @@ class WebPage :
   # クッキーを得る。
   def getCookie(self, key) :
     if self.isCookie(key) :
-      return self.cookies[key]
+      c = self.cookies[key]
+      if type(c) == str :
+        return c
+      else :
+        return c.value
     else :
       return ''
 
