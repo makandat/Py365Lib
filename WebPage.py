@@ -1,5 +1,5 @@
 # coding:utf-8
-# Version 1.11  2019-04-05 getCookie() method bug fix
+# Version 1.12  2019-04-17 tag() でパラメータが文字列型でないときも対応。
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -146,8 +146,10 @@ class WebPage :
 
   # タグ作成
   @staticmethod
-  def tag(name, str) :
-    return "<" + name + ">" + str + "</" + name + ">"
+  def tag(name, s) :
+    if s == None :
+      s = ""
+    return "<" + name + ">" + str(s) + "</" + name + ">"
 
   # テーブル行を作成
   @staticmethod
