@@ -1,5 +1,5 @@
 # FileSystem.py
-# Version 1.13  2019-01-23
+# Version 1.15  2019-04-19
 import os
 import shutil
 import glob
@@ -194,9 +194,22 @@ def getAbsolutePath(path:str) -> str:
 def getParentDirectory(path:str) -> str:
   return Path(path).parent
 
+# フルパスの中から一番下のディレクトリを得る。
+def getThisDirectory(path:str) -> str :
+  parts = path.split('/')
+  n = len(parts)
+  if n <= 1 :
+    return path
+  else :
+    return parts[n-1]
+
 # カレントディレクトリを得る。
 def getCurrentDirectory() -> str:
   return os.getcwd()
+
+# ホームディレクトリを得る。
+def getHomeDirectory() -> str :
+  return str(Path.home())
 
 # 一時ファイル(パス名)を得る。
 def getTempFile() -> str:
