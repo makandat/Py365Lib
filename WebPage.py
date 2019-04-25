@@ -1,12 +1,12 @@
 # coding:utf-8
-# Version 1.20  2019-04-23 
+# Version 1.13  2019-04-25 tag() で属性にも対応。
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
 import locale
 import http.cookies as Cookie
 import urllib.parse
-import re
+#from syslog import syslog
 
 #
 #  WebPage クラス
@@ -147,10 +147,15 @@ class WebPage :
 
   # タグ作成
   @staticmethod
-  def tag(name, s) :
+  def tag(name:str, s, attr="") -> str:
     if s == None :
       s = ""
-    return "<" + name + ">" + str(s) + "</" + name + ">"
+    ss = str(s)
+    if attr == "" :
+      tag = f"<{name}>{ss}</{name}>"
+    else :
+      tag = f"<{name} {attr}>{ss}</{name}>"
+    return tag
 
   # テーブル行を作成
   @staticmethod
@@ -167,11 +172,6 @@ class WebPage :
   @staticmethod
   def escape(str) :
     return str.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-
-  # タグで囲まれた要素からタグを取り去る。
-  @staticmethod
-  def stripTag(element) :
-    return re.sub(r"<[^>]*?>", "", element)
 
   # 画像を送信する。
   @staticmethod
@@ -200,11 +200,3 @@ class WebPage :
   def sendText(str) :
     print("Content-Type: text/plain\n")
     print(str)
-
-  # PDF を送信する。
-  @staticmethod
-  def sendPDF(file) :
-    with open(file, "rb") as f :
-      b = f.read()
-    buff = b"Content-Type: application/pdf\n\n" + b
-    sys.stdout.buffer.write(buff)
