@@ -1,11 +1,12 @@
 # coding:utf-8
-# Version 1.12  2019-04-17 tag() でパラメータが文字列型でないときも対応。
+# Version 1.20  2019-04-23 
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
 import locale
 import http.cookies as Cookie
 import urllib.parse
+import re
 
 #
 #  WebPage クラス
@@ -167,6 +168,11 @@ class WebPage :
   def escape(str) :
     return str.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
+  # タグで囲まれた要素からタグを取り去る。
+  @staticmethod
+  def stripTag(element) :
+    return re.sub(r"<[^>]*?>", "", element)
+
   # 画像を送信する。
   @staticmethod
   def sendImage(file) :
@@ -194,3 +200,11 @@ class WebPage :
   def sendText(str) :
     print("Content-Type: text/plain\n")
     print(str)
+
+  # PDF を送信する。
+  @staticmethod
+  def sendPDF(file) :
+    with open(file, "rb") as f :
+      b = f.read()
+    buff = b"Content-Type: application/pdf\n\n" + b
+    sys.stdout.buffer.write(buff)
