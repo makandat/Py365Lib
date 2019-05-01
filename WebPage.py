@@ -1,5 +1,5 @@
 # coding:utf-8
-# Version 1.13  2019-04-25 tag() で属性にも対応。
+# Version 1.14  2019-05-01 getPlaceHolder(key) 追加
 #   参考 http://cgi.tutorial.codepoint.net/intro
 import os, sys, io
 import cgi
@@ -67,6 +67,19 @@ class WebPage :
   # プレースホルダに値を設定する。
   def setPlaceHolder(self, key, value) :
     self.vars[key] = value
+
+  # プレースホルダの値を得る。
+  def getPlaceHolder(self, key) :
+    if key in self.vars.keys() :
+      return self.vars[key]
+    else :
+      return ""
+
+  # 連想配列で与えられたキーと値をプレースホルダに値を設定する。
+  def embed(self, hashtable) :
+    for key, value in hashtable.items() :
+      self.vars[key] = value
+    return
 
   # パラメータ key があるかどうかを返す。
   def isParam(self, key) :
