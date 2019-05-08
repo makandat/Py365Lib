@@ -1,6 +1,5 @@
 # coding:utf-8
-# Version 1.14  2019-05-01 getPlaceHolder(key) 追加
-#   参考 http://cgi.tutorial.codepoint.net/intro
+# WebPage.py Version 1.15  2019-05-08 getCookie(key, default="") default 追加
 import os, sys, io
 import cgi
 import locale
@@ -86,18 +85,18 @@ class WebPage :
     return key in self.params.keys()
     
   # 外部から来る引数の値を得る。
-  def getParam(self, key) :
+  def getParam(self, key, default="") :
     if self.isParam(key) :
       return self.params[key].value
     else :
-      return ''
+      return default
 
   # クッキー key の有無を返す。
   def isCookie(self, key) :
     return key in self.cookies.keys()
     
   # クッキーを得る。
-  def getCookie(self, key) :
+  def getCookie(self, key, default="") :
     if self.isCookie(key) :
       c = self.cookies[key]
       if type(c) == str :
@@ -105,7 +104,7 @@ class WebPage :
       else :
         return c.value
     else :
-      return ''
+      return default
 
   # クッキーを登録する。
   def setCookie(self, key, value) :
@@ -113,7 +112,7 @@ class WebPage :
 
   # クッキーを登録する。(Alias)
   def cookie(self, key, value) :
-      self.cookies[key] = value
+    self.cookies[key] = value
   
   # AppConf.ini を読む。
   def readConf(self) :
