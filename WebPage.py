@@ -6,7 +6,6 @@ import locale
 import http.cookies as Cookie
 import urllib.parse
 #from syslog import syslog
-import Common
 
 #
 #  WebPage クラス
