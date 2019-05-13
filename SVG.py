@@ -1,29 +1,38 @@
 # -*- coding: utf-8 -*-
-# SVG Library  ver 1.0  2019-05-11
+# SVG Library  ver 1.1  2019-05-12
 
-VERSION   = "1.0"
+VERSION   = "1.1"
 
 XmlHeader = '<?xml version="1.0" encoding="utf-8" standalone="no" ?>'
 SvgSTART  = '<svg width="{0}" height="{1}" version="1.1" xmlns="http://www.w3.org/2000/svg">'
 TITLE     = "<title>{0}</title>"
+
 LINE      = '<line x1="{0}" y1="{1}" x2="{2}" y2="{3}" style="fill:{4};stroke:{5};stroke-width:{6};" />'
-CIRCLE    = '<circle cx="{0}" cy="{1}" r="{2}" style="fill:{3};stroke:{4};stroke-width:{5};fill-opacity:{6};" />'
-ELLIPSE   = '<ellipse cx="{0}" cy="{1}" rx="{2}" ry="{3}" style="fill:{4};stroke:{5};stroke-width:{6};fill-opacity:{7};" />'
-RECTANGLE = '<rect x="{0}" y="{1}" width="{2}" height="{3}" style="fill:{4};stroke:{5};stroke-width:{6};fill-opacity:{7};" />'
+CIRCLE    = '<circle cx="{0}" cy="{1}" r="{2}" style="fill:{3};stroke:{4};stroke-width:{5};fill-opacity:{6};filter:{7};" />'
+ELLIPSE   = '<ellipse cx="{0}" cy="{1}" rx="{2}" ry="{3}" style="fill:{4};stroke:{5};stroke-width:{6};fill-opacity:{7};filter:{8};" />'
+RECTANGLE = '<rect x="{0}" y="{1}" width="{2}" height="{3}" style="fill:{4};stroke:{5};stroke-width:{6};fill-opacity:{7};filter:{8}" />'
 POLYLINE  = '<polyline points="{0}" style="fill:{1};stroke:{2};stroke-width:{3};fill-opacity:{4};" />'
-POLYGON   = '<polygon points="{0}" style="fill:{1};stroke:{2};stroke-width:{3};fill-opacity:{4}" />'
-PATH      = '<path d="{0}" style="fill:{1};stroke:{2};stroke-width:{3};fill-opacity:{4}" />'
-VIEWPORT  = '<svg x="{0}" y="{1}" width="{2}" height="{3}">'
+POLYGON   = '<polygon points="{0}" style="fill:{1};stroke:{2};stroke-width:{3};fill-opacity:{4};filter:{5};" />'
+PATH      = '<path d="{0}" style="fill:{1};stroke:{2};stroke-width:{3};fill-opacity:{4};filter:{5};" />'
 TEXT      = '<text x="{0}" y="{1}" stroke="{2}" font-family="{3}" font-size="{4}">'
+VIEWBOX   = '<svg viewBox="{0} {1} {2} {3}" xmlns="http://www.w3.org/2000/svg">'
+
+FILTER_BLUR = '''<!-- ぼかし -->
+  <filter id="blur" x="{0}" y="{1}" width="{2}" height="{3}" filterUnits="userSpaceOnUse">
+    <feGaussianBlur stdDeviation="{4}" />
+  </filter>
+'''
 
 # クラス定義
 class SVG :
 
   # コンストラクタ
   def __init__(self, width:int, height:int, title='Made by the SVG class', xheader=True) :
+    self.filters = {}
     self.init(width, height, title, xheader)
+    self.init_filters()
     return
-
+    
   # 描画色
   @property
   def stroke(self) :
@@ -84,9 +93,20 @@ class SVG :
     self.style["font-family"] = value
     return
 
+  # フィルタ
+  @property
+  def filter(self) :
+    return self.style["filter"]
+
+  @filter.setter
+  def filter(self, value) :
+    self.style["filter"] = value
+    return
+
+
   # SVG データをクリアして新しく作り直せるようにする。
   def init(self, width:int, height:int, title:str, xheader:bool) -> None :
-    self.style = {"stroke":"black", "fill":"transparent", "stroke-width":1, "fill-opacity":1, "font-size":16, "font-family":"arial"}
+    self.style = {"stroke":"black", "fill":"transparent", "stroke-width":1, "fill-opacity":1, "font-size":16, "font-family":"arial", "filter":"none"}
     svg_begin = SvgSTART.format(width, height)
     self.lines = []
     if xheader :
@@ -94,16 +114,26 @@ class SVG :
     self.lines.append(svg_begin)
     self.lines.append(TITLE.format(title))
     return
+
+  # フィルタ初期化 (フィルタを使う場合は、通常オーバーライドが必要)
+  def init_filters(self) :
+    self.filters['blur'] = FILTER_BLUR.format(0, 0, 640, 480, 5)
+    return
     
   # ファイル保存
-  def save(self, filePath: str) -> None:
+  def save(self, filePath: str, usefilter=False) -> None:
     svg = self.toXml()
     with open(filePath, "w", encoding="utf-8") as f :
       f.write(svg)
     return
 
   # XML 文字列に変換
-  def toXml(self) :
+  def toXml(self, usefilter=False) :
+    if usefilter :
+      self.lines.append('<defs>')
+      for key in self.filters.keys() :
+        self.lines.append(self.filters[key])
+      self.lines.append('</defs>')
     svg = ""
     for line in self.lines :
       svg += line + "\n"
@@ -136,33 +166,33 @@ class SVG :
     
   # 円
   def circle(self, cx:float, cy:float, r:float) -> str :
-    shape = CIRCLE.format(cx, cy, r, self.fill, self.stroke, self.stroke_width, self.fill_opacity)
+    shape = CIRCLE.format(cx, cy, r, self.fill, self.stroke, self.stroke_width, self.fill_opacity, self.filter)
     self.lines.append(shape)
     return shape
     
   # 楕円
   def ellipse(self, cx:float, cy:float, rx:float, ry:float) -> str :
-    shape = ELLIPSE.format(cx, cy, rx, ry, self.fill, self.stroke, self.stroke_width, self.fill_opacity)
+    shape = ELLIPSE.format(cx, cy, rx, ry, self.fill, self.stroke, self.stroke_width, self.fill_opacity, self.filter)
     self.lines.append(shape)
     return shape
 
   # 矩形
   def rectangle(self, x:float, y:float, width:float, height:float) -> str:
-    shape = RECTANGLE.format(x, y, width, height, self.fill, self.stroke, self.stroke_width, self.fill_opacity)
+    shape = RECTANGLE.format(x, y, width, height, self.fill, self.stroke, self.stroke_width, self.fill_opacity, self.filter)
     self.lines.append(shape)
     return shape
 
   # 折れ線
   def polyline(self, points) -> str:
     pv = SVG.pointsToString(points)
-    shape = POLYLINE.format(pv, self.fill, self.stroke, self.stroke_width, self.fill_opacity)
+    shape = POLYLINE.format(pv, self.fill, self.stroke, self.stroke_width, self.fill_opacity, self.filter)
     self.lines.append(shape)
     return shape
     
   # 多角形
   def polygon(self, points) -> str:
     pv = SVG.pointsToString(points)
-    shape = POLYGON.format(pv, self.fill, self.stroke, self.stroke_width, self.fill_opacity)
+    shape = POLYGON.format(pv, self.fill, self.stroke, self.stroke_width, self.fill_opacity, self.filter)
     self.lines.append(shape)
     return shape
     
@@ -172,13 +202,8 @@ class SVG :
     for cmd in directives :
       pv += (cmd + " ")
     pv += "Z"
-    shape = PATH.format(pv, self.fill, self.stroke, self.stroke_width, self.fill_opacity)
+    shape = PATH.format(pv, self.fill, self.stroke, self.stroke_width, self.fill_opacity, self.filter)
     self.lines.append(shape)
-    return shape
-
-  # ビューポート
-  def viewport(self, x:int, y:int, width:int, height:int) -> str :
-    shape = VIEWPORT.format(x, y, width, height)
     return shape
 
   # テキスト
@@ -188,6 +213,19 @@ class SVG :
     stext += "</text>"
     self.lines.append(stext)
     return stext
+
+  # ビューポートを開始
+  def viewport(self, x:int, y:int, width:int, height:int) -> str :
+    shape = VIEWBOX.format(x, y, width, height)
+    self.lines.append(shape)
+    return shape
+
+  # ビューポートを終了
+  def close_viewport(self) :
+    shape = "</svg>"
+    self.lines.append(shape)
+    return shape
+    
 
   # 点のリストを文字列に変換する。
   @staticmethod
