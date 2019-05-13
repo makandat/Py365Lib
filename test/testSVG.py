@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from Py365Lib import SVG, Common
 
+usefilter = False
 name = "No Name"
 Common.esc_print("bold", "SVG class test")
 if Common.count_args() == 0 :
@@ -29,9 +30,20 @@ elif name == "path" :
   svg.path(["M100 100", "h 120", "v 80"])
 elif name == "text" :
   svg.drawtext(200, 200, "SVG draw text.")
+elif name == "viewport" :
+  svg.viewport(0, 0, 100, 100)
+  svg.stroke_width = 3
+  svg.fill = "silver"
+  svg.rectangle(-10, 5, 80, 80)
+  svg.close_viewport()
+elif name == "filter" :
+  usefilter = True
+  svg.fill = "gray"
+  svg.filter ="url(#blur)"  # id で指定する場合
+  svg.circle(320, 240, 240)
 else :
   Common.stop("Error: bad name.")
 # Show Result
-print(svg.toXml())
-svg.save("/home/user/temp/" + name + ".svg")
+print(svg.toXml(usefilter))
+svg.save("/home/user/temp/" + name + ".svg", usefilter)
 
