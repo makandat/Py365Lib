@@ -1,4 +1,4 @@
-# -*- code=utf-8 -*-
+# -*- coding: utf-8 -*-
 # Version 0.50  2018-09-12
 # Version 1.00  2018-10-03
 # Version 1.10  2018-12-01

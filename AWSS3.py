@@ -1,4 +1,4 @@
-# -*- code=utf-8 -*-
+# -*- coding: utf-8 -*-
 # Version 1.00  2018-12-12
 import boto3
 

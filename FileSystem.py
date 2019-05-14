@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # FileSystem.py
 # Version 1.22  2019-04-24
 import os, io, sys

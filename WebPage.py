@@ -1,4 +1,4 @@
-# coding:utf-8
+# -*- coding:utf-8 -*-
 # WebPage.py Version 1.16  2019-05-08 getCookie(key, default=""), getParam((key, default="") default 追加
 import os, sys, io
 import cgi

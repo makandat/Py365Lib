@@ -15,8 +15,8 @@ class CSS3 :
     return
 
   # 他のCSS3オブジェクトを結合する。
-  def append(self, css) :
-    self.lines.expand(css)
+  def concat(self, css) :
+    self.lines.extend(css)
     return
 
   # 任意の CSS をそのまま追加する。
@@ -26,11 +26,12 @@ class CSS3 :
 
   # 文字列に変換する。
   def tostring(self, withtag=False) :
+    s = ""
     if withtag :
       s = "<style>\n"
     s += "\n".join(self.lines)
     if withtag :
-      s += "<style>\n"
+      s += "\n<style>\n"
     return s
 
   # ファイル保存
@@ -41,13 +42,13 @@ class CSS3 :
     return
 
   # オブジェクトのスタイル定義開始
-  def begin_object(self, obj) :
-    self.lines.append(obj + " {\n")
+  def begin_object(self, tag, prefix="#", obj="") :
+    self.lines.append(tag + prefix + obj + " {")
     return
 
   # オブジェクトのスタイル定義終わり
   def end_object(self) :
-    self.lines.append("}\n")
+    self.lines.append("}")
     return
 
   # 影(箱)
@@ -56,18 +57,18 @@ class CSS3 :
   #      水平方向の影のオフセット距離, 垂直方向の影のオフセット距離, ぼかし距離, 広がり距離
   #   color: 色
   #   inset: 影を内側に付ける。
-　def box_shadow(self, distances, color=None, inset=False) :
-    s += "box-shadow: "
+  def box_shadow(self, distances, color=None, inset=False) :
+    s = " box-shadow: "
     for d in distances :
-      s += d
-      s += " "
+      s += str(d)
+      s += "px "
     if color != None :
       s += color
     else :
       pass
     if inset :
-      s += " inset\n"
-    else
+      s += " inset"
+    else:
       pass
     s += ";"
     self.lines.append(s)
@@ -78,35 +79,31 @@ class CSS3 :
   #   distances: [dx, dy]  影の水平と垂直距離
   #   radius: 影のぼかし半径
   #   color: 影の色
-　def text_shadow(self, distances, radius=None, color=None) :
-    s = "text-shadow: "
-    s += distances[0] + " "
-    s += distances[1]
+  def text_shadow(self, distances, radius=None, color=None) :
+    s = " text-shadow: "
+    s += distances[0] + "px "
+    s += distances[1] + "px"
     if radius != None :
-      s += f" {radius}"
+      s += " " + str(radius)
     if color != None :
-      s += f" {color}"
+      s += " " + str(color)
     s += ";"
     self.lines.append(s)
     return s
 
   # 境界線
-  def border(self, color, style, width) :
-    s = "border :"
-    s += "{0} {1} {2}".format(color, style, width)
+  def border(self, color="black", style="solid", width="thin") :
+    s = "border:"
+    s += " {0} {1} {2}".format(color, style, width)
     s += ";"
     self.lines.append(s)
     return
 
   # 境界線まるめ
-  def border_radius(self, radius) :
-    s = "border-radius :"
-    for r in radius :
-      s += r
-      s += " "
-    s1 = s.strip() + ";"
-    self.lines.append(s1)
-    return s1
+  def border_radius(self, radius="5px") :
+    s = " border-radius:" + radius + ";"
+    self.lines.append(s)
+    return s
     
   # 縁取り
   def outline(self, color, style, width) :
@@ -152,7 +149,7 @@ class CSS3 :
   #  3番目の数値は、水平方向の傾斜率（c）
   #  4番目の数値は、垂直方向の縮尺（d）
   #  5番目の数値は、水平方向の移動距離（e）
-6番目の数値は、垂直方向の移動距離（f）
+  #  6番目の数値は、垂直方向の移動距離（f）
   def transform(self, a, b, c, d, e) :
     s = "transform: matrix({0}, {1}, {2}, {3}, {4});}".format(a, b, c, d, e)
     self.lines.append(s)

@@ -1,4 +1,4 @@
-# -*- code=utf-8 -*-
+# -*- coding: utf-8 -*-
 # Version 2.01  2019-04-23  Text クラス廃止
 from typing import List, Tuple
 import re

@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 # Common.py
-# -*- code=utf-8 -*-
-#   ver 2.30  2019-05-09
+#   ver 2.40  2019-05-14
 import sys
 import linecache
 import os
@@ -10,6 +10,7 @@ import syslog
 import time
 import json
 from typing import List, Any, Callable
+from pprint import pprint
 
 # ログファイルの名前
 LOGFILE = 'Py365Lib.log'
@@ -46,7 +47,7 @@ StrList = List[str]
 
 
 # ロガー初期化
-def init_logger(filename:str=None) -> None:
+def init_logger(filename=None):
   global logger
   if filename == None :
     filename = LOGFILE
@@ -216,6 +217,21 @@ def from_json(jsonText:str) -> Any:
 def to_json(obj: Any) -> str:
   text = json.dumps(obj, indent=4)
   return text
+
+# ファイル内容を表示する。
+def printFile(filePath, code="utf-8") :
+  try :
+    with open(filePath, "r", encoding=code) as f :
+      text = f.read()
+      print(text)
+  except :
+    print("ファイルを開けません。")
+  return
+
+# 配列や連想配列を表示する。
+def printArray(arr) :
+  pprint(arr, indent=2, width=150)
+  return    
 
 # メインとして実行しようとしたとき
 if __name__ == "__main__" :
