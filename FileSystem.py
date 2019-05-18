@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.22  2019-04-24
+# Version 1.23  2019-05-18
 import os, io, sys
 import shutil
 import glob
@@ -279,3 +279,11 @@ def writeJson(path:str, data:Any, pretty:bool=False) -> None:
   with open(path, "w") as f :
     f.write(str)
   return
+
+
+# ファイル名の先頭が "~" ならホームディレクトリに変換する。
+def tilder(path:str) ->str :
+  if path.startswith('~') :
+    return path.replace('~', getHomeDirectory())
+  else :
+    return path
