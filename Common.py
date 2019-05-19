@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Common.py
-#   ver 2.40  2019-05-14
+#   ver 2.50  2019-05-19
 import sys
 import linecache
 import os
 import subprocess
 import logging
-import syslog
+if not os.name == 'nt' :
+  import syslog
 import time
 import json
 from typing import List, Any, Callable
