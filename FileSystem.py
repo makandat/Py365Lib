@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.3  2019-05-19
+# Version 1.23  2019-05-18
 import os, io, sys
 import shutil
 import glob
 from pathlib import Path
 import tempfile
-if not os.name == 'nt' :
-  import pwd  # Windows ではエラーになる。
-  import grp  # Windows ではエラーになる。
+import pwd  # Windows ではエラーになる。
+import grp  # Windows ではエラーになる。
 import csv
 import json
 from typing import Callable, List, Dict, Any
@@ -170,23 +169,27 @@ def grep(str:str, file:str) -> List:
   return result
 
 # 指定したワイルドカードでディレクトリ内を検索する。
-def listFiles(dir:str, wildcard:str="*") -> List:
+def listFiles(dir:str, wildcard:str="*", asstr=False) -> List:
   diru8 = dir.encode('utf-8')
   list = glob.glob(diru8 + b"/" + wildcard.encode('utf-8'))
   result = []
   for item in list :
     if os.path.isfile(item) :
+      if asstr :
+        item = item.decode('utf-8')
       result.append(item)
   return result
 
 # ディレクトリ一覧を得る。
-def listDirectories(dir:str) -> List:
+def listDirectories(dir:str, asstr=False) -> List:
   diru8 = dir.encode('utf-8')
   list = os.listdir(diru8)
   result = []
   for item in list :
     fpath = bytearray(diru8) + b"/" + item
     if os.path.isdir(fpath) :
+      if asstr :
+        fpath = fpath.decode('utf-8')
       result.append(fpath)
   return result
 
