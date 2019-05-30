@@ -6,8 +6,9 @@ import shutil
 import glob
 from pathlib import Path
 import tempfile
-import pwd  # Windows ではエラーになる。
-import grp  # Windows ではエラーになる。
+if not os.name == 'nt' :
+  import pwd  # Windows ではエラーになる。
+  import grp  # Windows ではエラーになる。
 import csv
 import json
 from typing import Callable, List, Dict, Any
