@@ -1,11 +1,13 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 1.16  2019-05-08 getCookie(key, default=""), getParam((key, default="") default 追加
+# WebPage.py Version 1.17  2019-05-30 stripTag()
 import os, sys, io
 import cgi
+import re
 import locale
 import http.cookies as Cookie
 import urllib.parse
-#from syslog import syslog
+if os.name != 'nt' :
+  from syslog import syslog
 
 #
 #  WebPage クラス
@@ -15,7 +17,6 @@ class WebPage :
         
     # コンストラクタ
   def __init__(self, template="") :
-    #Common.init_logger('C:/temp/Logger.log')
     self.headers = ["Content-Type: text/html"] # HTTP ヘッダーのリスト
     self.vars =    {}  # HTML 埋め込み変数
     self.params =  {}  # HTTP パラメータ
@@ -183,6 +184,12 @@ class WebPage :
     buff += "<tr>\n"
     return buff
 
+  # タグを取る。
+  @staticmethod
+  def stripTag(s) :
+    p = re.compile(r"<[^>]*?>")
+    return p.sub("", s)
+    
   # HTML エスケープ文字を変換
   @staticmethod
   def escape(str) :
