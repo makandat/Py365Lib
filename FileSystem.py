@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.23  2019-05-18
+# Version 1.24  2019-06-13
 import os, io, sys
 import shutil
 import glob
@@ -259,8 +259,8 @@ def getLinkedPath(link:str) -> str :
 # CSV ファイルを読む。
 def readCsv(path:str, header:bool=True, delim:str=",", lterm:str="\n") -> List[StrList]:
   rows = []
-  with open(path, "r") as fcsv :
-    f = csv.reader(fcsv, delimiter=delim , doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
+  with open(path, "r", encoding="utf-8") as fcsv :
+    f = csv.reader(fcsv, delimiter=delim , doublequote=True, lineterminator=lterm, quotechar='"', skipinitialspace=True)
     if header :
       next(f)  # ヘッダー読み飛ばし
     for row in f :
