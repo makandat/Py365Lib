@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.24  2019-06-13
+# Version 1.23  2019-05-18
 import os, io, sys
 import shutil
 import glob
 from pathlib import Path
 import tempfile
-if not os.name == 'nt' :
+if os.name != 'nt' :
   import pwd  # Windows ではエラーになる。
   import grp  # Windows ではエラーになる。
 import csv
@@ -18,19 +18,19 @@ StrList = List[str]
 
 
 # テキストファイルを読んでその内容を返す。
-def readAllText(file: str) -> str :
-  f = open(file, mode="r", buffering=-1, encoding="utf8")
+def readAllText(file: str, encode='utf-8') -> str :
+  f = open(file, mode="r", buffering=-1, encoding=encode)
   s = f.read()
   f.close()
   return s
 
 # テキストをファイルに書く。
-def writeAllText(file: str, text: str, append:bool=False) -> None:
+def writeAllText(file: str, text: str, append:bool=False, encode='utf-8') -> None:
   if append == True :
-    with open(file, "a", encoding="utf-8") as f :
+    with open(file, "a", encoding=encode) as f :
       f.write(text)
   else :
-    with open(file, "w", encoding="utf-8") as f :
+    with open(file, "w", encoding=encode) as f :
       f.write(text)
   return
 
@@ -45,8 +45,8 @@ def readLines(file: str, encode='utf-8') :
   return lines
     
 # ファイルを１行づつ読んで callback で処理する。
-def readAllLines(file: str, callback: Callable) -> None:
-  with open(file) as f :
+def readAllLines(file: str, callback: Callable, encode='utf-8') -> None:
+  with open(file, mode='r', encoding=encode) as f :
     for line in f:
       callback(line.rstrip())
   return
@@ -259,8 +259,8 @@ def getLinkedPath(link:str) -> str :
 # CSV ファイルを読む。
 def readCsv(path:str, header:bool=True, delim:str=",", lterm:str="\n") -> List[StrList]:
   rows = []
-  with open(path, "r", encoding="utf-8") as fcsv :
-    f = csv.reader(fcsv, delimiter=delim , doublequote=True, lineterminator=lterm, quotechar='"', skipinitialspace=True)
+  with open(path, "r") as fcsv :
+    f = csv.reader(fcsv, delimiter=delim , doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
     if header :
       next(f)  # ヘッダー読み飛ばし
     for row in f :
