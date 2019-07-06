@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.23  2019-05-18
+# Version 1.24  2019-07-06
 import os, io, sys
 import shutil
 import glob
@@ -180,6 +180,20 @@ def listFiles(dir:str, wildcard:str="*", asstr=False) -> List:
         item = item.decode('utf-8')
       result.append(item)
   return result
+
+# 指定したフォルダ内のオブジェクト再帰的に検索する。
+def listFilesRecursively(dir:str, wildcard:str="*", asstr=False) -> List :
+  diru8 = dir.encode('utf-8')
+  list = glob.glob(diru8 + b"/**/" + wildcard.encode('utf-8'), recursive=True)
+  result = []
+  for item in list :
+    if os.path.isfile(item) :
+      if asstr :
+        item = item.decode('utf-8')
+      result.append(item)
+  return result
+  
+  
 
 # ディレクトリ一覧を得る。
 def listDirectories(dir:str, asstr=False) -> List:
