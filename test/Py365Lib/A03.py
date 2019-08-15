@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import Common
 
 # コマンドを実行して終了コードを確認する。(パラメータは配列であることに注意)
 cmd = ["mkdir", "./testA03"]

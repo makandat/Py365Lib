@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import Common
 
 # コマンドライン引数のチェック
 if Common.count_args() == 0 :
@@ -9,13 +9,12 @@ if Common.count_args() == 0 :
 err = 0
 
 #  パラメータ取得例
-fileName = Common.args()[0]
+fileName = Common.args(0)
 print(fileName)
 
 try :
   # ファイルの内容を表示する。
-  content = FileSystem.readAllText(fileName)
-  print(content) 
+  Common.printFile(fileName) 
 except Exception as e :
   # 例外発生時の処理
   Common.esc_print(Common.ESC_FG_RED, e.args)

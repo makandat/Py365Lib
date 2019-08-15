@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import Text
 from pprint import pprint
 
 # 文字列から数値への変換とフォーマット化

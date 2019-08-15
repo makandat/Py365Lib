@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import FileSystem
 
 path = "/home/user/bin/rmcr.pl"
 

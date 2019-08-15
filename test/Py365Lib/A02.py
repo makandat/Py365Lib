@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from Py365Lib import *
+from Py365Lib import Common, FileSystem 
 
 # ログファイルの名前を決める。
 logFile = FileSystem.changeExt(sys.argv[0], ".log")

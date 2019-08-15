@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import Text
 from pprint import pprint
 
 str1 = "-rw-r--r-- 1 user user  406 11月 22 11:02 A02.log"

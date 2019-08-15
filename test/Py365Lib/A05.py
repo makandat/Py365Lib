@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from Py365Lib import *
+from Py365Lib import Common
 
 key = Common.readline("環境変数の名前を入力してください。>")
 try :

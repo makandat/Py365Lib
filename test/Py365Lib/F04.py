@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import Common, FileSystem, Text
 
 buff = ""
 
@@ -18,7 +18,7 @@ if Common.count_args() == 0 :
 err = 0
 
 #  パラメータ取得例
-fileName = Common.args()[0]
+fileName = Common.args(0)
 
 try :
   # ファイルの内容を表示する。

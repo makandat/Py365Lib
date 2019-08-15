@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import Text
 from pprint import pprint
 
 assert Text.isdigit('0') == True

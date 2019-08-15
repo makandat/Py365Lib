@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from Py365Lib import *
+from Py365Lib import Common
 
 # バイト列を文字列にする。
 data = b'ABCDEF'

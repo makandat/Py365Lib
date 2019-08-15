@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from Py365Lib import *
+from Py365Lib import Common
 
 # esc_print 関数を使うと簡単に表示属性を変更できる。
 Common.esc_print(Common.ESC_FG_GREEN, sys.argv[0])
