@@ -1,4 +1,4 @@
-"# Py365Lib" 
+# Py365Lib
 This library and tools help you to create small Python3 application quickly.
 And it is consisted of the modules below.
 
@@ -16,20 +16,20 @@ And it is consisted of the modules below.
 - CSS3
 - JQuery (under consruction)
 
-##Requirements
+## Requirements
 - Python3
 
-##Usage
+## Usage
 Only Japanese document is provided now.
 [Py365Lib Document (ja)] (http://www7b.biglobe.ne.jp/~makandat/Py365Lib/index.html)
 
 
-##Contributing
+## Contributing
 Contributions, issues and feature requests are welcome.
 
-##Author
+## Author
 Github: makandat
 
-##License
+## License
 GNU GPL
 
