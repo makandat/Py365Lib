@@ -36,6 +36,8 @@ figure {
 <p style="text-align:center;"><a href="../index.html">もどる</a></p>
 <div class="i2">
 
+
+<!-- サンプル１ フォームの使用例 -->
 <h3>サンプル１</h3>
 <p>フォームの使用例</p>
 <figure>
@@ -43,28 +45,30 @@ figure {
 </figure>
 
 <pre class="code"><code>#!/usr/bin/env python3
+#!C:\Program Files (x86)\Python37\python.exe
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト
-#   フォーム
-import WebPage as page
-import FileSystem as fsys
-# import os
+from WebPage import WebPage
 
-class TestPage(page.WebPage) :
+class TestPage(WebPage) :
+  COKEY = "key101"
+
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'text1' in self.params :
-        self.vars['message'] = self.getParam('text1') + "&lt;br />\n"
+    message = self.getParam("text101", default="メッセージです。text101 is null.")
+    if self.isCookie(TestPage.COKEY) :
+      self.setPlaceHolder("message", "echo=" + message + ", cookie=" + self.getCookie(TestPage.COKEY))
     else :
-        self.vars['message'] = fsys.FileSystem.getCurrentDirectory() + "&lt;br />\n"  # os.getcwd()
-    self.cookie('key1', 'value1')
-    if 'key1' in self.cookies :
-        self.vars['message'] += (" cookie key1=" + self.cookies['key1'])
+      self.setPlaceHolder("message", "echo=" + message + ", cookie=undefined")
+      # (注意) クッキーの値は日本語不可とする。長すぎるクッキーも不可。
+      self.setCookie(TestPage.COKEY, "COOKIE101")
+    return
 
 # メイン開始位置
-wp = TestPage('templates/template.html')
-wp.echo()</code></pre>
+wp = TestPage('templates/testWebPage.html')
+wp.echo()
+</code></pre>
 <br />
 <h4>templates/template.html</h4>
 <pre class="code"><code>&lt;!doctype html>
@@ -76,13 +80,12 @@ wp.echo()</code></pre>
 
 &lt;body style="margin-left:5%;margin-right:5%">
 &lt;h1 style="text-align:center;color:crimson;padding:10px;">WebPage テスト&lt;/h1>
-&lt;p style="margin-left:10%;">&lt;a href="/">HOME&lt;/a>&lt;/p>
 &lt;br />
-&lt;form method="POST">
+&lt;form method="POST" style="margin-left:30%;">
 &lt;div style="float:left">
-&lt;label for="text1">text1&lt;/label>&lt;input type="text" name="text1" id="text1" />
+&lt;label for="text1">text101&lt;/label>&lt;input type="text" name="text101" id="text101" />
 &lt;/div>
-&lt;div>&lt;input type="submit" value="submit" />
+&lt;div>&lt;input type="submit" value="submit" />&lt;/div>
 &lt;/form>
 &lt;br style="clear:both;" />
 &lt;p style="text-align:center;color:blue;">
@@ -90,18 +93,21 @@ wp.echo()</code></pre>
 &lt;/p>
 &lt;p>&nbsp;&lt;/p>
 &lt;/body>
-&lt;/html></code></pre>
+&lt;/html>
+</code></pre>
 </div>
 <br />
 
 
+<!-- サンプル２ MySQL モジュールを利用 -->
 <div class="i2">
 <h3>サンプル２</h3>
 <p>MySQL モジュールを利用してテーブルにクエリーを行って、取得した内容を表として表示する。</p>
 <figure>
  <img src="img/testWebPage1.png" />
 </figure>
-<pre class="code"><code>#!/usr/bin/env python3
+<pre class="code"><code>#!C:\Program Files (x86)\Python37\python.exe
+#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト (1)
 #   MySQL を利用
@@ -116,24 +122,25 @@ class TestPage(page.WebPage) :
     try :
       self.__mysql = MySQL.MySQL()
       rows = self.__mysql.query("SELECT `date`, FORMAT(payment, 0) AS payment, info FROM smbcvisa")
-      self.vars['result'] = ""
+      self.setPlaceHolder('result', "")
       # クエリー
       self.getResult(rows)
-      self.vars['message'] = "クエリー OK"
+      self.setPlaceHolder('message', "クエリー OK")
     except :
-      self.vars['message'] = "致命的エラーを検出。詳しくは Apache2 ログを参照。"
+      self.setPlaceHolder('message', "致命的エラーを検出。詳しくは Apache2 ログを参照。")
 
   # クエリー結果を表にする。
   def getResult(self, rows) :
     result = ""
     for row in rows :
       result += page.WebPage.table_row(row)
-    self.vars['result'] = result
+    self.setPlaceHolder('result', result)
     return
 
 # メイン開始位置
 wp = TestPage('templates/template1.html')
-wp.echo()</code></pre>
+wp.echo()
+</code></pre>
 <br />
 
 <h4>templates/template1.html</h4>
@@ -166,6 +173,7 @@ wp.echo()</code></pre>
 
 
 
+<!-- サンプル３ ファイルのアップロードを行うサンプル -->
 <div class="i2">
 <h3>サンプル３</h3>
 <p>ファイルのアップロードを行うサンプル</p>
@@ -173,28 +181,32 @@ wp.echo()</code></pre>
  <img src="img/testWebPage2.png" />
 </figure>
 
-<pre class="code"><code>#!/usr/bin/env python3
+<pre class="code"><code>#!C:\Program Files (x86)\Python37\python.exe
+#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト (2)
 #   ファイルアップロード
 import WebPage as page
 import FileSystem as fsys
-import MySQL
+import Common
 
 class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
     if self.isParam('file1') :
-      self.saveFile('file1', '/var/www/data')
-      file1 = self.params['file1']
-      self.vars['message'] = 'アップロードOK　' + file1.filename
+      if Common.is_windows() :
+         self.saveFile('file1', 'C:/Apache24/data')
+      else :
+         self.saveFile('file1', '/var/www/data')
+      self.setPlaceHolder('message', 'アップロードOK')
     else :
-      self.vars['message'] = 'ファイルを指定してください。'
+      self.setPlaceHolder('message', 'ファイルを指定してください。')
 
 # メイン開始位置
 wp = TestPage('templates/template2.html')
-wp.echo()</code></pre>
+wp.echo()
+</code></pre>
 <br />
 
 <h4>templates/template2.html</h4>
@@ -229,6 +241,7 @@ wp.echo()</code></pre>
 
 
 <div class="i2">
+<!-- サンプル４ ページのリダイレクトを行うサンプル -->
 <h3>サンプル４</h3>
 <p>ページのリダイレクトを行うサンプル</p>
 <figure>
@@ -248,7 +261,7 @@ class TestPage(page.WebPage) :
     if self.isParam('text1') :
         self.redirect(self.getParam('text1'))
     else :
-        self.vars['message'] = "指定URLへジャンプします。"
+        self.setPlaceHolder('message', "指定URLへジャンプします。")
 
 # メイン開始位置
 wp = TestPage('templates/template3.html')
@@ -286,6 +299,7 @@ wp.echo()</code></pre>
 
 
 <div class="i2">
+<!-- サンプル５ Ajax を利用してプレーンテキストを取得するサンプル -->
 <h3>サンプル５</h3>
 <p>Ajax を利用してプレーンテキストを取得するサンプル</p>
 <figure>
@@ -324,7 +338,7 @@ MyPage()</code></pre>
   function btnclick() {
     var text1 = $('#text1').val();
     var temp = $('input[name=temp]:checked').val();
-    $.get('/cgi-bin/PyOOLib/fahren.cgi',
+    $.get('/cgi-bin/Python3/fahren.cgi',
      {"text1":text1, "temp":temp}, 
      function(data) { $('#message').text(data); });
   }
@@ -358,6 +372,7 @@ MyPage()</code></pre>
 
 
 <div class="i2">
+<!-- サンプル６ Ajax を利用して JSON を取得して表示するサンプル -->
 <h3>サンプル６</h3>
 <p>Ajax を利用して JSON を取得して表示するサンプル</p>
 <figure>
@@ -392,7 +407,7 @@ MyPage()</code></pre>
 $(function() {
   $('#button1').click(function() {
     complex = $('#complex').val();
-    $.getJSON('/cgi-bin/PyOOLib/complex.cgi', {"complex":complex}, function(data) { $('#result').text(data); });
+    $.getJSON('/cgi-bin/Python3/complex.cgi', {"complex":complex}, function(data) { $('#result').text(data); });
   });
 });
 &lt;/script>
@@ -420,6 +435,7 @@ $(function() {
 
 
 <div class="i2">
+<!-- サンプル７ 画像を返す CGI の例 -->
 <h3>サンプル７</h3>
 <p>画像を返す CGI の例</p>
 <figure>
@@ -471,6 +487,7 @@ MyPage()</code></pre>
 
 
 <div class="i2">
+<!-- サンプル８ TextArea, Select, CheckBox, Radio 使用例 -->
 <h3>サンプル８</h3>
 <p>TextArea, Select, CheckBox, Radio 使用例</p>
 <figure>
@@ -478,21 +495,21 @@ MyPage()</code></pre>
 </figure>
 
 <h4>CGI</h4>
-<pre class="code"><code>#!/usr/bin/env python3
+<pre class="code"><code>#!C:\Program Files (x86)\Python37\python.exe
+#!/usr/bin/env python3
 # -*- code=utf-8 -*-
 # WebPage クラスのテスト (7)
 #   TextArea, Select, CheckBox, Radio
 import WebPage as page
-import os
 
 class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
     if self.isParam('text1') :
-        self.vars['message'] = self.getValues()
+      self.setPlaceHolder('message', self.getValues())
     else :
-        self.vars['message'] = os.getcwd()
+      self.setPlaceHolder('message', '')
 
   # コントロールの値を得る。
   def getValues(self) :
@@ -505,7 +522,8 @@ class TestPage(page.WebPage) :
 
 # メイン開始位置
 wp = TestPage('templates/template7.html')
-wp.echo()</code></pre>
+wp.echo()
+)</code></pre>
 <br />
 <h4>HTML</h4>
 <pre class="code"><code>&lt;!doctype html>

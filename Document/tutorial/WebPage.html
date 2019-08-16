@@ -118,7 +118,7 @@ class Hello(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    self.vars['message'] = "Hello, world!"
+    self.setPlaceHolder('message', "Hello, world!")
 
 # メイン開始位置
 wp = Hello('templates/hellow_world.html')
@@ -157,7 +157,7 @@ wp.echo()
 <p>WebPage の HTML テンプレートは文法的にはただの HTML です。特別な構文はなく、単なる "(*" と "*)" で囲んだ key に一致するワードを self.vars[key] で置き換えるだけです。self.vars[key] の内容は単なる値だけでなく一般的には HTML です。
 </p>
 <p>
-WebPage の HTML テンプレートには特別な構文がないので、繰り返しや条件を使って生成される HTML は、Python で作成し、<span>self.vars[key]</span> に入れて HTML 応答送信前に "(*key*)" をその内容で置き換えます。
+WebPage の HTML テンプレートには特別な構文がないので、繰り返しや条件を使って生成される HTML は、Python で作成し、<span>self.vars[key]</span> に入れて HTML 応答送信前に "(*key*)" をその内容で置き換えます。この置き換えを行うメソッドが <span>setPlaceHolder(key, value)</span> です。また、一括して key:value ペアを置き換えることも可能です。その場合は、<span>embed(obj)</span> を使用します。
 </p>
 <p>先の <a href="#hello_world.cgi">hello_world.cgi</a> の例で、テンプレート (hellow_world.html) の "(*message*)" が CGI (hello_world.cgi) の self.vars['message'] に置き換えられます。
 </p>
@@ -189,10 +189,10 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'text1' in self.params :
-        self.vars['message'] = self.getParam('text1')  # self.params['text1'].value も可。
+    if self.isParam('text1') :
+        self.setPlaceHolder('message', self.getParam('text1'))
     else :
-        self.vars['message'] = fs.getCurrentDirectory()
+        self.setPlaceHolder('message', fs.getCurrentDirectory())
 
 # メイン開始位置
 wp = TestPage('templates/template.html')
@@ -259,11 +259,9 @@ p.echo()
 <!-- クッキー -->
 <h2><a id="6">クッキー</a></h2>
 <p>
-受信したクッキーはインスタンス変数 <span>self.cookies</span> で取得できます。この変数は、キーがクッキー名のディクショナリです。
-</p>
+受信したクッキーはメソッド <span>self.getCookie(key)</span> で取得できます。</p>
 <p>
-クッキーの送信は、<span>self.cookie(key, value)</span> で送信できます。self.cookies に含まれるクッキーも同時に再送信されます。クッキーを削除するには、ディクショナリの要素を削除します。(del 文で削除できる)
-</p>
+クッキーの送信は、<span>self.cookie(key, value) あるいは self.setCookie(key, value)</span> で送信できます。</p>
 <p>クッキーの値を変更するにも、self.cookie(key, value) を使用できます。</p>
 <br />
 <h4>(Example) Cookie</h4>
@@ -284,14 +282,13 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    if 'count' in self.cookies :
+    if self.isCookie('count') :
         c = int(self.getCookie('count'))
-        # c = int(self.cookies['count'].value) でも可。
         c += 1
-        self.cookie('count', str(c))
-        self.vars['count'] = str(c)
+        self.cookie('count', str(c))  # self.setCookie('count', str(c)) も同じ。
+        self.setPlaceHolder('count', str(c))
     else :
-        self.vars['count'] = '0'
+        self.setPlaceHolder('count', '0')
         self.cookie('count', '0')
 
 # メイン開始位置
@@ -384,10 +381,10 @@ class TestPage(page.WebPage) :
     super().__init__(template)
     if self.isParam('file1') :
       self.saveFile('file1', '/var/www/data')
-      file1 = self.params['file1']
-      self.vars['message'] = 'アップロードOK　' + file1.filename
+      file1 = self.getParam('file1')
+      self.setPlaceHolder('message', 'アップロードOK')
     else :
-      self.vars['message'] = 'ファイルを指定してください。'
+      self.setPlaceHolder('message', 'ファイルを指定してください。')
 
 # メイン開始位置
 wp = TestPage('templates/template2.html')
@@ -447,10 +444,9 @@ class TestPage(page.WebPage) :
   def __init__(self, template) :
     super().__init__(template)
     if self.isParam('text1') :
-        #self.vars['message'] = self.getParams('text1') + "&lt;br />\n"
         self.redirect(self.getParam('text1'))
     else :
-        self.vars['message'] = "指定URLへジャンプします。"
+        self.setPlaceHolder('message', "指定URLへジャンプします。")
 
 # メイン開始位置
 wp = TestPage('templates/template3.html')
@@ -583,7 +579,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    self.params['message'] = ''
+    self.setParam('message', '')
 
 # メイン開始位置
 wp = TestPage('templates/template4.html')
@@ -673,7 +669,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    self.vars['message'] = ''
+    self.setPlaceHolder('message', '')
 
 # メイン開始位置
 wp = TestPage('templates/template5.html')
@@ -743,7 +739,7 @@ class TestPage(page.WebPage) :
   # コンストラクタ
   def __init__(self, template) :
     super().__init__(template)
-    self.vars['message'] = ''
+    self.setPlaceHolder('message', '')
 
 # メイン開始位置
 wp = TestPage('templates/template6.html')

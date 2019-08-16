@@ -43,7 +43,7 @@ else :
   for s in Common.args() :
     Common.esc_print(Common.ESC_FG_GREEN, s)
 
-testNo = int(Common.args()[0])
+testNo = int(Common.args(0))
 
 if testNo == 1 :
   # ログのテスト
@@ -102,7 +102,7 @@ if Common.count_args() == 0 :
 err = 0
 
 #  パラメータ取得例
-fileName = Common.args()[0]
+fileName = Common.args(0)
 print(fileName)
 
 try :
@@ -192,6 +192,108 @@ print(Common.ESC_FG_CYAN + Common.ESC_BG_BLUE + Common.ESC_BLINK + "Complex Esca
 
 # ESC_NOMRAL でもとに戻ったか確認
 print("Reset")
+</code></pre>
+<br />
+
+
+
+<h3>サンプル (test/Py365Lib/A05.py)</h3>
+<p>環境変数の値を表示する。</p>
+<pre class="code"><code>
+#!/usr/bin/env python3
+import sys
+from Py365Lib import Common
+
+key = Common.readline("環境変数の名前を入力してください。>")
+try :
+  value = Common.get_env(key)
+  print("{0} : {1}".format(key, value))
+except :
+  Common.esc_print("red", "例外を検出。")
+</code></pre>
+<br />
+
+
+
+<h3>サンプル (test/Py365Lib/A06.py)</h3>
+<p>バイト列と文字列の相互変換の例。</p>
+<pre class="code"><code>
+#!/usr/bin/env python3
+from Py365Lib import Common
+
+# バイト列を文字列にする。
+data = b'ABCDEF'
+str = Common.from_bytes(data)
+print(str)
+print(Common.is_str(str))
+
+# 文字列をバイト列にする。
+str = "01234"
+data = Common.to_bytes(str)
+print(data)
+</code></pre>
+<br />
+
+
+<h3>サンプル (test/Py365Lib/A07.py)</h3>
+<p>Python オブジェクトと JSON 文字列との相互変換例。</p>
+<pre class="code"><code>
+#!/usr/bin/env python3
+from Py365Lib import Common
+from pprint import pprint
+
+# JSON 文字列をオブジェクトにする。
+data = '''[
+ {"type":"label", "name":"Label1", "text":"Label1", "left":20, "top":3},
+ {"type":"button", "name":"btnOK", "text":" OK ", "left":20, "top":4}
+]'''
+obj = Common.from_json(data)
+pprint(obj)
+
+# オブジェクトを JSON 文字列にする。
+json = Common.to_json(obj)
+print(json)
+</code></pre>
+<br />
+
+
+<h3>サンプル (test/Py365Lib/A08.py)</h3>
+<p>変数の型判別関数の使用例。</p>
+<pre class="code"><code>
+#!/usr/bin/python3
+from Py365Lib import Common
+
+# isset
+print("# isset")
+print(Common.isset(1))
+print(Common.isset(None))
+
+# isnull
+print('# isnull')
+print(Common.isnull(1))
+print(Common.isnull(None))
+
+# is_str
+print('# is_str')
+print(Common.is_str(0))
+print(Common.is_str('ABC'))
+
+# is_int
+print('# is_int')
+print(Common.is_int(0))
+print(Common.is_int('ABC'))
+
+# is_float
+print('# is_float')
+print(Common.is_float('0.1'))
+print(Common.is_float(1))
+print(Common.is_float(0.1))
+
+# is_bool
+print('# is_bool')
+print(Common.is_bool(False))
+print(Common.is_bool(None))
+print(Common.is_bool(1))
 </code></pre>
 <br />
 
