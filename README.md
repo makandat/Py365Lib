@@ -165,9 +165,7 @@ And it is consisted of the modules below.
 	    print("Bad testnumber.")
 
 ### AWSS3
-#!/usr/bin/python3
-# -*- coding=utf-8 -*-
-#  AWSS3 クラスのテスト
+	#!/usr/bin/python3
 	import sys
 	from pprint import pprint
 	from Py365Lib import AWSS3 as aws
@@ -214,7 +212,7 @@ And it is consisted of the modules below.
 
 ## WebPage (CGI)
 
-![hello world CGI] (http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/CGI_hello_world.png)
+![hello world CGI](http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/CGI_hello_world.png)
 
 ### hello_world.cgi
 	#!/usr/bin/env python3
@@ -262,7 +260,7 @@ And it is consisted of the modules below.
 
 ## CursesApp
 
-![Hello World!] (http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/CursesApp_HelloWorld.png)
+![Hello World!](http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/CursesApp_HelloWorld.png)
 
 	#!/usr/bin/python3
 
@@ -292,7 +290,7 @@ And it is consisted of the modules below.
 
 ## TkApp
 
-![Hello World] (http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/Tk_Hello.png)
+![Hello World](http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/Tk_Hello.png)
 
 	import sys
 	from Py365Lib import TkApp as tkapp
@@ -312,7 +310,7 @@ And it is consisted of the modules below.
 
 ## HTApp
 
-![Hello World] (http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/HTApp_Hello_World.png)
+![Hello World](http://www7b.biglobe.ne.jp/~makandat/Py365Lib/tutorial/HTApp_Hello_World.png)
 
 	#!/usr/bin/env python3
 	import os
