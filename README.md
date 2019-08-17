@@ -20,14 +20,14 @@ And it is consisted of the modules below.
 	#!/usr/bin/env python3
 	from Py365Lib import Common
 	
-	# Confirm to exist the command line parameters
+	# Confirm to exist the command line parameters.
 	if Common.count_args() == 0 :
-	  Common.stop(9, "Enter the parameters.")
+	  Common.stop(9, "A parameter must be exists.")
 	
-	# Define the error code (0 means non-error)
+	# Define the error code (0 means non-error).
 	err = 0
 	
-	#  Getting a parameter.
+	#  Get a parameter.
 	fileName = Common.args(0)
 	print(fileName)
 	
@@ -50,8 +50,63 @@ And it is consisted of the modules below.
 
 
 ### FileSystem
+	#!/usr/bin/env python3
+	from Py365Lib import Common, FileSystem
+
+	# Confirm to exist the command line parameters
+	if Common.count_args() == 0 :
+	  Common.stop(9, "A file path must be specified as the parameter.")
+
+	# Define the error code (0 means non-error).
+	err = 0
+
+	#  #  Get a parameter.
+	fileName = Common.args(0)
+	Common.esc_print(Common.ESC_FG_CYAN, fileName)
+
+	# Confirm the file exists.
+	if not FileSystem.exists(fileName) :
+	  Common.stop(8, "The file does not exist.")
+	    
+	# Get the attributes of the file.
+	b = FileSystem.isFile(fileName)
+	print("Is file?： {0}".format(b))
+	b = FileSystem.isDirectory(fileName)
+	print("Is directory?： {0}".format(b))
+	b = FileSystem.isLink(fileName)
+	print("Is link?： {0}".format(b))
+	mode = FileSystem.getAttr(fileName)
+	print("File mode： {0:09o}".format(mode))
+	owner = FileSystem.getOwner(fileName)
+	print("Owner： {0}".format(owner))
+	group = FileSystem.getGroup(fileName)
+	print("Group： {0}".format(group))
+
+	# Exit with termination code (err).
+	exit(err)
+
 
 ### Text
+	#!/usr/bin/env python3
+	from Py365Lib import Common, Text
+
+	# Define variable "txt".
+	txt = "0123456789"
+
+	# Concat text.
+	to = Text.concat(txt, "ABCDEF")
+	print(to)
+
+	# Slices
+	print(Text.substring(to, 1, 4))  # Start position 1, length is 4 chars.
+	print(Text.substr(to, 1, 4))     # From the position 1 to 4.
+	print(Text.left(to, 4))   # Left side length 4 chars.
+	print(Text.right(to, 4))  # Right side 4 chars.
+
+	# Repeat '*' 10 times.
+	to = Text.times('*', 10)
+	print(to)
+
 
 ### DateTime
 
