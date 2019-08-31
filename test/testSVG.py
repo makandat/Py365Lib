@@ -41,6 +41,14 @@ elif name == "filter" :
   svg.fill = "gray"
   svg.filter ="url(#blur)"  # id で指定する場合
   svg.circle(320, 240, 240)
+elif name == "tag" :
+  
+  svg.stroke_width =2
+  svg.stroke = "red"
+  svg.line(20, 240, 640, 0)
+  svg.stroke = "magenta"
+  svg.line(20, 480, 640, 0)
+  print(svg.svgtag())
 else :
   Common.stop("Error: bad name.")
 # Show Result

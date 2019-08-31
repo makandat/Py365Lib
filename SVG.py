@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# SVG Library  ver 1.1  2019-05-12
+# SVG Library  ver 1.2  2019-08-31
 
-VERSION   = "1.1"
+VERSION   = "1.2"
 
 XmlHeader = '<?xml version="1.0" encoding="utf-8" standalone="no" ?>'
 SvgSTART  = '<svg width="{0}" height="{1}" version="1.1" xmlns="http://www.w3.org/2000/svg">'
@@ -28,6 +28,8 @@ class SVG :
 
   # コンストラクタ
   def __init__(self, width:int, height:int, title='Made by the SVG class', xheader=True) :
+    self.width = width
+    self.height = height
     self.filters = {}
     self.init(width, height, title, xheader)
     self.init_filters()
@@ -151,6 +153,19 @@ class SVG :
       i += 1
     return
 
+  # svg タグ (HTML 直接埋め込み用) 作成
+  def svgtag(self, usefilter=False) :
+    tag = f'<svg x="0px" y="0px" width="{self.width}px" height="{self.height}px" viewBox="{0} {0} {self.width} {self.height}">'
+    if usefilter :
+      self.lines.append('<defs>')
+      for key in self.filters.keys() :
+        self.lines.append(self.filters[key])
+      self.lines.append('</defs>')
+    for i in range(len(self.lines) -2) :
+      tag += self.lines[i + 2] + "\n"
+    tag += "</svg>\n"
+    return tag
+    
   # 直線
   def line(self, x1:float, y1:float, x2:float, y2:float) -> str:
     shape = LINE.format(x1, y1, x2, y2, self.fill, self.stroke, self.stroke_width)
