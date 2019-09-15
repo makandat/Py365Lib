@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 1.17  2019-05-30 stripTag()
+# WebPage.py Version 1.80  2019-09-15 getMethod()
 import os, sys, io
 import cgi
 import re
@@ -47,6 +47,7 @@ class WebPage :
     else :
       pass
     return
+
   # コンテンツを送信する。
   def echo(self) :
     # クッキーをヘッダーに追加
@@ -222,3 +223,8 @@ class WebPage :
   def sendText(str) :
     print("Content-Type: text/plain\n")
     print(str)
+
+  # HTTP メソッドを返す。
+  def getMethod(self) :
+    return os.environ["REQUEST_METHOD"]
+
