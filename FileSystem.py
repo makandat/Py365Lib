@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.24  2019-07-06
+# Version 1.25  2019-10-18
 import os, io, sys
 import shutil
 import glob
@@ -235,10 +235,18 @@ def getAbsolutePath(path:str) -> str:
   return os.path.abspath(path)
 
 # 親のディレクトリを得る。
-def getParentDirectory(path:str) -> str:
-  #return Path(path).parent.name
-  (head,tail) = os.path.split(path)
-  return head
+def getParentDirectory(path:str, method=0) -> str:
+  if method == 0 :
+    return Path(path).parent.name
+  elif method == 1 :
+    (head, tail) = os.path.split(path)
+    return head
+  else :
+    parts = path.split('/')
+    parts.pop()
+    parent = "/".join(parts)
+    return parent
+    
   
 # フルパスの中から一番下のディレクトリを得る。
 def getThisDirectory(path:str) -> str :
