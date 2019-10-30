@@ -31,7 +31,7 @@ header, article, fooder {
 
 <body>
 <header>
-<h1 style="text-align:center;">Python3.6 Py365Lib 仕様書　<span style="font-size:14pt">(ver 2.1)</span></h1>
+<h1 style="text-align:center;">Python3.6 Py365Lib 仕様書　<span style="font-size:14pt">(ver 2.0)</span></h1>
 <div style="text-align:center;"><a href="/">HOME</a></div>
 </header>
 
@@ -45,7 +45,7 @@ header, article, fooder {
   <ul>
    <li><a href="#Common">Common モジュール</a></li>
    <li><a href="#FileSystem">FileSystem モジュール</a></li>
-   <li><a href="#Text">Text モジュール</a></li>
+   <li><a href="#Text">Text クラス, モジュール</a></li>
    <li><a href="#DateTime">DateTime クラス, モジュール</a></li>
    <li><a href="#MySQL">MySQL クラス</a></li>
    <li><a href="#AWSS3">AWSS3 クラス</a></li>
@@ -95,7 +95,6 @@ header, article, fooder {
 <!-- 目標 -->
 <h3>目標</h3>
 <p>Py365Lib パッケージの目標は、あまり大きくない小型のプログラムを手間をかけず、迅速に作成することである。機能を絞って、たまにしかプログラミングをしない人も、すぐ覚えられて忘れにくいように考慮する。</p>
-<p>他の言語にもPy365Lib相当のライブラリを作成して、言語独自のライブラリの差を吸収する。</p>
 <br />
 
 
@@ -103,7 +102,7 @@ header, article, fooder {
 <h3>要件</h3>
 <ul>
  <li>Python 3.6.5 以上が必要</li>
- <li><strike>Linux 環境が必要</strike>Windows 環境では動作しない機能がある。</li>
+ <li>Linux 環境が必要</li>
  <li>MySQL モジュールを使う場合は、Oracle の MySQL コネクタが必要 (pip3 install mysql-connector-python)</li>
  <li>AWSS3 モジュールを使う場合は、AWS S3 のアクセス権と boto3 のインストールが必要 (pip3 install boto3)</li>
  <li></li>
@@ -128,9 +127,9 @@ header, article, fooder {
    <li>HTApp.py</li>
    <li>TkApp.py</li>
   </ul>
-  <li>Py365Lib の下に __init__.py を作成する。内容は次の通りとする。
+  <li>Py365Lib の下に __init__.py を作成する。内容は次の通りとする。ただし、TkApp.py, WebPage.py をコピーしなかった場合は、それぞれの項目を除く)
     <pre>
-  __all__ = ['Common', 'FileSystem', 'Text', 'DateTime', "MySQL"]
+  __all__ = ['Common', 'FileSystem', 'Text', 'DateTime', "MySQL", "AWSS3", "WebPage", "CursesApp", "HTApp", "TkApp" ]
     </pre></li>
    <li>環境変数 PYTHONPATH に Py365Lib の親フォルダを追加する。(例) "~/lib/python3" を追加<br />
    PYTHONPATH が自動的に設定されるように .bashrc に次のような１行を追加するとよい。
@@ -205,7 +204,7 @@ code: 終了コード<br />message: 終了時に表示するメッセージ。<b
  <tr><td>is_int(x)</td><td>x: 変数</td><td>x が整数なら True</td><td>変数が整数型か判別する。</td><td></td></tr>
  <tr><td>is_float(x)</td><td>x: 変数</td><td>x が浮動小数点数なら True</td><td>変数が浮動小数点数型か判別する。</td><td></td></tr>
  <tr><td>is_bool(x)</td><td>x: 変数</td><td>x がブール型なら True</td><td>変数がブール型か判別する。</td><td></td></tr>
- <tr><td>syslog_out(msg)</td><td>msg: メッセージ</td><td>なし</td><td>syslog へ出力する。</td><td>Windowsはサポートしない。</td></tr>
+ <tr><td>syslog_out(msg)</td><td>msg: メッセージ</td><td>なし</td><td>syslog へ出力する。</td><td></td></tr>
  <tr><td>set_timeout(sec, callback)</td><td>sec: タイムアウトまでの時間（秒）<br />
 callback : タイムアウト時にコールされる関数 callback()
 </td><td>なし</td><td>タイムアウト時に実行されるコールバック関数を設定する。</td><td></td></tr>
@@ -221,8 +220,6 @@ reset: True なら前の状態にもどす。False ならそのまま。
  <tr><td>readline(message=None)</td><td>message: メッセージ</td><td>入力文字列</td><td>文字列をキーボードから入力する。</td><td></td></tr>
  <tr><td>from_json(json)</td><td>json: JSON 形式文字列</td><td>Python オブジェクト</td><td>JSON 文字列を Python オブジェクトに変換する。</td><td></td></tr>
  <tr><td>to_json(obj)</td><td>obj: Python オブジェクト</td><td>JSON 形式文字列</td><td>Python オブジェクトを JSON 形式文字列に変換する。</td><td></td></tr>
- <tr><td>printFile(filePath, code="utf-8")</td><td>filePath: ファイルのパス名<br />code="utf-8":文字コード</td><td>なし</td><td>ファイル内容を表示する。</td><td></td></tr>
- <tr><td>printArray(arr)</td><td>arr: 配列や連想配列</td><td>なし</td><td>配列や連想配列を表示する。</td><td></td></tr>
 <table>
 <br />
 
@@ -273,9 +270,6 @@ reset: True なら前の状態にもどす。False ならそのまま。
 str: 書き込む文字列<br />
 append: True の場合は追加
 </td><td>なし</td><td>ファイルにパラメータの文字列を書く。</td><td>関数</td></tr>
- <tr><td>readLines(file, encode='utf-8')</td><td>
-file: ファイルのパス名<br />
-encode="utf-8": 文字コード</td><td>ファイルの内容(行ごとの配列)</td><td>ファイルを読んで行の配列として返す。</td><td>関数</td></tr>
  <tr><td>readAllLines(file, method)</td><td>
 file: ファイルのパス名<br />
 method(line): １行づつ処理する関数</td><td>なし</td><td>ファイルを１行づつ読んで、その行を method に渡す。</td><td>関数</td></tr>
@@ -303,19 +297,15 @@ method(line): １行づつ処理する関数</td><td>なし</td><td>ファイル
 recursive: True ならファイルやサブディレクトリも削除</td><td>なし</td><td>ディレクトリを削除する。</td><td>関数</td></tr>
  <tr><td>grep(str, file)</td><td>str: 検索文字列<br />file: 対象ファイル</td><td>見つかった行番号の配列</td><td>ファイル内を検索する。</td><td>関数</td></tr>
  <tr><td>getFileSize(file)</td><td>file: 対象ファイル</td><td>ファイルのバイト数</td><td>ファイルの長さを得る。</td><td>関数</td></tr>
- <tr><td>listFiles(dir, wildcard="*", asstr=False)</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード<br />asstr=False: Falseの場合はバイト列、Trueの場合は文字列で結果が返される。</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイル一覧を得る。</td><td>関数</td></tr>
- <tr><td>listFilesRecursively(dir, wildcard="*", asstr=False)</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード<br />asstr=False: Falseの場合はバイト列、Trueの場合は文字列で結果が返される。</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイル一覧をサブディレクトリも含めて再帰的に取得する。</td><td>関数</td></tr>
- <tr><td>listDirectories(dir, asstr=False)</td><td>dir: 対象のディレクトリ<br />asstr=False: Falseの場合はバイト列、Trueの場合は文字列で結果が返される。</td><td>サブディレクトリ一覧リスト</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>関数</td></tr>
+ <tr><td>listFiles(dir, wildcard="*")</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイルとサブディレクトリ一覧を得る。</td><td>関数</td></tr>
+ <tr><td>listDirectories(dir)</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>サブディレクトリ一覧リスト</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>getFileName(path)</td><td>path: パス名</td><td>パスのファイル名部分</td><td>path のファイル名部分を得る。</td><td>関数</td></tr>
  <tr><td>getDirectoryName(path)</td><td>path: パス名</td><td>パスのディレクトリ名</td><td>path のディレクトリ名部分を得る。</td><td>関数</td></tr>
  <tr><td>getExtension(path)</td><td>path: パス名</td><td>パスの拡張子部分</td><td>path のドットを含む拡張子部分を得る。</td><td>関数</td></tr>
  <tr><td>getAbolutePath(path)</td><td>path: パス名</td><td>絶対パス</td><td>相対パス path の絶対パスを得る。</td><td>関数</td></tr>
  <tr><td>getParentDirectory(path)</td><td>path: パス名</td><td>親のディレクトリ</td><td>path の親ディレクトリを得る。</td><td>関数</td></tr>
- <tr><td>getThisDirectory(path)</td><td>path: パス名</td><td>現在のディレクトリ</td><td>フルパスの中から一番下のディレクトリを得る。</td><td>関数</td></tr>
  <tr><td>getCurrentDirectory()</td><td>なし</td><td>カレントディレクトリ</td><td>pwd() の別名</td><td>関数</td></tr>
  <tr><td>getTempFile()</td><td>なし</td><td>一時ファイルのパス名</td><td>一時ファイルを得る。</td><td>関数</td></tr>
- <tr><td>getHomeDirectory()</td><td>なし</td><td>ホームディレクトリ</td><td>ホームディレクトリのパスを得る。</td><td>関数</td></tr>
- <tr><td>getLinkPath(link)</td><td>link: リンク</td><td>リンク先のパス名</td><td>リンク先を得る。</td><td>関数</td></tr>
  <tr><td>changeExt(path, ext)</td><td>path: ファイルのパス名<br />ext: 新しい拡張子（先頭はドットであること）</td><td>新しいパス名</td><td>ファイルの拡張子を変更する。</td><td>関数</td></tr>
  <tr><td>readCsv(path, header=True, delim=",", lterm="\n")</td><td>path: CSVファイルのパス名<br />
 header=True: 1行目をヘッダーとして読み飛ばす。<br />
@@ -326,7 +316,6 @@ header=True: 1行目をヘッダーとして読み飛ばす。<br />
 <tr><td>writeJson(path, data, pretty=False)</td><td>path: JSONファイルのパス名<br />
 data: オブジェクト<br />pretty: True なら見やすい形式で保存する。
 </td><td>なし</td><td>オブジェクトをJSONファイルとしてファイルに書く。</td><td>関数</td></tr>
-<tr><td>tilder(path)</td><td>path: ファイルやディレクトリのパス名</td><td>変換されたパス名</td><td>パス名の先頭が "~" ならホームディレクトリに変換したパス名を返す。</td><td>関数</td></tr>
  </table>
 
 
@@ -334,21 +323,24 @@ data: オブジェクト<br />pretty: True なら見やすい形式で保存す�
 
 <br />
 <!--  Text -->
-<h2><a id="Text">Text モジュール</a></h2>
+<h2><a id="Text">Text モジュールとクラス</a></h2>
 <p>Text モジュールは Python 関数の薄いラッパー (wrapper) である。Python に慣れた人は、このモジュールを利用する利点はあまりないかもしれない。ただ、たまにしか Python を使わない人や他の言語に経験があって、Python を始めた人などには便利に使えるかもしれない。</p>
-
+<p>Text モジュールにはモジュール関数と Text クラスが含まれる。Text クラスは Text.Text として参照する必要があるので注意する。</p>
 <p>Text モジュールは <b>from Py356Lib import *</b> とすると利用可能である。</p>
 <p style="text-align:center;"><a href="samples/Text.html">サンプル</a>&nbsp;/&nbsp;<a href="tutorial/Text.html">チュートリアル</a></p><br />
 <p style="text-align:center;"><b>Text モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
- <tr><td>length(str)</td><td>str:文字列</td><td>文字列の長さ</td><td>現在の文字列の長さを得る。</td><td>関数</td></tr>
- <tr><td>concat(str1, str2)</td><td>str1, str2: 文字列</td><td>str1+str2</td><td>str1とstr2を結合した文字列</td><td>関数</td></tr>
- <tr><td>substring(text, start, length)</td><td>text: 文字列<br />start: 開始位置<br />length: 長さ</td><td>部分文字列</td><td>text の start の位置から長さ length の部分文字列を取得する。</td><td>関数</td></tr>
- <tr><td>substr(text, start, end)</td><td>text: 文字列<br />start: 開始位置<br />end: 終了位置</td><td>部分文字列</td><td>start の位置から end 手前までの文字列を取得する。</td><td>関数</td></tr>
- <tr><td>left(text, length)</td><td>text: 文字列<br />length: 長さ</td><td>部分文字列</td><td>文字列の先頭から長さ length の文字列を取得する。</td><td>関数</td></tr>
- <tr><td>right(text, length)</td><td>text: 文字列<br />length: 長さ</td><td>部分文字列</td><td>文字列の最後から長さ length の文字列を取得する。</td><td>関数</td></tr>
- <tr><td>times(c, n)</td><td>c: 文字<br />n: 回数</td><td>なし</td><td>文字 c を n 回繰り返した文字列をオブジェクトの文字列にする。</td><td>関数</td></tr>
+ <tr><td>__init__(s)</td><td>s: 文字列</td><td>N/A</td><td>Text クラスのコンストラクタ</td><td>Text クラスのコンストラクタ</td></tr>
+ <tr><td>length</td><td>なし</td><td>現在の文字列の長さ</td><td>現在の文字列の長さを得る。</td><td>Text クラスの R/O property</td></tr>
+ <tr><td>toString()</td><td>なし</td><td>このインスタンスの文字列</td><td>このインスタンスの文字列を返す。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>append(s)</td><td>s: 文字列</td><td>なし</td><td>現在の文字列に s を追加する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substring(start, length)</td><td>start: 開始位置<br />length: 長さ</td><td>部分文字列</td><td>start の位置から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>substr(start, end)</td><td>start: 開始位置<br />end: 終了位置</td><td>部分文字列</td><td>start の位置から end 手前までの文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>left(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の先頭から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>right(length)</td><td>length: 長さ</td><td>部分文字列</td><td>文字列の最後から長さ length の文字列を取得する。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>times(c, n)</td><td>c: 文字<br />n: 回数</td><td>なし</td><td>文字 c を n 回繰り返した文字列をオブジェクトの文字列にする。</td><td>Text クラスのメソッド</td></tr>
+ <tr><td>clear()</td><td>なし</td><td>なし</td><td>オブジェクトの内容をクリアする。</td><td>Text クラスのメソッド</td></tr>
  <tr><td>isdigit(a)</td><td>a: 文字</td><td>数字なら True、そうでないなら False</td><td>数字かどうかを判別する</td><td>関数</td></tr>
  <tr><td>isalpha(a)</td><td>a: 文字</td><td>アルファベットなら True、そうでないなら False</td><td>アルファベットかどうかを判別する</td><td>関数</td></tr>
  <tr><td>isdelim(a)</td><td>a: 文字</td><td>区切り文字なら True、そうでないなら False</td><td>区切り文字かどうかを判別する</td><td>関数</td></tr>
@@ -379,8 +371,14 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
  <tr><td>re_replace(re, c, s)</td><td>re: 正規表現文字列<br />c:置き換える文字列<br />s: 対象文字列</td>
   <td>新しい文字列</td><td>対象文字列 s を正規表現 re で検索して見つかった部分文字列を c で置き換える。</td><td>関数</td></tr>
  <tr><td>money(x)</td><td>x: 整数・浮動小数点数</td><td>金額</td><td>数字に3文字ごとにカンマを挿入した文字列を返す。</td><td>関数</td></tr>
- <tr><td>b2s(b)</td><td>b: バイト列</td><td>UTF-8 文字列</td><td>バイト列を文字列に変換する。</td><td>関数</td></tr>
- <tr><td>s2b(s)</td><td>s: UTF-8 文字列</td><td>バイト列</td><td>文字列をバイト列に変換する。</td><td>関数</td></tr>
+ <tr><td>substring(s, start, length)</td><td>s: 元の文字列<br />start: 部分文字列の開始位置<br />length: 部分文字列の長さ</td><td>部分文字列</td><td>元の文字列 s の位置 start から長さ length だけ切り取った部分文字列を返す。</td>
+<td>関数</td></tr>
+ <tr><td>substr(s, start, end)</td><td>s: 元の文字列<br />start: 部分文字列の開始位置<br />end: 部分文字列の終了位置</td><td>部分文字列</td><td>元の文字列 s の位置 start から位置 end まで切り取った部分文字列を返す。
+</td><td>関数</td></tr>
+ <tr><td>left(s, length)</td><td>s: 元の文字列<br />length: 部分文字列の長さ</td><td>部分文字列</td>
+<td>元の文字列 s の先頭から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
+ <tr><td>right(s, length)</td><td>s: 元の文字列<br />length: 部分文字列の長さ</td><td>部分文字列</td>
+<td>元の文字列 s の最後から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
 </table>
 
 
@@ -441,7 +439,6 @@ host: ホストのアドレス<br />
  <tr><td>getValue(sql)</td><td>sql: 値を一つ返すSQL</td><td>値</td><td>値を得る。</td><td></td></tr>
  <tr><td>rows</td><td>なし</td><td>N/A</td><td>クエリー結果の行数</td><td>R/O property</td></tr>
  <tr><td>cursorClose()</td><td>なし</td><td>N/A</td><td>カーソルを閉じる。</td><td></td></tr>
- <tr><td>getFieldNames(table)</td><td>table: テーブル</td><td>テーブルのフィールド一覧</td><td>フィールドのフィールド(カラム名)一覧を得る。</td><td></td></tr>
  <tr><td>connectInfo</td><td>なし</td><td>接続情報</td><td>次のようなディクショナリが返される。{"user":uid, "password":pwd, "host":host, "database":db}</td><td></td></tr>
 </table>
 
@@ -489,29 +486,25 @@ host: ホストのアドレス<br />
 <p style="text-align:center;"><b>WebPage モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>メンバー</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
- <tr><td>APPCONF<td><td>N/A</td><td>N/A</td><td>構成ファイルの名前("AppConf.ini")</td><td></td></tr>
  <tr><td>__init__(template="")</td><td>template: HTML ファイル</td><td>N/A</td><td>コンストラクタ</td><td>template を省略した場合は、手動でHTMLを html に設定する。</td></tr>
  <tr><td>vars[key]</td><td>key: キー</td><td>key に対する値</td><td>埋め込み変数の連想配列。HTML の (*var*) 部分を置換する。</td><td>R/W property</td></tr>
- <tr><td>params[key]</td><td>key: キー</td><td>key に対する値</td><td>HTTP パラメータの連想配列。型は MiniStorage 型なので、値は .value になるので注意。(getParam() を使用したほうが良い)</td><td>R/O property</td></tr>
+ <tr><td>params[key]</td><td>key: キー</td><td>key に対する値</td><td>HTTP パラメータの連想配列。型は MiniStorage 型で値は .value になるので注意。(getParam() を使用したほうが良い)</td><td>R/O property</td></tr>
  <tr><td>conf[key]</td><td>key: キー</td><td>key に対する値</td><td>INI ファイル・パラメータの連想配列</td><td>R/O property</td></tr>
  <tr><td>cookies[key]</td><td>key: キー</td><td>key に対する値</td><td>受信したクッキーの連想配列。値は .value になるので注意。(getCookie, setCookie を使用したほうが良い)</td><td>R/W property</td></tr>
- <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定。v1.20 で、JSON などのテキストファイルもロードできるようにした。</td><td>R/W property</td></tr>
+ <tr><td>html</td><td>なし</td><td>HTML テンプレート</td><td>HTML の内容を取得または設定。v1.20 で、JSON などのテキストファイルもロードできるようにした。<br />
+バイナリーデータは self.binbuff に保存するが、self.html を "" にしないと、self.binbuff は使用できない。
+</td><td>R/W property</td></tr>
  <tr><td>echo()</td><td>なし</td><td>なし</td><td>HTML を送信する(ヘッダーとクッキーも同時送信)。設定によっては、画像やJSONなどの送信も可能である。</td><td></td></tr>
  <tr><td>header(str)</td><td>str:ヘッダー文字列</td><td>なし</td><td>HTTP ヘッダーを送信する。</td><td></td></tr>
- <tr><td>setPlaceHolder(key,value)</td><td>key: 埋め込み文字列のキー<br />value: 埋め込み文字列の値</td><td>なし</td><td>HTML テンプレートの埋め込み文字列を定義する。</td><td></td></tr>
- <tr><td>getPlaceHolder(key)</td><td>key: 埋め込み文字列のキー</td><td>埋め込み文字列の値</td><td>key に対応する埋め込み文字列の値を得る。</td><td></td></tr>
- <tr><td>embed(hash)</td><td>hash: 埋め込み文字列のキー:値のコレクション</td><td>なし</td><td>HTML テンプレートの埋め込み文字列をまとめて定義する。</td><td></td></tr>
  <tr><td>cookie(key, val)</td><td>key:クッキーのキー<br />
-val:クッキーの値</td><td>なし</td><td>クッキーを送信する。</td><td>実際の動作は self.cookies に追加する。日本語のクッキーは不可。長いクッキーも不可。</td></tr>
- <tr><td>setCookie(key, val)</td><td>cookie() と同じ。</td><td>なし</td><td>cookie() のシノニム</td><td>日本語のクッキーは不可。長いクッキーも不可。</td></tr>
+val:クッキーの値</td><td>なし</td><td>クッキーを送信する。</td><td>実際の動作は self.cookies に追加する。</td></tr>
+ <tr><td>setCookie(key, val)</td><td>cookie() と同じ。</td><td>なし</td><td>cookie() のシノニム</td><td></td></tr>
  <tr><td>isCookie(key)</td><td>key: キー</td><td>キー key というクッキーが存在すれば True</td><td>指定したキーのクッキーが存在するかを調べる。</td><td></td></tr>
  <tr><td>getCookie(key)</td><td>key: クッキーのキー</td><td>クッキーの値</td><td>キー key が存在すれば、その連想配列の値 (self.cookies[key].value) 、なければ "" を返す。</td><td></td></tr>
- <tr><td>isParam(key)</td><td>key: パラメータのキー</td><td>キー key というパラメータが存在すれば True、そうでなければ False</td><td>指定したキーのパラメータが存在するかを調べる。</td><td></td></tr>
- <tr><td>getParam(key, default="")</td><td>key: パラメータのキー<br />default: key に対するパラメータが存在しないとき返される値</td><td>パラメータの値</td><td>キー key が存在すれば、その連想配列の値 (self.params[key].value) 、なければ default="" を返す。</td><td></td></tr>
- <tr><td>readConf(file)</td><td>file: コンフィグファイル</td><td>なし</td><td>コンフィグファイルを読み込んで conf を初期化する。</td><td>クラス内部で使用する。</td></tr>
+ <tr><td>getParam(key)</td><td>key: パラメータのキー</td><td>パラメータの値</td><td>キー key が存在すれば、その連想配列の値 (self.params[key].value) 、なければ "" を返す。<br />(注意) 同じ名前のコントロールが複数ある場合、致命的エラーが発生する。これは、cgi.params がリスト型になるためである。</td><td></td></tr>
+ <tr><td>readConf(file)</td><td>file: コンフィグファイル</td><td>なし</td><td>コンフィグファイルを読み込んで conf を初期化する。</td><td></td></tr>
  <tr><td>tag(name, str)</td><td>name: タグ名<br />
 str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作る。</td><td>static</td></tr>
- <tr><td>stripTag(str)</td><td>str: 文字列</td><td>タグを取り去った文字列</td><td>文字列からタグを取り去る。</td><td>static</td></tr>
  <tr><td>table_row(coll)</td><td>coll: コレクション (行の内容)</td><td>タグ (tr, td)</td><td>iter から HTML テーブル行を作る。</td><td>static</td></tr>
  <tr><td>escape(str)</td><td>str: 文字列</td><td>HTML エスケープされた文字列</td><td>HTML エスケープされた文字列にする。</td><td>static</td></tr>
  <tr><td>saveFile(key, dir)</td><td>
@@ -531,6 +524,12 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
    url: URL<br />wait: 待ち時間（秒）
 </td><td>なし</td><td>指定した URL へジャンプする。</td><td></td></tr>
 <tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
+<tr><td>cacheControl(value)</td><td>"no-cache"などを指定</td><td>なし</td><td>キャッシュコントロールヘッダ(Cahce-Control)を追加する。</td><td>v1.20 で追加。</td></tr>
+<tr><td>cacheExpires(date)</td><td>date: 有効期限。例：Wed, 21 Oct 2015 07:28:00 GMT</td><td>なし</td><td>コンテンツの有効期限を追加する。</td><td>v1.20 で追加。</td></tr>
+<tr><td>isBinaryFile(file)</td><td>file:ファイルのパス名</td><td>バイナリーファイルなら True</td><td>(サポートする)バイナリーファイルか判別。</td><td>v1.20 で追加。内部で使用する。</td></tr>
+<tr><td>loadFile(filePath)</td><td>filePath: ロードするファイルのパス名</td><td>なし</td><td>ファイルを読み込んで、self.html または self.binbuff に保存する。どちらにロードするかは、テキストファイルかバイナリーファイルかによる。</td><td>v1.20 で追加。</td></tr>
+<tr><td>self.binbuff</td><td></td><td></td><td>バイナリーファイルを loadFile() メソッドでロードしたときの保存先。その際、self.html は "" であること。</td><td>v1.20 で追加。</td></tr>
+<tr><td>isPostback()</td><td></td><td>パラメータがなければ False、あれば True。</td><td>呼び出しがポストバックか判別</td><td>v1.22 で追加。</td></tr>
  </table>
 <br />
 
@@ -674,6 +673,7 @@ fileName: JSON ファイルのパス名
 <tr><td>CursesApp.selectedForm</td><td></td><td></td><td>現在表示されているフォーム名</td><td>クラス変数</td></tr>
 <tr><td>CursesApp.tabidx</td><td></td><td></td><td>タブインデックス</td><td>クラス変数</td></tr>
 <tr><td>CursesApp.formData</td><td></td><td></td><td>JSON を元にしたフォームデータ。キーはフォーム名、値はウィジェットプロパティ・ディクショナリのリスト</td><td>クラス変数</td></tr>
+<tr><td>CursesApp.Title</td><td></td><td></td><td>タイトルバーの文字列</td><td>クラス変数</td></tr>
 <tr><td>CursesApp.Title</td><td></td><td></td><td>タイトルバーの文字列</td><td>クラス変数</td></tr>
 <tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
 </table>
