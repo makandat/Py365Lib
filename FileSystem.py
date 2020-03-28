@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.25  2019-10-18
+# Version 1.30  2020-03-28
 import os, io, sys
 import shutil
 import glob
@@ -193,7 +193,17 @@ def listFilesRecursively(dir:str, wildcard:str="*", asstr=False) -> List :
       result.append(item)
   return result
   
-  
+# v1.30 指定したディレクトリ内を検索する。(os.listdir 版)
+def listFiles2(dir:str) -> List:
+  diru8 = dir.encode('utf-8')
+  list = os.listdir(dir)
+  result = []
+  for item in list :
+    p = dir + "/" + item
+    if os.path.isfile(p) :
+      result.append(p)
+  return result
+
 
 # ディレクトリ一覧を得る。
 def listDirectories(dir:str, asstr=False) -> List:

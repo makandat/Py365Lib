@@ -52,6 +52,12 @@ elif testNo == 5 :
   for f in files :
     print(f)
 elif testNo == 6 :
+  # listFiles2  (os.listdir版)
+  print("listFiles2  (os.listdir版)")
+  files = fs.listFiles2("F:/Pictures/MANGA/Book01/PONPON/ぼいトレ！")
+  for f in files :
+    print(f)
+  print('Done.')
   pass
 elif testNo == 7 :
   pass
