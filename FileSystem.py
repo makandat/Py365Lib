@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.30  2020-03-28
+# Version 1.35  2020-05-14
 import os, io, sys
 import shutil
 import glob
@@ -36,14 +36,16 @@ def writeAllText(file: str, text: str, append:bool=False, encode='utf-8') -> Non
 
 # ファイルを読んで行の配列として返す。
 def readLines(file: str, encode='utf-8') :
-  lines = list()
   with open(file, mode='r', encoding=encode) as f:
-    line = f.readline().rstrip()
-    while line :
-      lines.append(line)
-      line = f.readline().rstrip()
+    lines = f.readlines()
   return lines
-    
+
+# 行の配列をファイルに書く。
+def writeLines(file, lines, encode='utf-8') :
+  with open(file, mode='w', encoding=encode) as f:
+    f.writelines(lines)
+  return
+
 # ファイルを１行づつ読んで callback で処理する。
 def readAllLines(file: str, callback: Callable, encode='utf-8') -> None:
   with open(file, mode='r', encoding=encode) as f :
@@ -192,10 +194,9 @@ def listFilesRecursively(dir:str, wildcard:str="*", asstr=False) -> List :
         item = item.decode('utf-8')
       result.append(item)
   return result
-  
+
 # v1.30 指定したディレクトリ内を検索する。(os.listdir 版)
 def listFiles2(dir:str) -> List:
-  diru8 = dir.encode('utf-8')
   list = os.listdir(dir)
   result = []
   for item in list :
@@ -256,8 +257,8 @@ def getParentDirectory(path:str, method=0) -> str:
     parts.pop()
     parent = "/".join(parts)
     return parent
-    
-  
+
+
 # フルパスの中から一番下のディレクトリを得る。
 def getThisDirectory(path:str) -> str :
   path1 = path.decode('utf-8')

@@ -270,6 +270,10 @@ reset: True なら前の状態にもどす。False ならそのまま。
 str: 書き込む文字列<br />
 append: True の場合は追加
 </td><td>なし</td><td>ファイルにパラメータの文字列を書く。</td><td>関数</td></tr>
+ <tr><td>readLines(file, encode='utf-8')</td><td>
+file: ファイルのパス名<br />encode: 文字コード</td><td>なし</td><td>ファイルを１行づつ読んで配列に格納しその配列を返す。</td><td>関数</td></tr>
+ <tr><td>writeLines(file, lines, encode='utf-8')</td><td>
+file: ファイルのパス名<br />lines: 文字列配列<br />encode: 文字コード</td><td>なし</td><td>行ごとの配列をファイルに書く。</td><td>関数</td></tr>
  <tr><td>readAllLines(file, method)</td><td>
 file: ファイルのパス名<br />
 method(line): １行づつ処理する関数</td><td>なし</td><td>ファイルを１行づつ読んで、その行を method に渡す。</td><td>関数</td></tr>
