@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 1.80  2019-09-15 getMethod()
+# WebPage.py Version 1.81  2020-05-21 isPostback()
 import os, sys, io
 import cgi
 import re
@@ -84,6 +84,10 @@ class WebPage :
     for key, value in hashtable.items() :
       self.vars[key] = value
     return
+
+  # パラメータがあるかどうか
+  def isPostback(self) :
+    return len(self.params) > 0
 
   # パラメータ key があるかどうかを返す。
   def isParam(self, key) :
