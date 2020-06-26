@@ -188,7 +188,7 @@ header, article, fooder {
 <p style="text-align:center;"><b>Common モジュールのメンバー一覧</b></p>
 <table>
  <tr><th>関数</th><th>パラメータ</th><th>戻り値</th><th>機能</th><th>備考</th></tr>
- <tr><td>init_log(filename)</td><td>filename: ログファイルのパス名。省略時は Py365Lib.log となる。</td><td>なし</td><td>ログ機能を有効にする。</td><td>logger モジュールのメソッドでログを出力する。</td></tr>
+ <tr><td>init_logger(filename)</td><td>filename: ログファイルのパス名。省略時は Py365Lib.log となる。</td><td>なし</td><td>ログ機能を有効にする。</td><td>logger モジュールのメソッドでログを出力する。</td></tr>
  <tr><td>args(ix=-1)</td><td>ix: パラメータのインデックス。負の数だとパラメータ配列全体</td><td>コマンド引数またはそのの配列</td><td>コマンド引数を得る。</td><td>コマンド名は含まれない</td></tr>
  <tr><td>count_args()</td><td>なし</td><td>コマンド引数の数</td><td>コマンド引数の数を返す。</td><td></td></tr>
  <tr><td>stop(code = 0, message = "", color=ESC_FG_RED)</td><td>
@@ -271,7 +271,7 @@ str: 書き込む文字列<br />
 append: True の場合は追加
 </td><td>なし</td><td>ファイルにパラメータの文字列を書く。</td><td>関数</td></tr>
  <tr><td>readLines(file, encode='utf-8')</td><td>
-file: ファイルのパス名<br />encode: 文字コード</td><td>なし</td><td>ファイルを１行づつ読んで配列に格納しその配列を返す。</td><td>関数</td></tr>
+file: ファイルのパス名<br />encode: 文字コード</td><td>読み込んだ行の配列</td><td>ファイルを１行づつ読んで配列に格納しその配列を返す。</td><td>関数</td></tr>
  <tr><td>writeLines(file, lines, encode='utf-8')</td><td>
 file: ファイルのパス名<br />lines: 文字列配列<br />encode: 文字コード</td><td>なし</td><td>行ごとの配列をファイルに書く。</td><td>関数</td></tr>
  <tr><td>readAllLines(file, method)</td><td>
@@ -383,6 +383,8 @@ s: 対象の文字列</td><td>置換後の文字列</td><td>文字列 s に対�
 <td>元の文字列 s の先頭から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
  <tr><td>right(s, length)</td><td>s: 元の文字列<br />length: 部分文字列の長さ</td><td>部分文字列</td>
 <td>元の文字列 s の最後から長さ length まで切り取った部分文字列を返す。</td><td>関数</td></tr>
+ <tr><td>insert(str, ins, p)</td><td>str: 元の文字列<br />ins: 挿入する文字列<br />p: 挿入する位置</td><td>挿入後の文字列</td>
+<td>元の文字列 str の位置 p に文字列 ins を挿入する。</td><td>関数</td></tr>
 </table>
 
 
@@ -528,14 +530,13 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
    url: URL<br />wait: 待ち時間（秒）
 </td><td>なし</td><td>指定した URL へジャンプする。</td><td></td></tr>
 <tr><td>self.conf</td><td></td><td></td><td>構成ファイル AppConf.ini の内容。型はディクショナリで、キーは式の左側、値は式の右側。</td><td>インスタンス変数</td></tr>
-<tr><td>cacheControl(value)</td><td>"no-cache"などを指定</td><td>なし</td><td>キャッシュコントロールヘッダ(Cahce-Control)を追加する。</td><td>v1.20 で追加。</td></tr>
-<tr><td>cacheExpires(date)</td><td>date: 有効期限。例：Wed, 21 Oct 2015 07:28:00 GMT</td><td>なし</td><td>コンテンツの有効期限を追加する。</td><td>v1.20 で追加。</td></tr>
-<tr><td>isBinaryFile(file)</td><td>file:ファイルのパス名</td><td>バイナリーファイルなら True</td><td>(サポートする)バイナリーファイルか判別。</td><td>v1.20 で追加。内部で使用する。</td></tr>
-<tr><td>loadFile(filePath)</td><td>filePath: ロードするファイルのパス名</td><td>なし</td><td>ファイルを読み込んで、self.html または self.binbuff に保存する。どちらにロードするかは、テキストファイルかバイナリーファイルかによる。</td><td>v1.20 で追加。</td></tr>
-<tr><td>self.binbuff</td><td></td><td></td><td>バイナリーファイルを loadFile() メソッドでロードしたときの保存先。その際、self.html は "" であること。</td><td>v1.20 で追加。</td></tr>
 <tr><td>isPostback()</td><td></td><td>パラメータがなければ False、あれば True。</td><td>呼び出しがポストバックか判別</td><td>v1.22 で追加。</td></tr>
-<tr><td>embed(hashtable)</td><td>hashtable: 埋め込み変数のディクショナリ</td><td>なし</td><td>ディクショナリ hashtable に基づいて埋め込み変数を定義する。</td><td>v1.22 で追加。</td></tr>
-<tr><td>getMethod()</td><td></td><td>メソッド名</td><td>メソッド名を得る。(例) "POST"</td><td>v1.22 で追加。</td></tr>
+<tr><td>debugInfo(info)</td><td>info: 表示内容</td><td>なし</td><td>デバッグ情報をページに表示する。self.debugEnabled = False の場合は何もしない。</td><td>v2.0 で追加。</td></tr>
+<tr><td><strike>cacheControl(value)</strike></td><td>"no-cache"などを指定</td><td>なし</td><td>キャッシュコントロールヘッダ(Cahce-Control)を追加する。</td><td>廃止</td></tr>
+<tr><td><strike>cacheExpires(date)</strike></td><td>date: 有効期限。例：Wed, 21 Oct 2015 07:28:00 GMT</td><td>なし</td><td>コンテンツの有効期限を追加する。</td><td>廃止</td></tr>
+<tr><td><strike>isBinaryFile(file)</strike></td><td>file:ファイルのパス名</td><td>バイナリーファイルなら True</td><td>(サポートする)バイナリーファイルか判別。</td><td>廃止</td></tr>
+<tr><td><strike>loadFile(filePath)</strike></td><td>filePath: ロードするファイルのパス名</td><td>なし</td><td>ファイルを読み込んで、self.html または self.binbuff に保存する。どちらにロードするかは、テキストファイルかバイナリーファイルかによる。</td><td>廃止</td></tr>
+<tr><td><strike>self.binbuff</strike></td><td></td><td></td><td>バイナリーファイルを loadFile() メソッドでロードしたときの保存先。その際、self.html は "" であること。</td><td>v廃止</td></tr>
  </table>
 <br />
 

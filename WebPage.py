@@ -249,6 +249,10 @@ class WebPage :
   def getMethod(self) :
     return os.environ["REQUEST_METHOD"]
 
+  # パラメータがあるかどうか
+  def isPostback(self) :
+    return len(self.params) > 0
+
   # 文字列を指定位置に挿入する。
   @staticmethod
   def insert (source_str, insert_str, pos):
