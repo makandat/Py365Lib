@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 1.81  2020-05-21 isPostback()
+# WebPage.py Version 2.0.0  2020-06-26 デバッグ様メッセージ機能追加
 import os, sys, io
 import cgi
 import re
@@ -22,6 +22,8 @@ class WebPage :
     self.params =  {}  # HTTP パラメータ
     self.conf =    {}  # AppConf.ini の値
     self.cookies = {}  # Cookie の値
+    self.debug = []    # デバッグ用メッセージ
+    self.debugEnabled = True
     # stdin, stdout のコードを UTF-8 にする。デフォルトは ASCII になっているので文字化けする。
     sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -58,8 +60,27 @@ class WebPage :
     # 埋め込み変数を処理
     for k, v in self.vars.items() :
       self.html = self.html.replace("(*" + k + "*)", str(v))
+    # デバッグ用メッセージを追加
+    if len(self.debug) > 0 and self.debugEnabled == True :
+      # <body> の後にデバッグ情報を挿入する。
+      self.insertDebugInfo()
     # HTML を送信
     print(self.html)
+    return
+
+  # <body> の後にデバッグ情報を挿入する。
+  def insertDebugInfo(self) :
+    if len(self.html) == 0 :
+      return
+    pbody = self.html.find("<body ")
+    ebody = self.html.find(">", pbody) + 1
+    sdebug = "<br />\n".join(self.debug)
+    self.html = WebPage.insert(self.html, sdebug + "<br />\n", ebody)
+    return
+
+  # デバッグ情報を出力する。
+  def debugInfo(self, info) :
+    self.debug.append(info)
     return
              
   # HTTP ヘッダーを送信する。
@@ -84,10 +105,6 @@ class WebPage :
     for key, value in hashtable.items() :
       self.vars[key] = value
     return
-
-  # パラメータがあるかどうか
-  def isPostback(self) :
-    return len(self.params) > 0
 
   # パラメータ key があるかどうかを返す。
   def isParam(self, key) :
@@ -232,3 +249,7 @@ class WebPage :
   def getMethod(self) :
     return os.environ["REQUEST_METHOD"]
 
+  # 文字列を指定位置に挿入する。
+  @staticmethod
+  def insert (source_str, insert_str, pos):
+    return source_str[:pos]+insert_str+source_str[pos:]

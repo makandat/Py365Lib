@@ -12,39 +12,33 @@ else :
 
 # テスト開始
 if testNo == 1 :
-    # コンストラクタ, toString(), append(s), length
-    tx = txt.Text("Text class")
-    print(tx.toString())
-    assert tx.toString() == "Text class", "testNo=1, subNo=1"
-    print(tx.length)
-    assert tx.length == 10, "testNo=1, subNo=2"
-    tx.append(" *** ")
-    print(tx.toString())
-    assert tx.toString() == "Text class *** ", "testNo=1, subNo=3"
+    # length(s), concat(s1, s2), 
+    s = "012３４"
+    assert txt.length(s) == 5, "testNo=1 subNo=1"
+    s = txt.concat(s, "89")
+    assert s == "012３４89", "testNo=1 subNo=2"
     print("Test #1 OK")
 elif testNo == 2 :
-    # コンストラクタ, toString(), substring(start, length), substr(start, end), left(length), right(length)
-    tx = txt.Text("0123456789ABCDEF")
-    print(tx.substring(2, 4))
-    assert tx.substring(2, 4) == "2345", "testNo=2 subNo=1"
-    print(tx.substr(2, 4))
-    assert tx.substr(2, 4) == "234", "testNo=2 subNo=2"
-    print(tx.left(4))
-    assert tx.left(4) == "0123", "testNo=2 subNo=3"
-    print(tx.right(4))
-    assert tx.right(4) == "CDEF", "testNo=2 subNo=4"
+    # substring(text, start, length), substr(text, start, end)
+    tx = "012３４５6789ABCDEF"
+    # substring
+    print(txt.substring(tx, 2, 4))
+    assert txt.substring(tx, 2, 4) == "2３４５", "testNo=2 subNo=1"
+    # substr
+    print(txt.substr(tx, 2, 4))
+    assert txt.substr(tx, 2, 4) == "2３４", "testNo=2 subNo=2"
     print("Test #2 OK")
 elif testNo == 3 :
-    # コンストラクタ, toString(), clear(), times(c, n)
-    tx = txt.Text("0123456789ABCDEF")
-    assert tx.toString() == "0123456789ABCDEF", "testNo=3, subNo=1"
-    print(tx.toString())
-    tx.clear()
-    print(tx.length)
-    assert tx.toString() == "", "testNo=3, subNo=2"
-    tx.times('*', 5)
-    print(tx.toString())
-    assert tx.toString() == "*****", "testNo=3, subNo=3"
+    #  left(text, length), right(text, length), times(c, n)
+    tx = "012３４５6789ABCDEF"
+    # left
+    print(txt.left(tx, 4))
+    assert txt.left(tx, 4) == "012３", "testNo=3 subNo=1"
+    # right
+    print(txt.right(tx, 4))
+    assert txt.right(tx, 4) == "CDEF", "testNo=3 subNo=2"
+    # times
+    assert txt.times('*', 5) == "*****", "testNo=3 subNo=3"
     print("Test #3 OK")
 elif testNo == 4 :
     # isdigit(a), isalpha(a), isdelim(a), isprint(a)
@@ -89,7 +83,7 @@ elif testNo == 7 :
     assert txt.char(0x41) == "A", "testNo=7, subNo=5"
     assert txt.asc("A") == 0x41, "testNo=7, subNo=6"
     print("Test #7 OK.")
-elif testNo == 8 :
+elif testNo == 8 : # re_contain, re_search, re_split, re_replace
     assert txt.re_contain(r'.+[0-9][0-9]', 'map10') == True, "testNo=8, subNo=1"
     assert txt.re_contain(r'.+[0-9][0-9]', 'mapten') == False, "testNo=8, subNo=2"
     m = txt.re_search(r'(\d+)\.(\d+)', "10987.4")
@@ -105,5 +99,18 @@ elif testNo == 8 :
     print(s)
     assert s == '*, *.', "testNo=8, subNo=9"
     print("Test #8 OK.")
+elif testNo == 9 : # s2b(s), b2s(b)
+    s = "1234１２"
+    b = txt.s2b(s)
+    print(type(b))
+    print(b)
+    s2 = txt.b2s(b)
+    print(type(s2))
+    print(s2)
+elif testNo == 10 : # insert
+   s = "0123456789"
+   ins = "ABC"
+   s2 = txt.insert(s, ins, 2)
+   print(s2)
 else :
     print("不正な番号です。")
