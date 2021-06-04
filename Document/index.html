@@ -475,11 +475,11 @@ host: ホストのアドレス<br />
  </td><td>なし</td><td>bucketName, key で指定されたファイルをダウンロードして fileName に保存する。</td><td></td></tr>
  <tr><td>make_folder(bucketName, key)</td><td>
  	bucketName: バケット<br />
-	key: フォルダのキー 
+	key: フォルダのキー
  </td><td>なし</td><td>bucketName, key で指定したフォルダを作成する。</td><td></td></tr>
  <tr><td>remove_object(self, bucketName, key)</td><td>
  	bucketName: バケット<br />
-	key: 削除するファイルのキー 
+	key: 削除するファイルのキー
  </td><td>なし</td><td>bucket, keyName で指定したオブジェクトを削除にする。</td><td></td></tr>
 </table>
 <br />
@@ -517,9 +517,12 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
    key: アップロードされたファイルのキー<br />
    dir: 保存先のフォルダ
  </td><td>なし</td><td>key で指定されたアップロードされたファイルを file へ保存する。</td><td></td></tr>
- <tr><td>sendImage(file)</td><td>
+ <tr><td>static sendImage(file)</td><td>
    file: 画像ファイルのパス名
  </td><td>なし</td><td>HTTPヘッダーと画像ファイルを送信する。</td><td>jpeg, png, gif のみ</td></tr>
+ <tr><td>static sendMP4(file)</td><td>
+   file: MP4 ファイルのパス名
+ </td><td>なし</td><td>HTTPヘッダーとMP4ファイルを送信する。</td><td>mp4 のみ</td></tr>
  <tr><td>sendJson(json)</td><td>
    json: JSON 文字列
 </td><td>なし</td><td>HTTPヘッダー(application/json)とJSON 形式文字列を送信する。</td><td></td></tr>

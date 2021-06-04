@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 2.0.0  2020-06-26 デバッグ様メッセージ機能追加
+# WebPage.py Version 1.17  2019-05-30 stripTag()
 import os, sys, io
 import cgi
 import re
@@ -14,7 +14,7 @@ if os.name != 'nt' :
 # ================
 class WebPage :
   APPCONF = "AppConf.ini"
-        
+
     # コンストラクタ
   def __init__(self, template="") :
     self.headers = ["Content-Type: text/html"] # HTTP ヘッダーのリスト
@@ -22,8 +22,6 @@ class WebPage :
     self.params =  {}  # HTTP パラメータ
     self.conf =    {}  # AppConf.ini の値
     self.cookies = {}  # Cookie の値
-    self.debug = []    # デバッグ用メッセージ
-    self.debugEnabled = True
     # stdin, stdout のコードを UTF-8 にする。デフォルトは ASCII になっているので文字化けする。
     sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -49,7 +47,6 @@ class WebPage :
     else :
       pass
     return
-
   # コンテンツを送信する。
   def echo(self) :
     # クッキーをヘッダーに追加
@@ -60,29 +57,10 @@ class WebPage :
     # 埋め込み変数を処理
     for k, v in self.vars.items() :
       self.html = self.html.replace("(*" + k + "*)", str(v))
-    # デバッグ用メッセージを追加
-    if len(self.debug) > 0 and self.debugEnabled == True :
-      # <body> の後にデバッグ情報を挿入する。
-      self.insertDebugInfo()
     # HTML を送信
     print(self.html)
     return
 
-  # <body> の後にデバッグ情報を挿入する。
-  def insertDebugInfo(self) :
-    if len(self.html) == 0 :
-      return
-    pbody = self.html.find("<body ")
-    ebody = self.html.find(">", pbody) + 1
-    sdebug = "<br />\n".join(self.debug)
-    self.html = WebPage.insert(self.html, sdebug + "<br />\n", ebody)
-    return
-
-  # デバッグ情報を出力する。
-  def debugInfo(self, info) :
-    self.debug.append(info)
-    return
-             
   # HTTP ヘッダーを送信する。
   def header(self) :
     for s in self.headers :
@@ -109,7 +87,7 @@ class WebPage :
   # パラメータ key があるかどうかを返す。
   def isParam(self, key) :
     return key in self.params.keys()
-    
+
   # 外部から来る引数の値を得る。
   def getParam(self, key, default="") :
     if self.isParam(key) :
@@ -120,7 +98,7 @@ class WebPage :
   # クッキー key の有無を返す。
   def isCookie(self, key) :
     return key in self.cookies.keys()
-    
+
   # クッキーを得る。
   def getCookie(self, key, default="") :
     if self.isCookie(key) :
@@ -139,7 +117,7 @@ class WebPage :
   # クッキーを登録する。(Alias)
   def cookie(self, key, value) :
     self.cookies[key] = value
-  
+
   # AppConf.ini を読む。
   def readConf(self) :
     self.conf = {}
@@ -211,7 +189,7 @@ class WebPage :
   def stripTag(s) :
     p = re.compile(r"<[^>]*?>")
     return p.sub("", s)
-    
+
   # HTML エスケープ文字を変換
   @staticmethod
   def escape(str) :
@@ -233,6 +211,15 @@ class WebPage :
     #buff = b"Content-Type: image/png\n\n" + b
     sys.stdout.buffer.write(buff)
 
+  # ビデオ (.mp4) を送信する。
+  @staticmethod
+  def sendMP4(file) :
+    with open(file, "rb") as f :
+      b = f.read()
+    buff = b"Content-Type: video/mp4\n\n" + b
+    #buff = b"Content-Type: image/png\n\n" + b
+    sys.stdout.buffer.write(buff)
+
   # JSON テキストを応答
   @staticmethod
   def sendJson(json) :
@@ -244,16 +231,3 @@ class WebPage :
   def sendText(str) :
     print("Content-Type: text/plain\n")
     print(str)
-
-  # HTTP メソッドを返す。
-  def getMethod(self) :
-    return os.environ["REQUEST_METHOD"]
-
-  # パラメータがあるかどうか
-  def isPostback(self) :
-    return len(self.params) > 0
-
-  # 文字列を指定位置に挿入する。
-  @staticmethod
-  def insert (source_str, insert_str, pos):
-    return source_str[:pos]+insert_str+source_str[pos:]
