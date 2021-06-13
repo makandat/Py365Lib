@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.35  2020-05-14
+# Version 1.40  2021-06-13
 import os, io, sys
 import shutil
 import glob
@@ -171,8 +171,8 @@ def grep(str:str, file:str) -> List:
         result.append(i)
   return result
 
-# 指定したワイルドカードでディレクトリ内を検索する。
-def listFiles(dir:str, wildcard:str="*", asstr=False) -> List:
+# 指定したワイルドカードでディレクトリ内を検索する。v1.40 asstr=True にした。
+def listFiles(dir:str, wildcard:str="*", asstr=True) -> List:
   diru8 = dir.encode('utf-8')
   list = glob.glob(diru8 + b"/" + wildcard.encode('utf-8'))
   result = []
@@ -183,8 +183,8 @@ def listFiles(dir:str, wildcard:str="*", asstr=False) -> List:
       result.append(item)
   return result
 
-# 指定したフォルダ内のオブジェクト再帰的に検索する。
-def listFilesRecursively(dir:str, wildcard:str="*", asstr=False) -> List :
+# 指定したフォルダ内のオブジェクト再帰的に検索する。v1.40 asstr=True にした。
+def listFilesRecursively(dir:str, wildcard:str="*", asstr=True) -> List :
   diru8 = dir.encode('utf-8')
   list = glob.glob(diru8 + b"/**/" + wildcard.encode('utf-8'), recursive=True)
   result = []
@@ -206,8 +206,8 @@ def listFiles2(dir:str) -> List:
   return result
 
 
-# ディレクトリ一覧を得る。
-def listDirectories(dir:str, asstr=False) -> List:
+# ディレクトリ一覧を得る。v1.40 asstr=True にした。
+def listDirectories(dir:str, asstr=True) -> List:
   diru8 = dir.encode('utf-8')
   list = os.listdir(diru8)
   result = []

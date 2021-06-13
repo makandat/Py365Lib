@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Common.py
-#   ver 2.51  2019-06-16
+#   ver 2.60  2021-06-13
 import sys
 import linecache
 import os
@@ -90,11 +90,19 @@ def stop(code:int = 0, message:str ="", color:str="") -> None :
 
 # コマンドを起動する。(cmd は配列)
 def exec(cmd:StrList) -> int:
-  return subprocess.check_call(cmd)
+  if type(cmd) is str :
+    cmd_a = [cmd]
+  else :
+    cmd_a = cmd
+  return subprocess.check_call(cmd_a)
 
 # コマンドを起動して、その結果を返す。(cmd は配列)
 def shell(cmd:StrList) -> str:
-  return subprocess.check_output(args=cmd)
+  if type(cmd) is str :
+    cmd_a = [cmd]
+  else :
+    cmd_a = cmd
+  return subprocess.check_output(args=cmd_a)
 
 # ログ情報出力
 def log(msg:str) -> None:
@@ -232,7 +240,7 @@ def printFile(filePath, code="utf-8") :
 # 配列や連想配列を表示する。
 def printArray(arr) :
   pprint(arr, indent=2, width=150)
-  return    
+  return
 
 # メインとして実行しようとしたとき
 if __name__ == "__main__" :
