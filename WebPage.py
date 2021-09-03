@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 1.17  2019-05-30 stripTag()
+# WebPage.py Version 1.80  2019-09-15 getMethod()
 import os, sys, io
 import cgi
 import re
@@ -47,6 +47,7 @@ class WebPage :
     else :
       pass
     return
+
   # コンテンツを送信する。
   def echo(self) :
     # クッキーをヘッダーに追加
@@ -211,23 +212,19 @@ class WebPage :
     #buff = b"Content-Type: image/png\n\n" + b
     sys.stdout.buffer.write(buff)
 
-  # ビデオ (.mp4) を送信する。
-  @staticmethod
-  def sendMP4(file) :
-    with open(file, "rb") as f :
-      b = f.read()
-    buff = b"Content-Type: video/mp4\n\n" + b
-    #buff = b"Content-Type: image/png\n\n" + b
-    sys.stdout.buffer.write(buff)
-
   # JSON テキストを応答
   @staticmethod
   def sendJson(json) :
     print("Content-Type: application/json\n")
-    print(json)
+    print(json, end="")
 
   # プレーンテキストを応答
   @staticmethod
   def sendText(str) :
     print("Content-Type: text/plain\n")
-    print(str)
+    print(str, end="")
+
+  # HTTP メソッドを返す。
+  def getMethod(self) :
+    return os.environ["REQUEST_METHOD"]
+
