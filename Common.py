@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Common.py
-#   ver 2.60  2021-06-13
+#   ver 2.70  2021-09-14
 import sys
 import linecache
 import os
@@ -48,12 +48,12 @@ StrList = List[str]
 
 
 # ロガー初期化
-def init_logger(filename=None):
+def init_logger(filename=None, level=logging.DEBUG):
   global logger
   if filename == None :
     filename = LOGFILE
   logger = logging.getLogger('Py365Lib')
-  logger.setLevel(logging.DEBUG)
+  logger.setLevel(level)
   # ファイルハンドラを作成
   fh = logging.FileHandler(filename)
   fh.setLevel(logging.DEBUG)
