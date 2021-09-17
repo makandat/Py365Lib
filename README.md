@@ -3,6 +3,7 @@ This library and tools help you to create small Python3 application quickly.
 And it is consisted of the modules below.
 
 - Common
+- MyError
 - FileSystem
 - Text
 - DateTime
@@ -19,32 +20,32 @@ And it is consisted of the modules below.
 ### Common
 	#!/usr/bin/env python3
 	from Py365Lib import Common
-	
+
 	# Confirm to exist the command line parameters.
 	if Common.count_args() == 0 :
 	  Common.stop(9, "A parameter must be exists.")
-	
+
 	# Define the error code (0 means non-error).
 	err = 0
-	
+
 	#  Get a parameter.
 	fileName = Common.args(0)
 	print(fileName)
-	
+
 	try :
 	  # Display the content of the file.
-	  Common.printFile(fileName) 
+	  Common.printFile(fileName)
 	except Exception as e :
 	  # Exception
 	  Common.esc_print(Common.ESC_FG_RED, e.args)
 	  err = 1
-	
-	
+
+
 	if err == 0 :
 	  print("Normal termination.")
 	else :
 	  print("Error(s) has been detected. The error code: {0:d}".format(err))
-	
+
 	# Exit with termination code (err).
 	exit(err)
 
@@ -67,7 +68,7 @@ And it is consisted of the modules below.
 	# Confirm the file exists.
 	if not FileSystem.exists(fileName) :
 	  Common.stop(8, "The file does not exist.")
-	    
+
 	# Get the attributes of the file.
 	b = FileSystem.isFile(fileName)
 	print("Is file?: {0}".format(b))
@@ -173,7 +174,7 @@ And it is consisted of the modules below.
 	def cb_keys(key) :
 	    print(key)
 	    return
-	    
+
 	# Get the test number.
 	if len(sys.argv) == 1 :
 	    print("You must enter the test number.")
@@ -219,7 +220,7 @@ And it is consisted of the modules below.
 	# Hello, world!
 	import WebPage as page
 	import FileSystem as fsys
-	
+
 	# CGI class
 	class Hello(page.WebPage) :
 	  # constructor
@@ -283,7 +284,7 @@ And it is consisted of the modules below.
 	    if key == 'q' :
 	      rc = False
 	    return rc
-	        
+
 	# Start up.
 	Application()
 

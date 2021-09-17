@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 # Common.py
-#   ver 2.70  2021-09-14
-import sys
+#   ver 2.70  2021-09-18
+import sys, os, io, time, json
 import linecache
-import os
 import subprocess
 import logging
 if not os.name == 'nt' :
   import syslog
-import time
-import json
 from typing import List, Any, Callable
 from pprint import pprint
 
@@ -242,6 +239,16 @@ def printArray(arr) :
   pprint(arr, indent=2, width=150)
   return
 
+# オブジェクトの文字列表現を返す。
+def get_objstring(obj) :
+  buff = io.StringIO()
+  pprint(obj, stream=buff)
+  s = buff.getvalue()
+  return s
+
+
+# ----------------------------------------------------
 # メインとして実行しようとしたとき
+# ----------------------------------------------------
 if __name__ == "__main__" :
 	pass
