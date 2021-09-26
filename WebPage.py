@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 2.04  2021-09-16
+# WebPage.py Version 2.05  2021-09-20
 import os, sys, io
 import cgi
 import json
@@ -312,9 +312,12 @@ class WebPage :
 
   # JSON テキストを送信
   @staticmethod
-  def sendJSON(json) :
+  def sendJSON(data) :
     print("Content-Type: application/json\n")
-    print(json, end="")
+    s = data
+    if not Common.is_str(data) :
+      s = json.dumps(data)
+    print(s, end="")
     return
 
   # プレーンテキストを送信
@@ -341,9 +344,14 @@ class WebPage :
   # MIME を指定して送信 v2.0  (mtype例) "application/pdf"
   @staticmethod
   def sendBLOB(mtype, data) :
-    with open(file, "rb") as f :
-      b = f.read()
-    buff = b"Content-Type: " + mtype + "\n\n" + b
+    buff = b"Content-Type: " + mtype.encode() + b"\n\n" + data
+    sys.stdout.buffer.write(buff)
+    return
+
+# ファイルダウンロード
+  @staticmethod
+  def download(mtype, filename, data):
+    buff = b"Content-Type: " + mtype.encode() + b'\nContent-Disposition: attachment; filename="' + filename.encode() + b'"' + b"\n\n" + data
     sys.stdout.buffer.write(buff)
     return
 
