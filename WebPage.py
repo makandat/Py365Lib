@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-# WebPage.py Version 2.05  2021-09-20
-import os, sys, io
+# WebPage.py Version 2.07  2021-10-20
+import os, sys, io, base64
 import cgi
 import json
 import re
@@ -19,6 +19,7 @@ class WebPage :
 
     # コンストラクタ
   def __init__(self, template="", conf=APPCONF) :
+    #Common.init_logger()
     self.headers = ["Content-Type: text/html"] # HTTP ヘッダーのリスト
     self.vars =    {}  # HTML 埋め込み変数
     self.params =  {}  # HTTP パラメータ
@@ -35,7 +36,8 @@ class WebPage :
     except :
       pass
     # AppConf.ini を読む。
-    self.readConf(conf)
+    if conf :
+      self.readConf(conf)
     # HTTP パラメータを得る。
     self.form = cgi.FieldStorage()
     for k in self.form.keys() :
@@ -246,12 +248,12 @@ class WebPage :
   # URL エスケープ文字を変換
   @staticmethod
   def escUrl(str) :
-    return str.replace(' ', '%20').replace('&', '%26').replace('?', '%3F').replace('=', '%3D').replace('%', '%25')
+    return str.replace(' ', '%20').replace('&', '%26').replace('?', '%3F').replace('=', '%3D').replace('%', '%25').replace('#', '%23').replace('+', '%2B')
 
   # 画像を送信する。v2.0
   @staticmethod
   def sendImage(file) :
-    ext = os.path.splitext(file)[1].lower()
+    ext = os.path.splitext(file)[1].lower().decode()
     if ext == '.jpg' :
       type = b"jpeg"
     elif ext == '.png' :
@@ -262,10 +264,9 @@ class WebPage :
       type = b'svg+xml'
     else:
       return
-    with open(file, "rb") as f :
+    with open(file.decode(), "rb") as f :
       b = f.read()
     buff = b"Content-Type: image/" + type + b"\n\n" + b
-    #buff = b"Content-Type: image/png\n\n" + b
     sys.stdout.buffer.write(buff)
     return
 
@@ -366,3 +367,17 @@ class WebPage :
   def notFound() :
     sys.stdout.buffer.write(b"404 Not Found")
     return
+
+#from cgi import FieldStorage
+
+def parse_multipart_form(headers, body):
+    fp = io.BytesIO(base64.b64decode(body))
+    environ = {'REQUEST_METHOD': 'POST'}
+    headers = {
+        'content-type': headers['Content-Type'],
+        'content-length': headers['Content-Length']
+    }
+    fs = cgi.FieldStorage(fp=fp, environ=environ, headers=headers)
+    #for f in fs.list:
+    #    print(f.name, f.filename, f.type, f.value)
+    return fs
