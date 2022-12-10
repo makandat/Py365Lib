@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.40  2021-06-13
+# Version 1.41  2022-12-10
 import os, io, sys
 import shutil
 import glob
@@ -41,9 +41,12 @@ def readLines(file: str, encode='utf-8') :
   return lines
 
 # 行の配列をファイルに書く。
-def writeLines(file, lines, encode='utf-8') :
+def writeLines(file, lines, encode='utf-8', end='') :
   with open(file, mode='w', encoding=encode) as f:
-    f.writelines(lines)
+    if end == '':
+      f.writelines(lines)
+    else:
+      f.write(end.join(lines))
   return
 
 # ファイルを１行づつ読んで callback で処理する。
