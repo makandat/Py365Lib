@@ -6,11 +6,12 @@
 # Version 1.30  2019-07-20
 # Version 2.00  2021-09-11
 # Version 2.10  2021-09-15
+# Version 2.20  2023-03-12
 #    To install mysql connector
 #  sudo pip3 install mysql-connector-python
 import json, os
 import mysql.connector
-import Common
+from Py365Lib import Common
 
 class MySQL :
     APPCONF = "AppConf.ini"
@@ -27,7 +28,7 @@ class MySQL :
             # uid をコンフィグファイルとして使う
             self.readAppConf(uid)
         else :
-            raise "No connection info."
+            self.__config = {"user":uid, "password":pwd, "database":db, "host":host}
         # 接続する。
         self.__client = mysql.connector.connect(**self.__config)
         # カーソルを取得する。
