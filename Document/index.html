@@ -301,6 +301,8 @@ method(line): １行づつ処理する関数</td><td>なし</td><td>ファイル
 recursive: True ならファイルやサブディレクトリも削除</td><td>なし</td><td>ディレクトリを削除する。</td><td>関数</td></tr>
  <tr><td>grep(str, file)</td><td>str: 検索文字列<br />file: 対象ファイル</td><td>見つかった行番号の配列</td><td>ファイル内を検索する。</td><td>関数</td></tr>
  <tr><td>getFileSize(file)</td><td>file: 対象ファイル</td><td>ファイルのバイト数</td><td>ファイルの長さを得る。</td><td>関数</td></tr>
+ <tr><td>getLastWrite(file)</td><td>file: 対象ファイル</td><td>ファイルの日時(文字列)</td><td>ファイルの最終更新日時を返す。</td><td>関数</td></tr>
+ <tr><td>getAttr(file)</td><td>file: 対象ファイル</td><td>ファイルの属性</td><td>ファイルの属性(os.stat(path).st_mode)を返す。</td><td>関数</td></tr>
  <tr><td>listFiles(dir, wildcard="*")</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイルとサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>listDirectories(dir)</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>サブディレクトリ一覧リスト</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>getFileName(path)</td><td>path: パス名</td><td>パスのファイル名部分</td><td>path のファイル名部分を得る。</td><td>関数</td></tr>
@@ -517,12 +519,9 @@ str: タグの中身</td><td>タグ</td><td>&lt;name&gt;str&lt;/name&gt; を作�
    key: アップロードされたファイルのキー<br />
    dir: 保存先のフォルダ
  </td><td>なし</td><td>key で指定されたアップロードされたファイルを file へ保存する。</td><td></td></tr>
- <tr><td>static sendImage(file)</td><td>
+ <tr><td>sendImage(file)</td><td>
    file: 画像ファイルのパス名
  </td><td>なし</td><td>HTTPヘッダーと画像ファイルを送信する。</td><td>jpeg, png, gif のみ</td></tr>
- <tr><td>static sendMP4(file)</td><td>
-   file: MP4 ファイルのパス名
- </td><td>なし</td><td>HTTPヘッダーとMP4ファイルを送信する。</td><td>mp4 のみ</td></tr>
  <tr><td>sendJson(json)</td><td>
    json: JSON 文字列
 </td><td>なし</td><td>HTTPヘッダー(application/json)とJSON 形式文字列を送信する。</td><td></td></tr>
