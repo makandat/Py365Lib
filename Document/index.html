@@ -31,7 +31,7 @@ header, article, fooder {
 
 <body>
 <header>
-<h1 style="text-align:center;">Python3.6 Py365Lib 仕様書　<span style="font-size:14pt">(ver 2.0)</span></h1>
+<h1 style="text-align:center;">Python3.6 Py365Lib 仕様書　<span style="font-size:14pt">(ver 2.1)</span></h1>
 <div style="text-align:center;"><a href="/">HOME</a></div>
 </header>
 
@@ -293,6 +293,7 @@ method(line): １行づつ処理する関数</td><td>なし</td><td>ファイル
  <tr><td>isFile(file)</td><td>file: 存在を確認するファイル</td><td>存在すれば True、存在しなければ False</td><td>ファイル file が存在すれば True を返す。</td><td>関数</td></tr>
  <tr><td>isLink(file)</td><td>file: 存在を確認するリンク</td><td>存在すれば True、存在しなければ False</td><td>リンク file が存在すれば True を返す。</td><td>関数</td></tr>
  <tr><td>getAttr(file)</td><td>file: ファイル、ディレクトリ、リンク</td><td>属性</td><td>ファイルの属性を得る。</td><td>関数</td></tr>
+ <tr><td>getStat(file)</td><td>file: ファイル、ディレクトリ、リンク</td><td>os_stat_result</td><td>ファイルのステータス情報を得る。例：更新時刻は st_mtime</td><td>関数</td></tr>
  <tr><td>getOwner(file)</td><td>file: ファイル、ディレクトリ、リンク</td><td>オーナー名</td><td>ファイルのオーナー名を得る。</td><td>関数</td></tr>
  <tr><td>getGroup(file)</td><td>file: ファイル、ディレクトリ、リンク</td><td>グループ名</td><td>ファイルのグループ名を得る。</td><td>関数</td></tr>
  <tr><td>chdir(dir)</td><td>dir: ディレクトリ名</td><td>なし</td><td>カレントディレクトリを変更する。</td><td>関数</td></tr>
@@ -303,6 +304,7 @@ recursive: True ならファイルやサブディレクトリも削除</td><td>�
  <tr><td>getFileSize(file)</td><td>file: 対象ファイル</td><td>ファイルのバイト数</td><td>ファイルの長さを得る。</td><td>関数</td></tr>
  <tr><td>getLastWrite(file)</td><td>file: 対象ファイル</td><td>ファイルの日時(文字列)</td><td>ファイルの最終更新日時を返す。</td><td>関数</td></tr>
  <tr><td>getAttr(file)</td><td>file: 対象ファイル</td><td>ファイルの属性</td><td>ファイルの属性(os.stat(path).st_mode)を返す。</td><td>関数</td></tr>
+ <tr><td>getStat(file)</td><td>file: 対象ファイル</td><td>ファイルの os_stat_result</td><td>ファイル情報を返す。（例）os_stat_result.st_mtime</td><td>関数</td></tr>
  <tr><td>listFiles(dir, wildcard="*")</td><td>dir: ディレクトリ(最後の"/"は含まない)<br />wildcard: ワイルドカード</td><td>ファイル一覧リスト</td><td>ディレクトリ内のファイルとサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>listDirectories(dir)</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>サブディレクトリ一覧リスト</td><td>ディレクトリ内のサブディレクトリ一覧を得る。</td><td>関数</td></tr>
  <tr><td>getFileName(path)</td><td>path: パス名</td><td>パスのファイル名部分</td><td>path のファイル名部分を得る。</td><td>関数</td></tr>

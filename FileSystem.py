@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # FileSystem.py
-# Version 1.41  2022-12-10
+# Version 1.50  2023-09-14
 import os, io, sys
 import shutil
 import glob
@@ -131,6 +131,11 @@ def getLastWrite(path, utc=False) :
 # ファイルやディレクトリの属性を得る。
 def getAttr(path:str) -> int:
   return os.stat(path).st_mode
+
+# ファイルやディレクトリの os_stat_result を得る。
+# # os.stat_result(st_mode=33188, st_ino=8728494137, st_dev=16777220, st_nlink=1, st_uid=501, st_gid=20, st_size=6, st_atime=1549094615, st_mtime=1549094615, st_ctime=1549094615)
+def getStat(path:str) -> os.stat_result:
+  return os.stat(path)
 
 # ファイルやディレクトリのオーナーを得る。
 def getOwner(path:str) -> str:
