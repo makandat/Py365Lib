@@ -7,10 +7,11 @@
 # Version 2.00  2021-09-11
 # Version 2.10  2021-09-15
 # Version 3.00  2023-10-14
+# Version 3.10  2023-10-15
 #    To install mysql connector
 #  sudo pip3 install mysql-connector-python
 import json, os
-from Py365Lib import Common
+import Common  # 同じフォルダに Common.py が必要。
 import mysql.connector
 
 class MySQL :
